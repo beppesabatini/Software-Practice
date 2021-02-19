@@ -1,0 +1,48 @@
+package ch13;
+
+import java.rmi.*;
+import java.util.*;
+
+public class MyServer extends java.rmi.server.UnicastRemoteObject implements RemoteServer {
+
+	private static final long serialVersionUID = -1921291835805476493L;
+
+	public MyServer() throws RemoteException {
+	}
+
+	// implement the RemoteServer interface
+	public Date getDate() throws RemoteException {
+		return new Date();
+	}
+
+	public Object execute(WorkRequest work) throws RemoteException {
+		return work.execute();
+	}
+
+	public void asyncExecute(final WorkRequest request, final WorkListener listener) throws RemoteException {
+		new Thread() {
+			public void run() {
+				try {
+					Thread.sleep(1000);
+				} catch (Exception e) {
+				}
+
+				Object result = request.execute();
+				try {
+					listener.workCompleted(request, result);
+				} catch (RemoteException e) {
+					System.out.println(e); // error calling client
+				}
+			}
+		}.start();
+	}
+
+	public static void main(String args[]) {
+		try {
+			RemoteServer server = new MyServer();
+			Naming.rebind("NiftyServer", server);
+		} catch (java.io.IOException e) {
+			// problem registering server
+		}
+	}
+}
