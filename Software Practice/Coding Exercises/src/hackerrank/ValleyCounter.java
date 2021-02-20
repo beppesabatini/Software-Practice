@@ -62,9 +62,9 @@ public class ValleyCounter {
 		int numberOfHills = 0;
 		int numberOfValleys = 0;
 		for (TrailChange trailChange : trailChanges) {
-			if (trailChange.type == TrailChange.HILL_OR_VALLEY.HILL) {
+			if (trailChange.type == TrailChange.HillOrValley.HILL) {
 				numberOfHills++;
-			} else if (trailChange.type == TrailChange.HILL_OR_VALLEY.VALLEY) {
+			} else if (trailChange.type == TrailChange.HillOrValley.VALLEY) {
 				numberOfValleys++;
 			}
 		}
@@ -106,9 +106,9 @@ public class ValleyCounter {
 				currentTrailChange.startPoint = currentStartPoint;
 				currentTrailChange.endPoint = currentEndPoint;
 				if (altitudes[currentStartPoint] < altitudes[currentStartPoint + 1]) {
-					currentTrailChange.type = TrailChange.HILL_OR_VALLEY.HILL;
+					currentTrailChange.type = TrailChange.HillOrValley.HILL;
 				} else if (altitudes[currentStartPoint] > altitudes[currentStartPoint + 1]) {
-					currentTrailChange.type = TrailChange.HILL_OR_VALLEY.VALLEY;
+					currentTrailChange.type = TrailChange.HillOrValley.VALLEY;
 				}
 				trailChanges.add(currentTrailChange);
 				currentStartPoint = currentEndPoint;
@@ -119,7 +119,7 @@ public class ValleyCounter {
 	}
 
 	private static class TrailChange {
-		public enum HILL_OR_VALLEY {
+		public enum HillOrValley {
 			HILL, VALLEY
 		}
 
@@ -127,7 +127,7 @@ public class ValleyCounter {
 		public Integer startPoint;
 		@SuppressWarnings("unused")
 		public Integer endPoint;
-		public HILL_OR_VALLEY type;
+		public HillOrValley type;
 
 		public TrailChange() {
 			this.startPoint = null;

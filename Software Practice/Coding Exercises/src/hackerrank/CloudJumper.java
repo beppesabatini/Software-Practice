@@ -15,9 +15,6 @@ import java.util.List;
  */
 public class CloudJumper {
 
-	private final static int CUMULUS = 0;
-	private final static int THUNDERHEAD = 1;
-
 	private class CloudJump {
 		public int jumpStart;
 		public int jumpEnd;
@@ -55,7 +52,11 @@ public class CloudJumper {
 	 *      "https://www.hackerrank.com/challenges/jumping-on-the-clouds/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=warmup&h_r=next-challenge&h_v=zen&h_r=next-challenge&h_v=zen">Original
 	 *      HackerRank Problem</a>
 	 */
-	public static int jumpingOnClouds(int[] clouds) {
+	public static int jumpingOnClouds(int[] cloudInts) {
+		Cloud[] clouds = new Cloud[cloudInts.length];
+		for (int i = 0; i < cloudInts.length; i++) {
+			clouds[i] = Cloud.fromValue(cloudInts[i]);
+		}
 		List<CloudJump> cloudJumps = buildCloudJumpPath(clouds, 0, null);
 		String badDataMessage = "Bad data: the game can not be won.";
 		if (cloudJumps == null || cloudJumps.size() <= 0) {
@@ -65,7 +66,7 @@ public class CloudJumper {
 		}
 
 		for (CloudJump cloudJump : cloudJumps) {
-			if (clouds[cloudJump.jumpStart] == THUNDERHEAD || clouds[cloudJump.jumpEnd] == THUNDERHEAD) {
+			if (clouds[cloudJump.jumpStart] == Cloud.THUNDERHEAD || clouds[cloudJump.jumpEnd] == Cloud.THUNDERHEAD) {
 				System.out.println("Application logic is broken - thunderhead found in path: " + cloudJump);
 				System.out.println("Full path: " + cloudJumps);
 				return (0);
@@ -106,7 +107,7 @@ public class CloudJumper {
 	 *                   point.
 	 * @return The list of cloud jumps which grows as the function calls itself.
 	 */
-	private static List<CloudJump> buildCloudJumpPath(int[] clouds, int startIndex, List<CloudJump> cloudJumps) {
+	private static List<CloudJump> buildCloudJumpPath(Cloud[] clouds, int startIndex, List<CloudJump> cloudJumps) {
 		if (cloudJumps == null) {
 			cloudJumps = new ArrayList<CloudJump>();
 		}
@@ -128,13 +129,13 @@ public class CloudJumper {
 		 * calculations are complete and the list of jumps can be returned.
 		 */
 		if (startIndex == secondToLast) {
-			if (clouds[secondToLast] == CUMULUS && clouds[lastCloud] == CUMULUS) {
+			if (clouds[secondToLast] == Cloud.CUMULUS && clouds[lastCloud] == Cloud.CUMULUS) {
 				CloudJump cloudJump = new CloudJumper().new CloudJump(secondToLast, lastCloud);
 				cloudJumps.add(cloudJump);
 				return (cloudJumps);
 			}
 		} else if (startIndex == nextToLast) {
-			if (clouds[nextToLast] == CUMULUS && clouds[lastCloud] == CUMULUS) {
+			if (clouds[nextToLast] == Cloud.CUMULUS && clouds[lastCloud] == Cloud.CUMULUS) {
 				CloudJump cloudJump = new CloudJumper().new CloudJump(nextToLast, lastCloud);
 				cloudJumps.add(cloudJump);
 				return (cloudJumps);
@@ -144,11 +145,11 @@ public class CloudJumper {
 		int shortJump = startIndex + 1;
 		int longJump = startIndex + 2;
 
-		if (clouds[startIndex] == CUMULUS && clouds[longJump] == CUMULUS) {
+		if (clouds[startIndex] == Cloud.CUMULUS && clouds[longJump] == Cloud.CUMULUS) {
 			cloudJumps.add(new CloudJumper().new CloudJump(startIndex, longJump));
 			int newStartIndex = longJump; // For readability
 			buildCloudJumpPath(clouds, newStartIndex, cloudJumps); // Recursive call
-		} else if (clouds[startIndex] == CUMULUS && clouds[shortJump] == CUMULUS) {
+		} else if (clouds[startIndex] == Cloud.CUMULUS && clouds[shortJump] == Cloud.CUMULUS) {
 			cloudJumps.add(new CloudJumper().new CloudJump(startIndex, shortJump));
 			int newStartIndex = shortJump; // For readability
 			buildCloudJumpPath(clouds, newStartIndex, cloudJumps); // Recursive call
@@ -156,11 +157,11 @@ public class CloudJumper {
 		return (cloudJumps);
 	}
 
-	private static String cloudArrayToString(int[] clouds) {
+	private static String cloudArrayToString(Cloud[] clouds) {
 		String cloudString = "";
 		cloudString += "{";
 		for (int i = 0; i < clouds.length; i++) {
-			String currentCloud = Cloud.fromValue(clouds[i]).toString();
+			String currentCloud = clouds[i].toString();
 			cloudString += currentCloud;
 			if (i < clouds.length - 1) {
 				cloudString += ", ";

@@ -1,10 +1,10 @@
 package hackerrank;
 
 /**
- * Typical enum, used to format output for the CloudJumper exercise. A good
- * simple example of common enum syntax.
+ * Typical enum, used to support for the CloudJumper exercise. A good simple
+ * example of common enum syntax.
  * 
- * @author Beppe Sabatini
+ * @author Beppe Sabatini bsabatini@hotmail.com
  *
  */
 public enum Cloud {
@@ -16,11 +16,11 @@ public enum Cloud {
 		return (this.value);
 	}
 
-	static public Enum<Cloud> fromValue(String value) {
+	static public Cloud fromValue(String value) {
 		return (valueOf(value));
 	}
 
-	static public Enum<Cloud> fromValue(int value) {
+	static public Cloud fromValue(int value) {
 		for (Cloud cloud : Cloud.values()) {
 			if (cloud.getValue() == value) {
 				return (cloud);

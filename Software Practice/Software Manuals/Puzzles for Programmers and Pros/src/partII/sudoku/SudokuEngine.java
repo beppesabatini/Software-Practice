@@ -29,16 +29,9 @@ public class SudokuEngine {
 	private static final SudokuStructure sudokuStructure = new SudokuStructure();
 
 	/**
-	 * For each cell in the puzzle, maintain a bit field (in a "short") that
-	 * represents possible values, 1 through 9, which are possible or prospect
-	 * values for the cell. Zero out the bit if we can demonstrate that the value is
-	 * impossible. The zero-position bit is not used. The 1 bit (second from the
-	 * right) represents "one", the 2 bit represents "two", etc.
+	 * Master copy -- all bits (prospects) are set to one, or "possible," at load
+	 * time
 	 */
-	/*
-	 * 1111111110 987654321
-	 */
-	// Master copy -- all bits (prospects) set to one, or "possible," at load time
 	private final static short[] masterCopyProspects = initMasterCopyProspects();
 
 	private static short[] initMasterCopyProspects() {
@@ -47,6 +40,18 @@ public class SudokuEngine {
 		return (masterCopyProspects);
 	}
 
+	/**
+	 * For each cell in the puzzle, maintain a bit field (in a "short") that
+	 * represents possible values, 1 through 9, which are possible or prospect
+	 * values for the cell. Zero out the bit if we can demonstrate that the value is
+	 * impossible. The zero-position bit is not used. The 1 bit (second from the
+	 * right) represents "one", the 2 bit represents "two", etc.
+	 * 
+	 * <pre>
+	 * 987654321   // possible values or candidate values for a cell
+	 * 1111111110  // One bit represents a candidate not yet eliminated
+	 * </pre>
+	 */
 	protected short[] prospects; // Cloned from the master copy at run time
 	/**
 	 * An array representing the Sudoku puzzle which we are trying to solve. This
@@ -166,8 +171,9 @@ public class SudokuEngine {
 		int len = array.length;
 		if (len > 0)
 			array[0] = value;
-		for (int i = 1; i < len; i += i)
+		for (int i = 1; i < len; i += i) {
 			System.arraycopy(array, 0, array, i, ((len - i) < i) ? (len - i) : i);
+		}
 	}
 
 	/**

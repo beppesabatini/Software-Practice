@@ -41,7 +41,7 @@ public class SudokuSolverLauncher {
 	 * 
 	 */
 	public void solveSudokuPuzzles() {
-		initSudokuData(Difficulty.VERY_DIFFICULT);
+		initSudokuData(Difficulty.WORLDS_HARDEST );
 		new SudokuSolver().solveSudokus(sudokuData);
 	}
 
