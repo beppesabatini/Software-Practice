@@ -2,11 +2,12 @@ package ch07;
 
 import java.util.HashMap;
 
-// Demonstrates deep cloning. From p. 197. This is supposed to be an
-// example of how deep cloning makes "equals()" return true; but
-// as will be seen if we run this, the manual is wrong. The clone()
-// behavior may have changed since the manual was written. 
-
+/**
+ * From p. 197. Demonstrates deep cloning. This is supposed to be an example of
+ * how deep cloning makes "equals()" return true; but, as will be seen if we run
+ * this, the Learning Java manual is wrong. The clone() behavior may have
+ * changed since the manual was written.
+ */
 public class DeepCloningSheep implements Cloneable {
 
 	public HashMap<String, Sheep> flock = null;

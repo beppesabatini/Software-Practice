@@ -4,8 +4,13 @@ import java.awt.*;
 import java.awt.geom.GeneralPath;
 import javax.swing.*;
 
-// From p. 731-733. 
-
+/**
+ * From Learning Java, 3rd Edition, p. 731-733. This draws a shape defined by
+ * four coordinate points, connected by four quadratic points, and painted with
+ * red and blue gradient paint. This hypnotic shape is then rotated. Limited
+ * animation is achieved by altering the shape coordinates by deltas defined at
+ * initialization time.
+ */
 public class Hypnosis extends JComponent implements Runnable {
 
 	private static final long serialVersionUID = -1342828757212528137L;
@@ -21,8 +26,11 @@ public class Hypnosis extends JComponent implements Runnable {
 		for (int i = 0; i < numberOfCoordinates; i++) {
 			coordinates[i] = (int) (Math.random() * 300);
 			deltas[i] = (int) (Math.random() * 4 + 3);
-			if (deltas[i] > 4)
+			if (deltas[i] > 4) {
+				// This would go outside the Frame, so we
+				// have the shape bounce off the border.
 				deltas[i] = -(deltas[i] - 3);
+			}
 		}
 		paint = new GradientPaint(0, 0, Color.blue, 20, 10, Color.red, true);
 
@@ -35,7 +43,7 @@ public class Hypnosis extends JComponent implements Runnable {
 			while (true) {
 				timeStep();
 				repaint();
-				Thread.sleep(1000 / 24);
+				Thread.sleep(1000 / 24); // redraws about 40 times a second
 			}
 		} catch (InterruptedException ie) {
 		}
@@ -71,8 +79,9 @@ public class Hypnosis extends JComponent implements Runnable {
 	private Shape createShape() {
 		GeneralPath path = new GeneralPath();
 		path.moveTo(coordinates[0], coordinates[1]);
-		for (int i = 2; i < coordinates.length; i += 4)
+		for (int i = 2; i < coordinates.length; i += 4) {
 			path.quadTo(coordinates[i], coordinates[i + 1], coordinates[i + 2], coordinates[i + 3]);
+		}
 		path.closePath();
 		return path;
 	}

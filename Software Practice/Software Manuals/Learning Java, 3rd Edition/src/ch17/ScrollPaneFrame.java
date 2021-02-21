@@ -1,7 +1,6 @@
 package ch17;
 
 import javax.swing.*;
-import java.io.IOException;
 
 /**
  * From p. 609-610. Displays a photo with a scroll frame.
@@ -9,12 +8,6 @@ import java.io.IOException;
 public class ScrollPaneFrame {
 	public static void main(String[] args) {
 
-		try {
-			String current = new java.io.File(".").getCanonicalPath();
-			System.out.println("Current dir:" + current);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		String filename = "src/ch17/Piazza di Spagna.jpg";
 		if (args.length > 0) {
 			filename = args[0];

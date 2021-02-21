@@ -6,8 +6,10 @@ import java.awt.geom.*;
 import java.awt.image.*;
 import javax.swing.*;
 
-// From p. 742-743.
-
+/**
+ * From Learning Java, 3rd Edition, p. 742-743. A stub for a photo-editing
+ * application.
+ */
 public class ImageProcessor extends JComponent {
 
 	private static final long serialVersionUID = -4690559821947996537L;
@@ -63,7 +65,7 @@ public class ImageProcessor extends JComponent {
 		if (args.length < 0) {
 			filename = args[0];
 		} else {
-			filename = "src/ch21/cheerleader.jpg";
+			filename = "src/ch21/8307507904_ef89929bd8_c.jpg";
 		}
 		ImageIcon icon = new ImageIcon(filename);
 		Image i = icon.getImage();

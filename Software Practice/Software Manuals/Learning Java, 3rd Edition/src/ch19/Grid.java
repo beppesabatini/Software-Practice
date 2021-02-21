@@ -3,8 +3,9 @@ package ch19;
 import java.awt.*;
 import javax.swing.*;
 
-// From p. 665-666. 
-
+/**
+ * From p. 665-666. An example of GridLayout.
+ */
 public class Grid extends JPanel {
 
 	private static final long serialVersionUID = 9200628286876856501L;

@@ -2,8 +2,9 @@ package ch19;
 
 import javax.swing.*;
 
-// From p. 664.
-
+/**
+ * From p. 664. A definition of Flow Layout, the default for a JPanel.
+ */
 public class Flow extends JPanel {
 
 	private static final long serialVersionUID = 6694085488341694308L;

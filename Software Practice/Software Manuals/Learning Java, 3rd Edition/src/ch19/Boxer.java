@@ -3,7 +3,10 @@ package ch19;
 import java.awt.*;
 import javax.swing.*;
 
-// Output from Simon and Garfunkel's song "The Boxer." From p. 669-670.
+/**
+ * From p. 669-670. Demonstration of a HorizontalBox, which uses BoxLayout.
+ * Output from Simon and Garfunkel's song "The Boxer."
+ */
 
 public class Boxer extends JPanel {
 

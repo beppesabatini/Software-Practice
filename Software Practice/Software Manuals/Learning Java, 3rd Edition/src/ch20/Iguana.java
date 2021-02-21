@@ -5,8 +5,11 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import javax.swing.*;
 
-// From p. 697-699.
-
+/**
+ * From Learning Java, 3rd Edition, p. 697-699. This example draws some
+ * pre-defined shapes which accept parameters and can be rotated by the user
+ * with mouse clicks.
+ */
 public class Iguana extends JComponent {
 	private static final long serialVersionUID = -8135844814989190985L;
 

@@ -1,8 +1,8 @@
 package hackerrank;
 
 /**
- * Typical enum, used to support for the CloudJumper exercise. A good simple
- * example of common enum syntax.
+ * Typical enum, used to support CloudJumper exercise. A good simple example of
+ * common enum syntax.
  * 
  * @author Beppe Sabatini bsabatini@hotmail.com
  *

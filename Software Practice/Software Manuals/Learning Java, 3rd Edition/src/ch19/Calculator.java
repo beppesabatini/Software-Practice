@@ -4,8 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-// From p. 684-686.
-
+/**
+ * From p. 684-686. A non-functional calculator demonstrating GridBagLayout.
+ */
 public class Calculator extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 7333772437455711402L;
 
@@ -41,9 +42,11 @@ public class Calculator extends JPanel implements ActionListener {
 		gbc.weightx = 1.0;
 		gbc.gridwidth = 1;
 		// make the digits
-		for (int j = 0; j < 3; j++)
-			for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++) {
+			for (int i = 0; i < 3; i++) {
 				addGB(this, new JButton("" + ((2 - j) * 3 + i + 1)), i, j + 2);
+			}
+		}
 		// -, x, and divide
 		addGB(this, new JButton("-"), 3, 2);
 		addGB(this, new JButton("x"), 3, 3);
@@ -70,10 +73,11 @@ public class Calculator extends JPanel implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals("C"))
+		if (e.getActionCommand().equals("C")) {
 			theDisplay.setText("");
-		else
+		} else {
 			theDisplay.setText(theDisplay.getText() + e.getActionCommand());
+		}
 	}
 
 	public static void main(String[] args) {

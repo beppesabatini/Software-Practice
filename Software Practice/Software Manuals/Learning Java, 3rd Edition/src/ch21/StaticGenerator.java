@@ -5,8 +5,11 @@ import java.awt.image.*;
 import java.util.Random;
 import javax.swing.*;
 
-// From p. 739-740.
-
+/**
+ * From Learning Java, 3rd Edition, p. 739-740. This is supposed to show that a
+ * BufferedImage can be used to update an image dynamically. Its data arrays are
+ * directly accessible, and the picture can be redrawn at any time.
+ */
 public class StaticGenerator extends JComponent implements Runnable {
 
 	private static final long serialVersionUID = 3577432875218891060L;
@@ -21,19 +24,21 @@ public class StaticGenerator extends JComponent implements Runnable {
 		data = new byte[length];
 		DataBuffer db = new DataBufferByte(data, length);
 		WritableRaster wr = Raster.createPackedRaster(db, w, h, 1, null);
-		ColorModel cm = new IndexColorModel(1, 2, new byte[] { (byte) 0, (byte) 255 }, new byte[] { (byte) 0, (byte) 255 }, new byte[] { (byte) 0, (byte) 255 });
+		ColorModel cm = new IndexColorModel(1, 2, new byte[] { (byte) 0, (byte) 255 },
+				new byte[] { (byte) 0, (byte) 255 }, new byte[] { (byte) 0, (byte) 255 });
 		image = new BufferedImage(cm, wr, false, null);
 		random = new Random();
 	}
 
 	public void run() {
-		if (random == null)
+		if (random == null) {
 			initialize();
+		}
 		while (true) {
 			random.nextBytes(data);
 			repaint();
 			try {
-				Thread.sleep(1000 / 24);
+				Thread.sleep(1000 / 24); // Should redraw 40 times a second
 			} catch (InterruptedException e) {
 				/* die */ }
 		}

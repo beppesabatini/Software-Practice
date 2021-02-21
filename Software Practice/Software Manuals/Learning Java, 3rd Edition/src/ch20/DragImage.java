@@ -4,8 +4,11 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-// p. 712-713.
-
+/**
+ * From Learning Java, 3rd Edition, p. 712-713. The user can drag around an
+ * image in front of a checkboard background. The entire composite image is
+ * redrawn with each movement.
+ */
 public class DragImage extends JComponent implements MouseMotionListener {
 
 	private static final long serialVersionUID = -4878834157208266762L;

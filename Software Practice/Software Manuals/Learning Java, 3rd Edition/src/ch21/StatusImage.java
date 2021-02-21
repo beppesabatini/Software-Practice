@@ -3,19 +3,27 @@ package ch21;
 import java.awt.*;
 import javax.swing.*;
 
-// If the image is a command line argument, then filenames with white space 
-// in the path must be quoted, and the quotation marks must be passed 
-// through. 
-// C:/Program Files/mypicture.jpg   // Fails
-// "C:/Program Files/mypicture.jpg" // Succeeds
-// From p. 727-728.
-
+/**
+ * From Learning Java 3rd ed. p. 727-728. Demonstrates how Java could show a
+ * status message ("Loading...") while the system was waiting for the upload to
+ * complete. This requires an enormous photo or a slow upload to test it
+ * meaningfully.
+ * <p>
+ * Users, note: If the image is a command line argument, then filenames with
+ * white space in the path must be quoted, and the quotation marks must be
+ * passed through.
+ * 
+ * <pre>
+   C:/Program Files/mypicture.jpg  // Fails
+  "C:/Program Files/mypicture.jpg" // Succeeds
+ * </pre>
+ */
 public class StatusImage extends JComponent {
 
 	private static final long serialVersionUID = -8780903686394880298L;
 
 	boolean loaded = false;
-	String message = "Loading...";
+	String loadingMessage = "Loading...";
 	Image image;
 
 	public StatusImage(Image image) {
@@ -27,7 +35,7 @@ public class StatusImage extends JComponent {
 			g.drawImage(image, 0, 0, this);
 		else {
 			g.drawRect(0, 0, getSize().width - 1, getSize().height - 1);
-			g.drawString(message, 20, 20);
+			g.drawString(loadingMessage, 20, 20);
 		}
 	}
 
@@ -37,7 +45,7 @@ public class StatusImage extends JComponent {
 	}
 
 	public void setMessage(String msg) {
-		message = msg;
+		loadingMessage = msg;
 		repaint();
 	}
 
@@ -47,13 +55,19 @@ public class StatusImage extends JComponent {
 		if (args.length > 0) {
 			filename = args[0];
 		} else {
-			filename = "src/ch21/cheerleader.jpg";
+			filename = "src/ch21/37.Solo Dancer 01.ed01.jpg";
 		}
 
 		Image image = Toolkit.getDefaultToolkit().getImage(filename);
 		StatusImage statusImage = new StatusImage(image);
+		/*
+		 * We ought to be able to display the enormous photo with scroll bars--see ch17,
+		 * Scroll Pane Frame--but so far it's not working.
+		 * 
+		 * frame.getContentPane().add(new JScrollPane(statusImage));
+		 */
 		frame.getContentPane().add(statusImage);
-		frame.setSize(300, 300);
+		frame.setSize(4000, 1000);
 		frame.setVisible(true);
 
 		MediaTracker tracker = new MediaTracker(statusImage);

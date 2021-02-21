@@ -3,8 +3,10 @@ package ch19;
 import java.awt.*;
 import javax.swing.*;
 
-// From p. 668.
-
+/**
+ * From p. 668. Another demonstration of BorderLayout, now with each JButton in
+ * its own panel.
+ */
 public class Border2 extends JPanel {
 
 	private static final long serialVersionUID = -6852060248207982333L;

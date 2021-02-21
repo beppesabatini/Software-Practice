@@ -2,8 +2,12 @@ package ch20;
 
 import java.awt.*;
 
-// From p. 703. 
-
+/**
+ * From Learning Java, 3rd Edition, p. 703. Prints a list of every font
+ * currently installed on the user's hardware. See also the demonstration of the
+ * "FontShow" class, in the current chapter, to see some of the these fonts
+ * displayed.
+ */
 public class ShowFonts {
 	public static void main(String[] args) {
 		Font[] fonts;

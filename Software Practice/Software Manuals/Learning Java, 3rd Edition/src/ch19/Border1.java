@@ -3,8 +3,9 @@ package ch19;
 import java.awt.*;
 import javax.swing.*;
 
-// From p. 667.
-
+/**
+ * From p. 667. Demonstrates the BorderLayout.
+ */
 public class Border1 extends JPanel {
 
 	private static final long serialVersionUID = -5546504097526822049L;

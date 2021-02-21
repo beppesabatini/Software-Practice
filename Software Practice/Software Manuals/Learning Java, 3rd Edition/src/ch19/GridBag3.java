@@ -3,8 +3,10 @@ package ch19;
 import java.awt.*;
 import javax.swing.*;
 
-// From p. 677-678. 
-
+/**
+ * From p. 677-678. Another use of the GridBagLayout, now with four asymmetric
+ * buttons filling the panel.
+ */
 public class GridBag3 extends JPanel {
 
 	private static final long serialVersionUID = 8041717751402487014L;
@@ -17,7 +19,8 @@ public class GridBag3 extends JPanel {
 		constraints.weighty = 1.0;
 		constraints.fill = GridBagConstraints.BOTH;
 		int x, y; // for clarity
-		x = 0; y = 0;
+		x = 0;
+		y = 0;
 		constraints.gridheight = 2; // span two rows
 		addGB(new JButton("one"), x, y);
 		constraints.gridheight = 1; // set it back

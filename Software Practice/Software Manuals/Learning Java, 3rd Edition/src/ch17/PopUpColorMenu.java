@@ -5,7 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- * From p. 604-606. Adds three buttons with no associated functionality, and a
+ * From Learning Java, 3rd Edition, p. 604-606. Adds three buttons with no associated functionality, and a
  * context menu (a right-button-click menu) that changes the button color.
  */
 public class PopUpColorMenu implements ActionListener {

@@ -3,8 +3,10 @@ package ch20;
 import java.awt.*;
 import java.awt.print.*;
 
-// From p. 721.
-
+/**
+ * From Learning Java, 3rd Edition, p. 721. This demonstrates how to launch a
+ * print dialogue and a print job.
+ */
 public class UnbelievablySimplePrint implements Printable {
 	private static Font sFont = new Font("Serif", Font.PLAIN, 64);
 

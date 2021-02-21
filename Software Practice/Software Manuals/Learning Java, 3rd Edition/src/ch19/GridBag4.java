@@ -3,8 +3,10 @@ package ch19;
 import java.awt.*;
 import javax.swing.*;
 
-// From p. 679.
-
+/**
+ * From p. 679. Another version of GridBagLayout, now with three asymmetric
+ * buttons filling the JFrame.
+ */
 public class GridBag4 extends JPanel {
 
 	private static final long serialVersionUID = -7046078630442333102L;

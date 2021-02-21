@@ -4,8 +4,11 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-// From p. 671. 
-
+/**
+ * From p. 671. This demonstrates the Card Layout, which is something like a
+ * thin deck of cards which can be shuffled. The manual recommends using the
+ * JTabbedPane component instead.
+ */
 public class Card extends JPanel {
 
 	private static final long serialVersionUID = 5386996500984448998L;

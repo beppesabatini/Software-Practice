@@ -3,8 +3,10 @@ package ch19;
 import java.awt.*;
 import javax.swing.*;
 
-// From p. 671. 
-
+/**
+ * From p. 671. A fifth version of GridBagLayout, with five asymmetric buttons
+ * forming a cross pattern in the JFrame.
+ */
 public class GridBag5 extends JPanel {
 
 	private static final long serialVersionUID = -8148169103874001652L;
@@ -14,7 +16,8 @@ public class GridBag5 extends JPanel {
 	public GridBag5() {
 		setLayout(new GridBagLayout());
 		int x, y; // for clarity
-		x = 1; y = 0;
+		x = 1;
+		y = 0;
 		addGB(new JButton("North"), x, y);
 		constraints.ipadx = 25; // add padding
 		constraints.ipady = 25;

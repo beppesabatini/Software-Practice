@@ -4,8 +4,13 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-// From p. 716-717.
-
+/**
+ * From Learning Java, 3rd Edition, p. 716-717. The user can drag around an
+ * image in front of a background. This is a subclass of DragImage; the
+ * checkboard background pattern is drawn in that parent. The difference is that
+ * in ClippedDragImage, this subclass, only the obscured portion (the "affected
+ * area") needs to be redrawn.
+ */
 public class ClippedDragImage extends DragImage {
 
 	private static final long serialVersionUID = 6626155008724302864L;
@@ -43,6 +48,13 @@ public class ClippedDragImage extends DragImage {
 		// Turn off double buffering
 		// RepaintManager.currentManager(null).setDoubleBufferingEnabled(false);
 
+		/*
+		 * Note that the getResource() function below can find the image file even
+		 * though the pathname is incomplete. The "src/ch17" part of the path is
+		 * missing. The getResource() function searches farther down in the directory
+		 * tree. See Chapter 12 and FindResources.java.
+		 */
+		System.out.println("Current Directory: " + System.getProperty("user.dir"));
 		Image image = Toolkit.getDefaultToolkit().getImage(ClippedDragImage.class.getResource(imageFile));
 		image = image.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 		JFrame frame = new JFrame("ClippedDragImage");

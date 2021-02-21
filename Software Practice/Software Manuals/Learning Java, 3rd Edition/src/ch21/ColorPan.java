@@ -4,8 +4,10 @@ import java.awt.*;
 import java.awt.image.*;
 import javax.swing.*;
 
-// From p. 736-737.
-
+/**
+ * From Learning Java, 3rd Edition, p. 736-737. Draws an image of a gradient
+ * with every value of the 32-bit RGB color space.
+ */
 public class ColorPan extends JComponent {
 
 	private static final long serialVersionUID = -2939272634009137042L;

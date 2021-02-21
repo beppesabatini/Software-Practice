@@ -4,8 +4,12 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-// From p. 718-719.
-
+/**
+ * From Learning Java, 3rd Edition, p. 718-719. A simple implementation of a
+ * doodle pad, like an Etch-a-Sketch with a mouse instead of control knobs. The
+ * mouse movements are captured off screen in a DrawPad and printed to the
+ * screen with graphics.drawScreen().
+ */
 public class DoodlePad {
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("DoodlePad");
@@ -26,8 +30,7 @@ public class DoodlePad {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
-
-} // end of class DoodlePad
+}
 
 class DrawPad extends JComponent {
 
@@ -49,8 +52,9 @@ class DrawPad extends JComponent {
 			public void mouseDragged(MouseEvent e) {
 				currentX = e.getX();
 				currentY = e.getY();
-				if (graphics2D != null)
+				if (graphics2D != null) {
 					graphics2D.drawLine(oldX, oldY, currentX, currentY);
+				}
 				repaint();
 				oldX = currentX;
 				oldY = currentY;
