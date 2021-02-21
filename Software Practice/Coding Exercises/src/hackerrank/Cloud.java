@@ -1,16 +1,17 @@
 package hackerrank;
 
 /**
- * Typical enum, used to support CloudJumper exercise. A good simple example of
- * common enum syntax.
+ * Typical enum, used to support the CloudJumper class, which is also in this
+ * package. This is a good simple example of common enum syntax.
  * 
  * @author Beppe Sabatini bsabatini@hotmail.com
  *
  */
 public enum Cloud {
-	CUMULUS(0), THUNDERHEAD(1);
+	CUMULUS(0),
+	THUNDERHEAD(1);
 
-	private int value;
+	private final int value;
 
 	public int getValue() {
 		return (this.value);
