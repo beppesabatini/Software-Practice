@@ -5,8 +5,9 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- * From p. 601-602. Menu bar drop-downs are demonstrated; items can be selected
- * (but have no functionality or output attached).
+ * From Learning Java, 3rd Edition, p. 601-602. Menu bar drop-downs are
+ * demonstrated; items can be selected (but have no functionality or output
+ * attached).
  */
 public class DinnerMenu {
 	@SuppressWarnings("deprecation")

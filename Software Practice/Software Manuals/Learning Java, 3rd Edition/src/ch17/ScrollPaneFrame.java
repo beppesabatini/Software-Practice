@@ -3,7 +3,8 @@ package ch17;
 import javax.swing.*;
 
 /**
- * From p. 609-610. Displays a photo with a scroll frame.
+ * From Learning Java, 3rd Edition, p. 609-610. Displays a photo with a scroll
+ * frame.
  */
 public class ScrollPaneFrame {
 	public static void main(String[] args) {

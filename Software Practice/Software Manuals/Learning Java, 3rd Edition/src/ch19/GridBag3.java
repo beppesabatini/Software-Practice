@@ -4,8 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * From p. 677-678. Another use of the GridBagLayout, now with four asymmetric
- * buttons filling the panel.
+ * From Learning Java, 3rd Edition, p. 677-678. Another use of the
+ * GridBagLayout, now with four asymmetric buttons filling the panel.
  */
 public class GridBag3 extends JPanel {
 

@@ -4,8 +4,9 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * From p. 669-670. Demonstration of a HorizontalBox, which uses BoxLayout.
- * Output from Simon and Garfunkel's song "The Boxer."
+ * From Learning Java, 3rd Edition, p. 669-670. Demonstration of a
+ * HorizontalBox, which uses BoxLayout. Output from Simon and Garfunkel's song
+ * "The Boxer."
  */
 
 public class Boxer extends JPanel {

@@ -3,9 +3,9 @@ package ch18;
 import javax.swing.*;
 
 /**
- * From p. 628-629. Two text fields are displayed. The first field allows any
- * input, but the second field enforces correct data entry, and will not let the
- * user leave the field until bad data is corrected.
+ * From Learning Java, 3rd Edition, p. 628-629. Two text fields are displayed.
+ * The first field allows any input, but the second field enforces correct data
+ * entry, and will not let the user leave the field until bad data is corrected.
  */
 public class Validator {
 	public static void main(String[] args) throws Exception {

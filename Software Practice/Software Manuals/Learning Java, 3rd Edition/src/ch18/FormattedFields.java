@@ -6,8 +6,8 @@ import javax.swing.text.*;
 import java.util.Date;
 
 /**
- * From p. 625-626. Displays a table, with data which has been formatted by
- * Swing functionality.
+ * From Learning Java, 3rd Edition, p. 625-626. Displays a table, with data
+ * which has been formatted by Swing functionality.
  */
 public class FormattedFields {
 	public static void main(String[] args) throws Exception {

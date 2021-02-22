@@ -5,7 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- * From p. 684-686. A non-functional calculator demonstrating GridBagLayout.
+ * From Learning Java, 3rd Edition, p. 684-686. A non-functional calculator
+ * demonstrating GridBagLayout.
  */
 public class Calculator extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 7333772437455711402L;

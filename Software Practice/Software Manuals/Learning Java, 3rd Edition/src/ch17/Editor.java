@@ -6,8 +6,9 @@ import java.io.*;
 import javax.swing.*;
 
 /**
- * From p. 618-620. A demonstration of a Menu Bar "File" drop-down. Selections
- * are not acted on, they are not attached to any functionality.
+ * From Learning Java, 3rd Edition, p. 618-620. A demonstration of a Menu Bar
+ * "File" drop-down. Selections are not acted on, they are not attached to any
+ * functionality.
  */
 public class Editor extends JFrame implements ActionListener {
 

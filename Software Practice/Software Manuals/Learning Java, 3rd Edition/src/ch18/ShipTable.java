@@ -4,8 +4,8 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 /**
- * From p. 647-648. A shipping schedule is implemented as a JTable, displaying
- * hard-coded data.
+ * From Learning Java, 3rd Edition, p. 647-648. A shipping schedule is
+ * implemented as a JTable, displaying hard-coded data.
  */
 public class ShipTable {
 	public static class ShipTableModel extends AbstractTableModel {

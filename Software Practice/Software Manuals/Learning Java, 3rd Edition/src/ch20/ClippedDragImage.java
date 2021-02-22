@@ -7,9 +7,9 @@ import javax.swing.*;
 /**
  * From Learning Java, 3rd Edition, p. 716-717. The user can drag around an
  * image in front of a background. This is a subclass of DragImage; the
- * checkboard background pattern is drawn in that parent. The difference is that
- * in ClippedDragImage, this subclass, only the obscured portion (the "affected
- * area") needs to be redrawn.
+ * checkerboard background pattern is drawn in that parent. The difference is
+ * that here in ClippedDragImage (this file), only the obscured portion (the
+ * "affected area") needs to be redrawn.
  */
 public class ClippedDragImage extends DragImage {
 

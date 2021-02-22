@@ -6,8 +6,9 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- * From p. 590-592. A Drive-Through Menu illustrates both checkboxes and radio
- * buttons; a button outputs the selection to the console.
+ * From Learning Java, 3rd Edition, p. 590-592. A Drive-Through Menu illustrates
+ * both checkboxes and radio buttons; a button outputs the selection to the
+ * console.
  */
 public class DriveThrough {
 	public static void main(String[] args) {

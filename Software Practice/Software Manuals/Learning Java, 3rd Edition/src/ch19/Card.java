@@ -5,9 +5,9 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- * From p. 671. This demonstrates the Card Layout, which is something like a
- * thin deck of cards which can be shuffled. The manual recommends using the
- * JTabbedPane component instead.
+ * From Learning Java, 3rd Edition, p. 671. This demonstrates the Card Layout,
+ * which is something like a thin deck of cards which can be shuffled. The
+ * manual recommends using the JTabbedPane component instead.
  */
 public class Card extends JPanel {
 

@@ -6,8 +6,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 /**
- * From p. 613-614. A scroll bar and a slider are displayed, with no
- * functionality or output attached.
+ * From Learning Java, 3rd Edition, p. 613-614. A scroll bar and a slider are
+ * displayed, with no functionality or output attached.
  */
 public class Slippery {
 	public static void main(String[] args) {

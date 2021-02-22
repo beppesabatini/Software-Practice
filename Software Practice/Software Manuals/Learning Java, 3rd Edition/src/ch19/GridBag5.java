@@ -4,8 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * From p. 671. A fifth version of GridBagLayout, with five asymmetric buttons
- * forming a cross pattern in the JFrame.
+ * From Learning Java, 3rd Edition, p. 671. A fifth version of GridBagLayout,
+ * with five asymmetric buttons forming a cross pattern in the JFrame.
  */
 public class GridBag5 extends JPanel {
 

@@ -7,8 +7,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 /**
- * From p 632-633. Demonstrates that a JEditorPane can display HTML, and,
- * theoretically, even implement a simple browser.
+ * From Learning Java, 3rd Edition, p. 632-633. Demonstrates that a JEditorPane
+ * can display HTML, and, theoretically, even implement a simple browser.
  */
 public class CanisMinor extends JFrame {
 

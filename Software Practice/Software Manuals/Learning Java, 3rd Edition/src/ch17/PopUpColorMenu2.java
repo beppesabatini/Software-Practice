@@ -7,9 +7,10 @@ import javax.swing.*;
 import utils.LearningJava3Utils;
 
 /**
- * Not in the manual. Includes three buttons which don't do anything, and a
- * right-click (context menu) which is supposed to change the background color
- * (not the button color), but instead,only throws a stack trace. 
+ * Not in the Learning Java manual. Includes three buttons which don't do
+ * anything, and a right-click (context menu) which is supposed to change the
+ * background color (not the button color), but instead,only throws a stack
+ * trace.
  */
 public class PopUpColorMenu2 implements ActionListener {
 	Component selectedComponent;

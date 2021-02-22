@@ -4,8 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * From p. 668. Another demonstration of BorderLayout, now with each JButton in
- * its own panel.
+ * From Learning Java, 3rd Edition, p. 668. Another demonstration of
+ * BorderLayout, now with each JButton in its own panel.
  */
 public class Border2 extends JPanel {
 

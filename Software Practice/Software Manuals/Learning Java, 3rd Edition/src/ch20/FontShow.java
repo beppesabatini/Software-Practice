@@ -13,7 +13,7 @@ import javax.swing.*;
  * (1/72"), the x and y axes intersect in the upper left, and extend with
  * positive values to the right and positive downwards. With every mouse click,
  * the font changes at random, and the font size toggles between large and
- * small. BFS has significantly revised this example.
+ * small. 
  */
 public class FontShow extends JComponent {
 

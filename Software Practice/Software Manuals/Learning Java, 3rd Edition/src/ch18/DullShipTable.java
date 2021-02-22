@@ -3,7 +3,8 @@ package ch18;
 import javax.swing.*;
 
 /**
- * From p. 643-644. Displays a table with values hard-coded in the cells.
+ * From Learning Java, 3rd Edition, p. 643-644. Displays a table with values
+ * hard-coded in the cells.
  */
 public class DullShipTable {
 	public static void main(String[] args) {

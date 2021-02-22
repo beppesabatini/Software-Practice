@@ -55,7 +55,8 @@ public class StatusImage extends JComponent {
 		if (args.length > 0) {
 			filename = args[0];
 		} else {
-			filename = "src/ch21/37.Solo Dancer 01.ed01.jpg";
+			System.out.println("Usage: StatusImage <veryLargePhotoName>");
+			return;
 		}
 
 		Image image = Toolkit.getDefaultToolkit().getImage(filename);

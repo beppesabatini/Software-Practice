@@ -6,7 +6,7 @@ import javax.swing.*;
 
 /**
  * From Learning Java, 3rd Edition, p. 712-713. The user can drag around an
- * image in front of a checkboard background. The entire composite image is
+ * image in front of a checkerboard background. The entire composite image is
  * redrawn with each movement.
  */
 public class DragImage extends JComponent implements MouseMotionListener {

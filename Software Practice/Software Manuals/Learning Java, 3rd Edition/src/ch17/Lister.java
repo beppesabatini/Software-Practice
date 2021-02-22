@@ -5,9 +5,9 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- * From p. 593-594. One specified list of options is displayed as both a combo
- * box (a drop-down selector) and a scroll pane. Only the input to the scroll
- * pane will be displayed.
+ * From Learning Java, 3rd Edition, p. 593-594. One specified list of options is
+ * displayed as both a combo box (a drop-down selector) and a scroll pane. Only
+ * the input to the scroll pane will be displayed.
  */
 public class Lister {
 	public static void main(String[] args) {

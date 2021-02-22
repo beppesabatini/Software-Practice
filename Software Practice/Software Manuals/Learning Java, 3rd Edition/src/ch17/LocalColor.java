@@ -5,8 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- * From p. 620-621. A demonstration of a Color Chooser, here used to enable the user to
- * change the background color.
+ * From Learning Java, 3rd Edition, p. 620-621. A demonstration of a Color
+ * Chooser, here used to enable the user to change the background color.
  */
 public class LocalColor {
 	public static void main(String[] args) {

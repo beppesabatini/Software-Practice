@@ -5,7 +5,8 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 /**
- * From p. 599-600. A demonstration of six kinds of label borders.
+ * From Learning Java, 3rd Edition, p. 599-600. A demonstration of six kinds of
+ * label borders.
  */
 public class Borders {
 	public static void main(String[] args) {

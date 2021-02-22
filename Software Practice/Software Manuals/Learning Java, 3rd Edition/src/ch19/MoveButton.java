@@ -4,8 +4,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- * From p. 687-688. Click OUTSIDE the non-functional button to move it around in
- * the frame.
+ * From Learning Java, 3rd Edition, p. 687-688. Click OUTSIDE the non-functional
+ * button to move it around in the frame.
  */
 public class MoveButton extends JPanel {
 

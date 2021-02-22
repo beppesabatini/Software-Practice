@@ -5,8 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- * From p. 623-624. Text can be entered into a given text area, either
- * directly, or through a separate associated text field.
+ * From Learning Java, 3rd Edition, p. 623-624. Text can be entered into a given
+ * text area, either directly, or through a separate associated text field.
  */
 public class TextEntryBox {
 

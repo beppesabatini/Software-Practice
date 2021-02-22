@@ -3,8 +3,9 @@ package ch17;
 import javax.swing.*;
 
 /**
- * From p. 612. A demonstration of a frame with two tabbed panels; one includes
- * non-functional widgets, and the other one displays an image.
+ * From Learning Java, 3rd Edition, p. 612. A demonstration of a frame with two
+ * tabbed panels; one includes non-functional widgets, and the other one
+ * displays an image.
  */
 public class TabbedPaneFrame {
 	public static void main(String[] args) {

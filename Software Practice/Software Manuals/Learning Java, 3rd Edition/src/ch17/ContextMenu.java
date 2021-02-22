@@ -5,8 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- * From p. 607-608. A demo of a Context Menu, that is, the right-mouse-click
- * menu.
+ * From Learning Java, 3rd Edition, p. 607-608. A demo of a Context Menu, that
+ * is, the right-mouse-click menu.
  */
 public class ContextMenu implements ActionListener {
 	JTextArea textArea = new JTextArea();

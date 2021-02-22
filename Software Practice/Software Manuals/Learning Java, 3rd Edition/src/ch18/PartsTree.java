@@ -7,11 +7,12 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 
 /**
- * From p. 641-642. Displays a navigation-style tree for examining the file
- * system. A button to add an element to the tree is only enabled when some
- * certain existing element is selected. The new dlement is added at the same
- * level as the selected (highlighted) element, unless the selected element is
- * the root of the tree, in which case it is added as a first-class child.
+ * From Learning Java, 3rd Edition, p. 641-642. Displays a navigation-style tree
+ * for examining the file system. A button to add an element to the tree is only
+ * enabled when some certain existing element is selected. The new element is
+ * added at the same level as the selected (highlighted) element, unless the
+ * selected element is the root of the tree, in which case it is added as a
+ * first-class child.
  */
 public class PartsTree {
 	public static void main(String[] args) {

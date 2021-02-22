@@ -5,8 +5,8 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 /**
- * From p. 649-650. A demonstration of a very simple spreadsheet, which can
- * evaluate basic expressions like (A0 + B0) * 2
+ * From Learning Java, 3rd Edition, p. 649-650. A demonstration of a very simple
+ * spreadsheet, which can evaluate basic expressions like (A0 + B0) * 2
  */
 public class SpreadsheetModel extends AbstractTableModel {
 

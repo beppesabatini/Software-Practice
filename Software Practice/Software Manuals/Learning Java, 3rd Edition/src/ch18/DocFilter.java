@@ -4,8 +4,8 @@ import javax.swing.*;
 import javax.swing.text.*;
 
 /**
- * From p. 627. Demonstrates a document filter, in this case, one which converts
- * all input to a document to upper case.
+ * From Learning Java, 3rd Edition, p. 627. Demonstrates a document filter, in
+ * this case, one which converts all input to a document to upper case.
  */
 public class DocFilter {
 	public static void main(String[] args) throws Exception {

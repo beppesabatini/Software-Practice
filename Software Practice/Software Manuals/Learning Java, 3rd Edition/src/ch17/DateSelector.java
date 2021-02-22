@@ -5,8 +5,9 @@ import javax.swing.event.*;
 import java.util.*;
 
 /**
- * From p. 596-597. This widget is supposed to demonstrate week-long jumps in a
- * Date Selector, but it does not seem to behave as described.
+ * From Learning Java, 3rd Edition, p. 596-597. This widget is supposed to
+ * demonstrate week-long jumps in a Date Selector, but it does not seem to
+ * behave as described.
  */
 public class DateSelector {
 

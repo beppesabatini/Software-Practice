@@ -3,8 +3,8 @@ package ch17;
 import javax.swing.*;
 
 /**
- * From p. 617-618. Examples of a variety of widgets which allow the user to
- * make a selection.
+ * From Learning Java, 3rd Edition, p. 617-618. Examples of a variety of widgets
+ * which allow the user to make a selection.
  */
 public class ExerciseOptions {
 	public static void main(String[] args) {

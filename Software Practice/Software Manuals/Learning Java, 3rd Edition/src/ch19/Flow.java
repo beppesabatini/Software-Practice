@@ -3,7 +3,8 @@ package ch19;
 import javax.swing.*;
 
 /**
- * From p. 664. A definition of Flow Layout, the default for a JPanel.
+ * From Learning Java, 3rd Edition, p. 664. A definition of Flow Layout, the
+ * default for a JPanel.
  */
 public class Flow extends JPanel {
 

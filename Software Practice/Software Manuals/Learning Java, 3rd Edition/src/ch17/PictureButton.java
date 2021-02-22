@@ -4,8 +4,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- * From p. 587-588. Displays an image in a frame, which is configured as a
- * button, and outputs to the console.
+ * From Learning Java, 3rd Edition, p. 587-588. Displays an image in a frame,
+ * which is configured as a button, and outputs to the console.
  */
 public class PictureButton {
 	public static void main(String[] args) {

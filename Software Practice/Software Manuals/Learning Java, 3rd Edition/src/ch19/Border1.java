@@ -4,7 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * From p. 667. Demonstrates the BorderLayout.
+ * From Learning Java, 3rd Edition, p. 667. Demonstrates the BorderLayout.
  */
 public class Border1 extends JPanel {
 

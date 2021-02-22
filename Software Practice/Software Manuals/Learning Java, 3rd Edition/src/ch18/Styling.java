@@ -5,8 +5,8 @@ import javax.swing.*;
 import javax.swing.text.*;
 
 /**
- * From p. 625-636. A very simple example of how to display fonts in red, blue,
- * orange, bold, and italic.
+ * From Learning Java, 3rd Edition, p. 625-636. A very simple example of how to
+ * display fonts in red, blue, orange, bold, and italic.
  */
 public class Styling extends JFrame {
 

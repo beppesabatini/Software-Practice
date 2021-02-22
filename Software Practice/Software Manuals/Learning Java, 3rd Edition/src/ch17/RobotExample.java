@@ -2,9 +2,10 @@ package ch17;
 
 import java.awt.*;
 import java.awt.event.*;
+
 /**
- * This function is not in the manual. See the JavaDoc (mouse over "Robot") for
- * more info.
+ * This function is not in the Learning Java manual. See the JavaDoc (mouse over
+ * "Robot") for more info.
  */
 public class RobotExample {
 	@SuppressWarnings("deprecation")

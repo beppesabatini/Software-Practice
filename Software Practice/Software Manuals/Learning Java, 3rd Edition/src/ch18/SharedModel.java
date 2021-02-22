@@ -4,7 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * From p. 631. Three text areas in one JFrame share the same document.
+ * From Learning Java, 3rd Edition, p. 631. Three text areas in one JFrame share
+ * the same document.
  */
 public class SharedModel {
 

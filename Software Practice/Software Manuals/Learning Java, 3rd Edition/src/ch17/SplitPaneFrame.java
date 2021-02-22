@@ -4,8 +4,9 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * From p. 610-611. Displays two photos in a split-panel frame. Note the syntax
- * in the Java code for accessing image files on disk.
+ * From Learning Java, 3rd Edition, p. 610-611. Displays two photos in a
+ * split-panel frame. Note the syntax in the Java code for accessing image files
+ * on disk.
  */
 public class SplitPaneFrame {
 	public static void main(String[] args) {

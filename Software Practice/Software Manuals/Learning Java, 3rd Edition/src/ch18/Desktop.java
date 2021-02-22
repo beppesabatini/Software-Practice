@@ -3,7 +3,8 @@ package ch18;
 import javax.swing.*;
 
 /**
- * From p. 652-652. Displays five JInternalFrames inside a JInternalFrame.
+ * From Learning Java, 3rd Edition, p. 652-652. Displays five JInternalFrames
+ * inside a JInternalFrame.
  */
 public class Desktop {
 	public static void main(String[] args) {

@@ -4,9 +4,9 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * From p. 675-676. An example of GridBagLayout with the buttons each filling
- * their one-ninth of the JFrame, because all have equal weight and the "fill"
- * constraint is set to "BOTH."
+ * From Learning Java, 3rd Edition, p. 675-676. An example of GridBagLayout with
+ * the buttons each filling their one-ninth of the JFrame, because all have
+ * equal weight and the "fill" constraint is set to "BOTH."
  */
 public class GridBag2 extends JPanel {
 

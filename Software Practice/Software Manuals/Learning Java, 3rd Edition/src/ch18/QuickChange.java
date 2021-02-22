@@ -5,8 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- * p. 654-655. The application's look-and-feel can be changed on the fly by
- * selecting a menu bar item.
+ * From Learning Java, 3rd Edition, p. 654-655. The application's look-and-feel
+ * can be changed on the fly by selecting a menu bar item.
  * 
  */
 public class QuickChange extends JFrame {

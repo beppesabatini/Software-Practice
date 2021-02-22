@@ -4,7 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * From p. 665-666. An example of GridLayout.
+ * From Learning Java, 3rd Edition, p. 665-666. An example of GridLayout.
  */
 public class Grid extends JPanel {
 
