@@ -2,8 +2,9 @@ package ch12;
 
 import java.io.*;
 
-// This code does not appear in Learning Java ch. 12.
-
+/**
+ * This code does not appear in Learning Java chap. 12.
+ */
 public class CopyStreams {
 	public static void main(String[] args) throws Exception {
 		if(args.length != 2) {

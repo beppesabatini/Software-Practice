@@ -1,6 +1,8 @@
 package ch09;
 
-// This code not included in Learning Java ch. 9.
+/**
+ * This code is not included in Learning Java chap. 9.
+ */
 public class Uncaught implements Runnable {
 
 	public static void main(String[] args) {

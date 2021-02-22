@@ -1,7 +1,8 @@
 package ch13;
 
-// From p. 457. 
-
+/**
+ * From Learning Java, 3rd Edition, p. 457.
+ */
 public class MyCalculation extends WorkRequest {
 
 	private static final long serialVersionUID = -7284938593681407535L;

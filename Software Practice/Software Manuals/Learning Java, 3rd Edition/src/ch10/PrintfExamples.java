@@ -3,8 +3,13 @@ package ch10;
 import java.util.*;
 import static java.lang.System.*;
 
-// Not included in Learning Java ch. 10 but still relevant.
-// Set Eclipse to UTF-8 through Window/Preferences/General/Workspace/Text File Encoding
+/**
+ * Not included in Learning Java chap. 10, but still relevant. If you can't read
+ * the Chinese here, set Eclipse to UTF-8 through:
+ * <pre>
+ * Window/Preferences/General/Workspace/Text File Encoding
+ * </pre>
+ */
 public class PrintfExamples {
 	public static void main(String[] args) {
 		System.out.printf("a %1$s is a %1$s is a %1$s...", "rose");

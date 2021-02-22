@@ -4,9 +4,11 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-// This version of "Hello Java" adds a button to change the color of the string.
-// Users can still mouse-drag around the colorful string.
-// From pp. 49-50.
+/**
+ * From Learning Java, 3rd Edition, pp. 49-50. This version of "Hello Java" adds
+ * a button to change the color of the string. Users can still mouse-drag around
+ * the colorful string.
+ */
 public class HelloJava3 {
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("HelloJava3");
@@ -34,7 +36,7 @@ class HelloComponent3 extends JComponent implements MouseMotionListener, ActionL
 		changeColorButton = new JButton("Change Color");
 		// Tells the component how to arrange components which are
 		// added to it. A FlowLayout is a LayoutManager, one of the
-		// standard ones. 
+		// standard ones.
 		setLayout(new FlowLayout());
 		add(changeColorButton);
 		changeColorButton.addActionListener(this);
@@ -45,14 +47,14 @@ class HelloComponent3 extends JComponent implements MouseMotionListener, ActionL
 		g.drawString(theMessage, messageX, messageY);
 	}
 
-	// Implements a MouseMotionListener interface function. 
+	// Implements a MouseMotionListener interface function.
 	public void mouseDragged(MouseEvent e) {
 		messageX = e.getX();
 		messageY = e.getY();
 		repaint();
 	}
 
-	// Implements a MouseMotionListener interface function. 
+	// Implements a MouseMotionListener interface function.
 	public void mouseMoved(MouseEvent e) {
 	}
 
@@ -68,7 +70,7 @@ class HelloComponent3 extends JComponent implements MouseMotionListener, ActionL
 		// This will rotate through the colors array.
 		// colorIndex = colorIndex + 1;
 		// The above is not thread safe; a different thread
-		// might be running here before the out-of-bounds condition 
+		// might be running here before the out-of-bounds condition
 		// is tested. That's why this function is synchronized.
 		if (++colorIndex == someColors.length) {
 			colorIndex = 0;

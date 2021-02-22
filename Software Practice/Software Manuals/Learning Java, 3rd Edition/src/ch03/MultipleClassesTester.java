@@ -1,5 +1,8 @@
 package ch03;
 
+/**
+ * Not from the Learning Java manual.
+ */
 public class MultipleClassesTester {
 
 	public static void main(String[] args) {

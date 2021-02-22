@@ -1,8 +1,9 @@
 package ch09;
 
-// Does not run. Note applets are no longer supported by Java.
-// This code not included in Learning Java ch. 9. 
-
+/**
+ * This code is not included in Learning Java chap. 9. This does not run. Note
+ * that applets are no longer supported by Java.
+ */
 public class Clock extends UpdateApplet {
 
 	private static final long serialVersionUID = 1254350238918281618L;

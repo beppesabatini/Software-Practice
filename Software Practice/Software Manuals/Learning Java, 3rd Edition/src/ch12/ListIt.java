@@ -2,11 +2,13 @@ package ch12;
 
 import java.io.*;
 
-// Opens a file and prints it to standard out. From p. 410.
-
+/**
+ * From Learning Java, 3rd Edition, p. 410. Opens a file and prints it to
+ * the console.
+ */
 class ListIt {
 	public static void main(String args[]) throws Exception {
-		if(args.length <= 0) {
+		if (args.length <= 0) {
 			System.out.println("Usage: ListIt <filename>");
 			return;
 		}

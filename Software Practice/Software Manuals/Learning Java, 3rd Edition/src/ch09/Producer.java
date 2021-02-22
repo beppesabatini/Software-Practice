@@ -2,7 +2,9 @@ package ch09;
 
 import java.util.*;
 
-// From p. 267-268.
+/**
+ * From Learning Java, 3rd Edition, p. 267-268.
+ */
 public class Producer implements Runnable {
 	static final int MAXQUEUE = 5;
 	private List<String> messages = new ArrayList<String>();

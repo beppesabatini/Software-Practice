@@ -6,7 +6,9 @@ import java.util.concurrent.*;
 import java.net.*;
 import java.io.IOException;
 
-// From p. 293-294
+/**
+ * From Learning Java, 3rd Edition, p. 293-294.
+ */
 public class SiteTimer {
 	CyclicBarrier barrier;
 	List<Result> results = new ArrayList<Result>();

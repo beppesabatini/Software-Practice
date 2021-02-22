@@ -2,7 +2,9 @@ package ch11;
 
 import java.util.logging.*;
 
-// From p. 383.
+/**
+ * From Learning Java, 3rd Edition, p. 383.
+ */
 public class LogTest {
 	public static void main(String argv[]) {
 		Logger logger = Logger.getLogger("com.oreilly.LogTest");

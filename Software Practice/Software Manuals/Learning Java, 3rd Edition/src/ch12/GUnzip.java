@@ -3,8 +3,9 @@ package ch12;
 import java.io.*;
 import java.util.zip.*;
 
-// From p. 420-421.
-
+/**
+ * From Learning Java, 3rd Edition, p. 420-421.
+ */
 public class GUnzip {
 	public static int sChunk = 8192;
 
@@ -33,7 +34,7 @@ public class GUnzip {
 		byte[] buffer = new byte[sChunk];
 		// decompress the file
 		try {
-			String outputName= "output\\" + source.substring(zipname.lastIndexOf('\\') + 1, source.length()); 
+			String outputName = "output\\" + source.substring(zipname.lastIndexOf('\\') + 1, source.length());
 			FileOutputStream out = new FileOutputStream(outputName);
 			int length;
 			while ((length = zipin.read(buffer, 0, sChunk)) != -1) {
@@ -41,7 +42,7 @@ public class GUnzip {
 			}
 			out.close();
 			System.out.println("File unzipped at: " + outputName);
-			} catch (IOException e) {
+		} catch (IOException e) {
 			System.out.println("Couldn't decompress " + args[0] + ".");
 		}
 		try {

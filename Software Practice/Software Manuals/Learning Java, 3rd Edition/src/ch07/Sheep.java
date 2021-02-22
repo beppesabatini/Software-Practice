@@ -1,11 +1,9 @@
 package ch07;
 
-// import java.util.HashMap;
-
-// Demonstrates cloning. From p. 196. 
-
+/**
+ * From Learning Java, 3rd Edition, p. 196. Demonstrates cloning.
+ */
 public class Sheep implements Cloneable {
-	// HashMap flock = new HashMap();
 
 	// Overrides the clone() function in the superclass, which is "Object."
 	public Sheep clone() {

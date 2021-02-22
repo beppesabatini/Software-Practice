@@ -3,12 +3,13 @@ package ch03;
 import java.net.*;
 
 /**
- * This program is supposed to be "evil" because it accesses another computer on
- * the Internet. Two Run Configurations are defined in this project; one runs
- * with no security, and the other runs with the default java.security.manager.
- * The function succeeds with no security, and fails when security is enforced.
- * Note that when no run configuration has been invoked, but only one run
- * configuration has been defined, Eclipse defaults to invoking the defined one.
+ * From Learning Java, 3rd Edition, p. 79. This program is supposed to be "evil"
+ * because it accesses another computer on the Internet. Two Run Configurations
+ * are defined in this project; one runs with no security, and the other runs
+ * with the default java.security.manager. The function succeeds with no
+ * security, and fails when security is enforced. Note that when no run
+ * configuration has been invoked, but only one run configuration has been
+ * defined, Eclipse defaults to invoking the defined one.
  * 
  */
 public class EvilEmpire {

@@ -2,8 +2,10 @@ package ch11;
 
 import java.util.*;
 
-// The point of this, if any, is that more than one Observer can be 
-// associated with an object at one time. From p. 387.
+/**
+ * From Learning Java, 3rd Edition, p. 387. The point of this, if any, is that
+ * more than one Observer can be associated with an object at one time.
+ */
 @SuppressWarnings("deprecation")
 public class MessageBoard extends Observable {
 	private String message;
@@ -26,7 +28,7 @@ public class MessageBoard extends Observable {
 		board.addObserver(joe);
 		board.changeMessage("More Homework!");
 	}
-} // end of class MessageBoard
+}
 
 @SuppressWarnings("deprecation")
 class Student implements Observer {

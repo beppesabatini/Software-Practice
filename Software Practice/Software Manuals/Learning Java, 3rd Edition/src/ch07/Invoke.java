@@ -2,19 +2,21 @@ package ch07;
 
 import java.lang.reflect.*;
 
-// From p. 205
-
+/**
+ * From Learning Java, 3rd Edition, p. 205
+ */
 class Invoke {
 	public static void main(String[] args) {
-		if(args.length < 2) {
-			System.out.println("Please invoke in the format <class name> <method name>");
+		if (args.length < 2) {
+			System.out.println("Usage: <class name> <method name>");
 			System.exit(1);
 		}
 		try {
 			Class<?> c = Class.forName(args[0]);
 			Method m = c.getMethod(args[1]);
 			Object ret = m.invoke(null);
-			System.out.println("Invoked static method: " + args[1] + " of class: " + args[0] + " with no args\nResults: " + ret);
+			String message = "Invoked static method: " + args[1] + " of class: " + args[0] + " with no args\nResults: " + ret;
+			System.out.println(message);
 		} catch (ClassNotFoundException e) {
 			System.out.println(e);
 			// Class.forName( ) can't find the class

@@ -3,8 +3,9 @@ package ch13;
 import java.net.Socket;
 import java.io.*;
 
-// From p. 422.
-
+/**
+ * From Learning Java, 3rd Edition, p. 422.
+ */
 public class DateAtHost extends java.util.Date {
 
 	private static final long serialVersionUID = -8114102028149368476L;

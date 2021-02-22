@@ -1,5 +1,8 @@
 package ch03;
 
+/**
+ * Not from the Learning Java manual.
+ */
 public class MultipleClasses {
 	static public void main(String[] args) {
 		System.out.println("Hello World");

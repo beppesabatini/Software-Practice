@@ -3,11 +3,11 @@ package ch12;
 import java.io.*;
 import java.util.*;
 
-// Serializes a hash table and write it to disk.
-// (Run "Load" to deserialize the disk file and echo it to standard out.) 
-// The input data and output file are both hard-coded in this example.
-// From p. 416.
-
+/**
+ * From Learning Java, 3rd Edition, p. 416. Serializes a hash table and write it
+ * to disk. (Run "Load" to deserialize the disk file and echo it to standard
+ * out.) The input data and output file are both hard-coded in this example.
+ */
 public class Save {
 	public static void main(String[] args) {
 		Hashtable<String, Object> hashtable = new Hashtable<String, Object>();

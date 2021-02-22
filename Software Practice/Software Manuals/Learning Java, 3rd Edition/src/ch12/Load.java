@@ -3,10 +3,10 @@ package ch12;
 import java.io.*;
 import java.util.*;
 
-// Deserializes a hashtable and prints it to standard out. 
-// The input and output locations are both hard-coded here. 
-// From p. 416.
-
+/**
+ * From Learning Java, 3rd Edition, p. 416. Deserializes a Hashtable and prints
+ * it to the console. The input and output locations are both hard-coded here.
+ */
 public class Load {
 	public static void main(String[] args) {
 		try {

@@ -4,8 +4,11 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-// In this version of HelloJava, the text string blinks every 300 milliseconds. 
-// The user can still change the string's color and drag it around.
+/**
+ * From Learning Java, 3rd Edition, pp. 58-59. In this version of HelloJava, the
+ * text string blinks every 300 milliseconds. The user can still change the
+ * string's color and drag it around.
+ */
 public class HelloJava4 {
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("HelloJava4");
@@ -63,10 +66,10 @@ class HelloComponent4 extends JComponent implements MouseMotionListener, ActionL
 
 	synchronized private void changeColor() {
 		colorIndex = colorIndex + 1;
-		// This function is now synchronized, to 
-		// prevent a different thread from accessing 
-		// the colorIndex before the out-of-bounds 
-		// handling is invoked. 
+		// This function is now synchronized, to
+		// prevent a different thread from accessing
+		// the colorIndex before the out-of-bounds
+		// handling is invoked.
 		if (colorIndex == someColors.length) {
 			colorIndex = 0;
 		}
@@ -84,7 +87,7 @@ class HelloComponent4 extends JComponent implements MouseMotionListener, ActionL
 				blinkState = !blinkState; // Toggle blinkState.
 				repaint(); // Show the change.
 				// The sleep() function throws an InterruptedException if it
-				// is interrupted by another thread, so a try/catch is needed. 
+				// is interrupted by another thread, so a try/catch is needed.
 				Thread.sleep(300);
 			}
 		} catch (InterruptedException ie) {

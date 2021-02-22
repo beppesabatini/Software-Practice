@@ -2,8 +2,9 @@ package ch13;
 
 import java.rmi.*;
 
-// Similar to p.466-467.
-
+/**
+ * Similar to Learning Java, 3rd Edition, p.466-467.
+ */
 public class MyClient {
 
 	public static void main(String[] args) throws RemoteException {

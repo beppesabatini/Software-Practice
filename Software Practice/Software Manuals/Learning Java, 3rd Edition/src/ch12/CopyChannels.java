@@ -4,8 +4,9 @@ import java.io.*;
 import java.nio.*;
 import java.nio.channels.*;
 
-// This code does not appear in Learning Java ch. 12.
-
+/**
+ * This code does not appear in Learning Java chap. 12.
+ */
 public class CopyChannels {
 	public static void main(String[] args) throws Exception {
 		String fromFileName = args[0];

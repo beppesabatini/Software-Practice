@@ -3,8 +3,8 @@ package ch16;
 import javax.swing.*;
 
 /**
- * From p. 566. An attempt to show the difference between a JFrame and a
- * JWindow.
+ * From Learning Java, 3rd Edition, p. 566. An attempt to show the difference
+ * between a JFrame and a JWindow.
  */
 public class TopLevelWindows {
 	public static void main(String[] args) {

@@ -6,7 +6,9 @@ import java.util.concurrent.*;
 
 import ch13.TinyHttpdConnection;
 
-// Not clear yet how to use this. From p. 284.
+/**
+ * From Learning Java, 3rd Edition, p. 284. Not clear yet how to use this.
+ */
 public class ExecutorHttpd {
 	ExecutorService executor = Executors.newFixedThreadPool(3);
 

@@ -3,7 +3,9 @@ package ch09;
 import java.net.*;
 import java.io.*;
 
-// This code not included in Learning Java ch. 09.
+/**
+ * This code not included in Learning Java chap. 09.
+ */
 public class ShowStates {
 
 	public static void main(String[] args) throws Exception {
@@ -28,5 +30,4 @@ public class ShowStates {
 			Thread.sleep(1000);
 		}
 	}
-
 }

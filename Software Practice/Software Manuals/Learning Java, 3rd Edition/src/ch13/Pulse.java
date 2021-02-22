@@ -3,9 +3,10 @@ package ch13;
 import java.net.*;
 import java.io.*;
 
-// Seems to talk to HeartBeat, which uses applets, which are no 
-// longer supported. From p. 453.
-
+/**
+ * From Learning Java, 3rd Edition, p. 453. Seems to talk to HeartBeat, which
+ * uses applets, which are no longer supported.
+ */
 public class Pulse {
 	public static void main(String[] argv) throws IOException {
 

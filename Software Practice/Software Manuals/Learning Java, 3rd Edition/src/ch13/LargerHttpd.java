@@ -9,8 +9,9 @@ import java.nio.channels.*;
 import java.nio.charset.*;
 import java.util.regex.*;
 
-// From p. 478-481.
-
+/**
+ * From Learning Java, 3rd Edition, p. 478-481.
+ */
 public class LargerHttpd {
 	Selector clientSelector;
 

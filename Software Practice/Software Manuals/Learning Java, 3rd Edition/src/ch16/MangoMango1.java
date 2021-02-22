@@ -4,8 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * From p. 568. A label and a button, both non-functional, are added to a
- * content pane.
+ * From Learning Java, 3rd Edition, p. 568. A label and a button, both
+ * non-functional, are added to a content pane.
  */
 public class MangoMango1 {
 	public static void main(String[] args) {

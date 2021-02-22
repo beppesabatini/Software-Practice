@@ -2,12 +2,13 @@ package ch08;
 
 import java.util.*;
 
-// The point here is that an instance of instance of List can 
-// be converted to an instance of Set without knowing the exact
-// actual data type in the containers. Similar to p. 242.
-
+/**
+ * Similar to Learning Java, 3rd Edition, p. 242. The point here is that an
+ * instance of instance of List can be converted to an instance of Set without
+ * knowing the exact actual data type in the containers.
+ */
 public class Capture {
-	// The first <T> here defines the name of the type variable, 
+	// The first <T> here defines the name of the type variable,
 	// the stand-in for the generic type.
 	static <T> Set<T> listToSet(List<T> list) {
 		Set<T> set = new HashSet<T>();
@@ -22,7 +23,7 @@ public class Capture {
 		List list = new ArrayList();
 		list.add(1);
 		list.add(2);
-		
+
 		// Here, the wildcard List<?> is captured.
 		Set<?> set = listToSet(list);
 		System.out.println(set);

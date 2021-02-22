@@ -1,13 +1,14 @@
 package ch09;
 
-// Note applets are no longer supported by Java. This will not run these days. 
-// From p. 259
-
+/**
+ * From Learning Java, 3rd Edition, p. 259. Note that applets are no longer
+ * supported by Java. This will not run these days.
+ */
 @SuppressWarnings("deprecation")
 public class UpdateApplet extends java.applet.Applet implements Runnable {
 
 	private static final long serialVersionUID = -5593364989580587986L;
-	
+
 	Thread thread;
 	boolean running;
 	int updateInterval = 1000;

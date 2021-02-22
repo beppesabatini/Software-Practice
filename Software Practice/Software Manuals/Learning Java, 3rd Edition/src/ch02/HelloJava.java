@@ -5,7 +5,7 @@ import javax.swing.*;
 // Chapter two provides four different ways to write "Hello, Java."
 
 /*
-	// This writes to the command line. From p. 30.
+	// This writes to the command line. From Learning Java, 3rd Edition, p. 30.
 	public static void main(String[] args) {
 		System.out.println("Hello, Java!");
 	}
@@ -14,7 +14,7 @@ import javax.swing.*;
 
 /*
 // This launches an empty frame; the words appear only in the title bar.
-// From p. 31.
+// From Learning Java, 3rd Edition, p. 31.
 public class HelloJava {
 	public static void main(String[] args) {
 		javax.swing.JFrame frame = new javax.swing.JFrame("Hello, Java!");
@@ -25,7 +25,7 @@ public class HelloJava {
 */
 
 /*
-// Now the words appear in the center of the frame. From p. 31.
+// Now the words appear in the center of the frame. From Learning Java, 3rd Edition, p. 31.
 public class HelloJava {
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("HelloJava");
@@ -38,8 +38,10 @@ public class HelloJava {
 }
 */
 
-// This is a (sort-of) object-oriented version of the previous. 
-// Discussed on p. 36, 41.
+/**
+ * Discussed in Learning Java, 3rd Edition, p. 36, 41. This is a (sort-of)
+ * object-oriented version of three earlier versions.
+ */
 public class HelloJava {
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("HelloJava");
@@ -52,7 +54,7 @@ public class HelloJava {
 }
 
 // The JComponent initializer is large and does most of the work. This 
-// overrides one function in it. From p. 36. 
+// overrides one function in it. From Learning Java, 3rd Edition, p. 36. 
 class HelloComponent extends JComponent {
 
 	private static final long serialVersionUID = -4937192801804587418L;

@@ -4,8 +4,9 @@ import java.net.*;
 import java.io.*;
 import java.util.regex.*;
 
-//From pg 444.
-
+/**
+ * From Learning Java, 3rd Edition, p. 444.
+ */
 public class TinyHttpdConnection implements Runnable {
 	Socket client;
 

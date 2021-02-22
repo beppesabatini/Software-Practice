@@ -2,12 +2,13 @@ package ch12.learningjava.io;
 
 import java.io.*;
 
-// From p. 403.
-
+/**
+ * From Learning Java, 3rd Edition, p. 403.
+ */
 public class rot13InputStream extends FilterInputStream {
 
 	// No main function in this file.
-	
+
 	public rot13InputStream(InputStream i) {
 		super(i);
 	}

@@ -2,11 +2,12 @@ package ch12;
 
 import java.io.*;
 
-// From p. 401.
-
+/**
+ * From Learning Java, 3rd Edition, p. 401.
+ */
 class LoggerDaemon extends Thread {
-	
-	// No main function in this class. From p. 401.
+
+	// No main function in this class.
 
 	PipedReader in = new PipedReader();
 

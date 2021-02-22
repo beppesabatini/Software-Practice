@@ -1,7 +1,10 @@
 package ch09;
 
-// The point of this, if any, is that priorities are platform-dependent and 
-// should be considered just a "hint" for the threads. Similar to p.275.
+/**
+ * Similar to Learning Java, 3rd Edition, p.275. The point of this, if any, is
+ * that priorities are platform-dependent and should be considered just a "hint"
+ * for the threads.
+ */
 public class Thready {
 	public static void main(String args[]) {
 		Thread foo = new ShowThread("Foo");

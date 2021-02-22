@@ -3,11 +3,11 @@ package ch11;
 import java.io.*;
 // import java.net.*;
 
-// This code does not appear in Learning Java ch. 11. 
-// The point of the example is not clear.
-// This reads the user's input (in green lettering) from the console.
-// After the user presses <Enter>, his input is echoed back to him.
-
+/**
+ * This code does not appear in Learning Java chap. 11. The point of the example
+ * is not clear. This reads the user's input (in green lettering) from the
+ * console. After the user presses <Enter>, his input is echoed back to him.
+ */
 public class LogListener {
 	public static void main(String[] args) throws IOException {
 

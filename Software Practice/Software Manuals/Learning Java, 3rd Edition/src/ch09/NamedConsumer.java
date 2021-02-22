@@ -1,7 +1,8 @@
 package ch09;
 
-// From p. 269-270.
-
+/**
+ * From Learning Java, 3rd Edition, p. 269-270.
+ */
 public class NamedConsumer implements Runnable {
 	Producer producer;
 	String name;

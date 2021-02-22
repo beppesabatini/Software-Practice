@@ -4,8 +4,9 @@ import java.net.*;
 import java.io.*;
 import java.util.concurrent.*;
 
-// From pg 444.
-
+/**
+ * From Learning Java, 3rd Edition, p. 444.
+ */
 public class TinyHttpd {
 	public static void main(String argv[]) throws IOException {
 		Executor executor = Executors.newFixedThreadPool(3);

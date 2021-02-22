@@ -1,6 +1,8 @@
 package ch09;
 
-// From p. 267.
+/**
+ * From Learning Java, 3rd Edition, p. 267.
+ */
 public class Consumer implements Runnable {
 	Producer producer;
 

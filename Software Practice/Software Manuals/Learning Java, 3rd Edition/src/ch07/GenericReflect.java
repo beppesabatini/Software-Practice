@@ -4,8 +4,8 @@ import java.util.*;
 import java.lang.reflect.*;
 
 /**
- * Similar to what appears on p. 208. A quick introduction to accessing
- * information about Generics.
+ * Similar to what appears on Learning Java, 3rd Edition, p. 208. A quick
+ * introduction to accessing information about Generics.
  */
 public class GenericReflect {
 

@@ -2,7 +2,9 @@ package ch08;
 
 import java.util.*;
 
-// This code also does not appear in Learning Java, chap. 8.
+/**
+ * This code also does not appear in Learning Java, chap. 8.
+ */
 public class Variant {
 	Object get() {
 		return null;

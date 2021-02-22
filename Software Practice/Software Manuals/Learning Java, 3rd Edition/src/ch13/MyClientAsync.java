@@ -2,8 +2,9 @@ package ch13;
 
 import java.rmi.*;
 
-// From p. 472-473. 
-
+/**
+ * From Learning Java, 3rd Edition, p. 472-473.
+ */
 public class MyClientAsync extends java.rmi.server.UnicastRemoteObject implements WorkListener {
 
 	private static final long serialVersionUID = -8872393680041914164L;

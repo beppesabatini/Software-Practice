@@ -3,8 +3,9 @@ package ch11;
 import java.io.*;
 import java.util.*;
 
-// From p. 372.
-
+/**
+ * From Learning Java, 3rd Edition, p. 372.
+ */
 public class WordSort {
 	public static void main(String[] args) throws IOException {
 		if (args.length < 2) {

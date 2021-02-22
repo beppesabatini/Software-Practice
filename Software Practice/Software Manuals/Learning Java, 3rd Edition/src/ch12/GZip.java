@@ -3,8 +3,9 @@ package ch12;
 import java.io.*;
 import java.util.zip.*;
 
-// From p. 419.
-
+/**
+ * From Learning Java, 3rd Edition, p. 419.
+ */
 public class GZip {
 	public static int sChunk = 8192;
 
@@ -15,9 +16,8 @@ public class GZip {
 		}
 		// create output stream
 		String zipname = args[0] + ".gz";
-		String outputName= "output\\" + zipname.substring(zipname.lastIndexOf('\\') + 1, zipname.length()); 
-		
-		
+		String outputName = "output\\" + zipname.substring(zipname.lastIndexOf('\\') + 1, zipname.length());
+
 		GZIPOutputStream zipout;
 		try {
 			FileOutputStream out = new FileOutputStream(outputName);

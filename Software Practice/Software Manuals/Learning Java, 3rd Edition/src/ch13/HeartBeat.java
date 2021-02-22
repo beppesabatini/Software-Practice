@@ -3,16 +3,17 @@ package ch13;
 import java.net.*;
 import java.io.*;
 
-// Java no longer supports applets. From p. 452. 
-
+/**
+ * From Learning Java, 3rd Edition, p. 452. Java no longer supports applets.
+ */
 @SuppressWarnings("deprecation")
 public class HeartBeat extends java.applet.Applet {
-	
+
 	private static final long serialVersionUID = 1044219712417400097L;
 
 	String myHost;
 	int myPort;
-	
+
 	public void init() {
 		myHost = getCodeBase().getHost();
 		myPort = Integer.parseInt(getParameter("myPort"));

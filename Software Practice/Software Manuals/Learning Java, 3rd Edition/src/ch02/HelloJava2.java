@@ -4,13 +4,14 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-// This version allows the user to use the mouse and drag around the 
-// Hello World string. From p. 42-43.
-
+/**
+ * From Learning Java, 3rd Edition, p. 42-43. This version allows the user to
+ * use the mouse and drag around the Hello World string.
+ */
 public class HelloJava2 {
 	public static void main(String[] args) {
 		// The frame variable is a "local variable."
-		// Local variables don't get automatically initialized (to null). 
+		// Local variables don't get automatically initialized (to null).
 		JFrame frame = new JFrame("HelloJava2");
 		frame.add(new HelloComponent2("Hello Java!"));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -24,10 +25,10 @@ class HelloComponent2 extends JComponent implements MouseMotionListener {
 	private static final long serialVersionUID = 9010910788876912776L;
 
 	// The next three are called "instance variables." They are duplicated
-	// in each instance (or instantiation). 
+	// in each instance (or instantiation).
 	String theMessage;
 	// Coordinates of the message
-	int messageX = 125, messageY = 95; 
+	int messageX = 125, messageY = 95;
 
 	public HelloComponent2(String message) {
 		theMessage = message;
@@ -35,7 +36,7 @@ class HelloComponent2 extends JComponent implements MouseMotionListener {
 		addMouseMotionListener(this);
 	}
 
-	// Called from a JComponent function. 
+	// Called from a JComponent function.
 	public void paintComponent(Graphics g) {
 		g.drawString(theMessage, messageX, messageY);
 	}

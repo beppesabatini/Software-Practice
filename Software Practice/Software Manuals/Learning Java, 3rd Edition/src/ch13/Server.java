@@ -3,8 +3,9 @@ package ch13;
 import java.net.*;
 import java.io.*;
 
-// From p. 458-459.
-
+/**
+ * From Learning Java, 3rd Edition, p. 458-459.
+ */
 public class Server {
 	public static void main(String argv[]) throws IOException {
 		@SuppressWarnings("resource")
