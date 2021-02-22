@@ -1,7 +1,8 @@
 package ch22.magicbeans.src.magicbeans;
 
-// From p. 772-773.
-
+/**
+ * From Learning Java, 3rd Edition, p. 772-773.
+ */
 import java.beans.*;
 
 public class Multiplier implements java.io.Serializable {

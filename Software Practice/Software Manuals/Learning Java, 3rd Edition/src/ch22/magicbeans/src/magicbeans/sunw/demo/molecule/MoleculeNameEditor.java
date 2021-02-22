@@ -1,9 +1,9 @@
 package ch22.magicbeans.src.magicbeans.sunw.demo.molecule;
 
 /**
- * Special case property editor for molecule names.
+ * Not in the Learning Java manual. Special case property editor for molecule
+ * names.
  */
-
 public class MoleculeNameEditor extends java.beans.PropertyEditorSupport {
 
 	public String[] getTags() {
@@ -14,5 +14,4 @@ public class MoleculeNameEditor extends java.beans.PropertyEditorSupport {
 	public String getJavaInitializationString() {
 		return (String) getValue();
 	}
-
 }

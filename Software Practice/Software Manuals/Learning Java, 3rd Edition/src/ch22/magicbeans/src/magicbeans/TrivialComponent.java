@@ -3,6 +3,9 @@ package ch22.magicbeans.src.magicbeans;
 import javax.swing.*;
 import java.awt.Graphics;
 
+/**
+ * Not in the Learning Java manual.
+ */
 public class TrivialComponent extends JComponent {
 
 	private static final long serialVersionUID = -8754248473660104244L;

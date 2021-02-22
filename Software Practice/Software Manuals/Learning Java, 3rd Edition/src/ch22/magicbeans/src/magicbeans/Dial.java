@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+/**
+ * Not in the Learning Java manual.
+ */
 public class Dial extends JComponent {
 
 	private static final long serialVersionUID = -9170762306328468714L;

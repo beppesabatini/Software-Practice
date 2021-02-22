@@ -2,6 +2,9 @@ package ch22.magicbeans.src.magicbeans;
 
 import java.beans.*;
 
+/**
+ * Not in the Learning Java manual.
+ */
 public class TimerBeanInfo extends SimpleBeanInfo {
 
 	public PropertyDescriptor[] getPropertyDescriptors() {

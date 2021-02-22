@@ -3,8 +3,9 @@ package ch22;
 import ch22.magicbeans.src.magicbeans.sunw.demo.juggler.Juggler;
 import java.io.*;
 
-// From  p. 780.
-
+/**
+ * From Learning Java, 3rd Edition, p. 780.
+ */
 public class SerializeJuggler {
 	public static void main(String[] args) throws Exception {
 		Juggler duke = new Juggler();

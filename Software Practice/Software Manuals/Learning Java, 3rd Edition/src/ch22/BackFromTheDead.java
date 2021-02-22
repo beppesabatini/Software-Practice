@@ -3,8 +3,9 @@ package ch22;
 import javax.swing.*;
 import java.beans.*;
 
-// From p. 780-781.
-
+/**
+ * From Learning Java, 3rd Edition, p. 780-781.
+ */
 public class BackFromTheDead extends JFrame {
 
 	private static final long serialVersionUID = -6754358783224072412L;

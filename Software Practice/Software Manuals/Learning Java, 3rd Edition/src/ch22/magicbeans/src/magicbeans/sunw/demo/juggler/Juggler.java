@@ -1,12 +1,5 @@
 package ch22.magicbeans.src.magicbeans.sunw.demo.juggler;
 
-/**
- * A simple JavaBean demonstration class that displays an animation
- * of Duke juggling a couple of coffee beans.    The Juggler class
- * is a good simple example of how to write readObject/writeObject
- * serialization methods that restore transient state.    In this case
- * the transient state is an array of images and a Thread.
- */
 // Updates and Modifications for LearningJava
 // 02/2002, Niemeyer
 // Added image pre-loading
@@ -21,11 +14,17 @@ import java.beans.*;
 import javax.swing.*;
 import java.io.*;
 
+/**
+ * A simple JavaBean demonstration class that displays an animation of Duke
+ * juggling a couple of coffee beans. The Juggler class is a good simple example
+ * of how to write readObject/writeObject serialization methods that restore
+ * transient state. In this case the transient state is an array of images and a
+ * Thread.
+ */
 public class Juggler extends JComponent implements Runnable, PropertyChangeListener, DesignMode {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 7681638718949902673L;
+
 	private transient Image[] images;
 	private transient Thread animationThread;
 	private int rate = 125;
@@ -39,7 +38,7 @@ public class Juggler extends JComponent implements Runnable, PropertyChangeListe
 	}
 
 	/**
-	 * method: start the Juggler .
+	 * method: start the Juggler.
 	 */
 
 	public synchronized void start() {

@@ -3,8 +3,9 @@ package ch22.magicbeans.src.magicbeans;
 import javax.swing.*;
 import java.awt.event.*;
 
-// From p. 770-771.
-
+/**
+ * From Learning Java, 3rd Edition, p. 770-771.
+ */
 public class NumericField extends JTextField {
 
 	private static final long serialVersionUID = 8850104061293539723L;

@@ -1,5 +1,8 @@
 package ch22.magicbeans.src.magicbeans;
 
+/**
+ * Not in the Learning Java manual.
+ */
 public class TimerEvent extends java.util.EventObject {
 
 	private static final long serialVersionUID = 3130676208549784012L;

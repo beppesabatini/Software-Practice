@@ -9,7 +9,9 @@ import java.util.*;
  */
 // Made atomTable generic Map 12/2004 - Pat Niemeyer
 
-/** The representation of a Chemical .xyz model */
+/**
+ * Not in the Learning Java manual. The representation of a Chemical .xyz model.
+ */
 class XYZChemModel {
 	float vert[];
 	Atom atoms[];

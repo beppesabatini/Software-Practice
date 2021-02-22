@@ -2,6 +2,9 @@ package ch22.magicbeans.src.magicbeans;
 
 import java.util.*;
 
+/**
+ * Not in the Learning Java manual.
+ */
 public class Timer implements Runnable {
 	long delay = 200;
 	Thread thread;

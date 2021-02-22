@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.beans.beancontext.*;
 import java.util.*;
 
+/**
+ * Not in the Learning Java manual.
+ */
 public class ShowContext extends JTabbedPane implements BeanContextProxy {
 
 	private static final long serialVersionUID = 1192048137151919339L;

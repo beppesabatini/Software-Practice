@@ -5,15 +5,15 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-/**
- * A bean to parse, represent and display Chemical compounds in .xyz format (see
- * http://chem.leeds.ac.uk/Project/MIME.html)
- */
-
 // Modifications and updates for LearningJava
 // 02/2002, Niemeyer
 /* A Bean to display a Chemical model */
 
+/**
+ * Not in the Learning Java manual. A bean to parse, represent and display
+ * Chemical compounds in .xyz format (see
+ * http://chem.leeds.ac.uk/Project/MIME.html)
+ */
 public class Molecule extends JComponent implements Serializable, MouseListener, MouseMotionListener {
 
 	private static final long serialVersionUID = -6307468150771249027L;

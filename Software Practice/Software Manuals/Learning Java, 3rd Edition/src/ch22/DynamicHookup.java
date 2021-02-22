@@ -4,8 +4,9 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.beans.EventHandler;
 
-// From p. 782-783.
-
+/**
+ * From Learning Java, 3rd Edition, p. 782-783.
+ */
 public class DynamicHookup extends JFrame {
 
 	private static final long serialVersionUID = -4557474777842164787L;
@@ -17,7 +18,8 @@ public class DynamicHookup extends JFrame {
 		JButton launchButton = new JButton("Launch!");
 		getContentPane().add(launchButton, "South");
 		getContentPane().add(label, "Center");
-		launchButton.addActionListener((ActionListener) EventHandler.create(ActionListener.class, this, "launchTheMissiles"));
+		ActionListener actionListener = EventHandler.create(ActionListener.class, this, "launchTheMissiles");
+		launchButton.addActionListener(actionListener);
 	}
 
 	public void launchTheMissiles() {

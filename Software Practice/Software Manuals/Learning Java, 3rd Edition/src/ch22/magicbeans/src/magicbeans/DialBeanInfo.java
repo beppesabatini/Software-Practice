@@ -1,7 +1,8 @@
 package ch22.magicbeans.src.magicbeans;
 
-// From  p. 777-778.
-
+/**
+ * From Learning Java, 3rd Edition, p. 777-778.
+ */
 import java.beans.*;
 
 public class DialBeanInfo extends SimpleBeanInfo {

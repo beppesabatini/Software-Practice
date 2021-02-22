@@ -1,5 +1,8 @@
 package ch22.magicbeans.src.magicbeans;
 
+/**
+ * Not in the Learning Java manual.
+ */
 public class Trivial implements java.io.Serializable {
 
 	private static final long serialVersionUID = -1793682900836872575L;
