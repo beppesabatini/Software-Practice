@@ -24,5 +24,9 @@ public class HankerRankCodingExercises {
 		// Arrays
 		// https://www.hackerrank.com/interview/interview-preparation-kit/arrays/challenges
 		new MaxHourglassSumFinderLauncher().findMaximumHourglassSum();
+
+		// Dictionaries and Hashmaps
+		// https://www.hackerrank.com/interview/interview-preparation-kit/dictionaries-hashmaps/challenges
+		new RansomNoteValidatorLauncher().validateNoteAgainstMagazine();
 	}
 }

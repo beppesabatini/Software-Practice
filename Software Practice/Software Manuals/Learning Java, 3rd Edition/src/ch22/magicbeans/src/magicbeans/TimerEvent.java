@@ -1,4 +1,4 @@
-package ch22.magicbeans.src.magicbeans;
+package magicbeans;
 
 /**
  * Not in the Learning Java manual.

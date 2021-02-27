@@ -1,4 +1,4 @@
-package ch22.magicbeans.src.magicbeans.sunw.demo.molecule;
+package magicbeans.sunw.demo.molecule;
 
 /**
  * Not in the Learning Java manual. Special case property editor for molecule

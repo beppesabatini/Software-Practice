@@ -10,7 +10,15 @@ import java.awt.Component;
 
 /**
  * From Learning Java, 3rd edition, p. 748-749. Not functional. Not clear why,
- * but probably just too outdated. No easy fix found.
+ * but probably just too outdated.
+ * <p>
+ * A similar MediaPlayer, using different third-party libraries, can be found in
+ * this workspace at:
+ * <p>
+ * Coding Exercises/src/javafx.ex03/MediaPlayerExample.java
+ * <p>
+ * That one actually works, but it only supports mp3 files (not avi files such
+ * as dancing_baby.avi).
  */
 public class MediaPlayer {
 	public static void main(String[] args) throws Exception {

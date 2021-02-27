@@ -5,7 +5,10 @@ import java.awt.event.*;
 import java.beans.EventHandler;
 
 /**
- * From Learning Java, 3rd Edition, p. 782-783.
+ * From Learning Java, 3rd Edition, p. 782-783. A brief look at how reflection
+ * can be used to create a generalized ActionListener, without having to specify
+ * the type of the object which is listening. Thus it's reusable code for a
+ * variety of class type listeners.
  */
 public class DynamicHookup extends JFrame {
 

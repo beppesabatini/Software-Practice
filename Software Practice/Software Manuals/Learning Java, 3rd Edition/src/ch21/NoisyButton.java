@@ -1,41 +1,46 @@
 package ch21;
 
-import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
+import java.net.URL;
 
-import utils.LearningJava3Utils;
+import javax.swing.*;
+import javafx.scene.media.AudioClip;
+
+import ch12.mypackage.FindResources;
 
 /**
- * From Learning Java, 3rd Edition, sp. 747. Not working; this launches but it
- * doesn't make the barking sound. It seems to require applet functionality,
- * which Oracle no longer supports.
+ * From Learning Java, 3rd Edition, p. 747. The version in the manual uses an
+ * old version of AudioClip from the old Applet jar. Java no longer supports
+ * Applets and that old version no longer works. To get this working, download
+ * and install JavaFX and use those jars instead, as done here. One possible
+ * source for the jars is below.
+ * 
+ * @see <a href="https://gluonhq.com/products/javafx/">JavaFX Download</a>
  */
 public class NoisyButton {
 
 	public static void main(String[] args) throws Exception {
 
-		LearningJava3Utils.confirmContinueWithDisfunctional();
 		JFrame frame = new JFrame("NoisyButton");
 
 		String filename = null;
-
-		// java.io.File file = new java.io.File(args[0]);
 		if (args.length > 0) {
 			filename = args[0];
 		} else {
-			filename = "src/ch21/bark.aiff";
+			/**
+			 * Note the path here for finding local files with getResource() is shorter than
+			 * the path used by some other functions.
+			 */
+			filename = "/ch21/bark.aiff";
 		}
-		java.io.File file = new java.io.File(filename);
-
-		@SuppressWarnings("deprecation")
-		final AudioClip sound = Applet.newAudioClip(file.toURL());
+		URL url = FindResources.class.getResource(filename);
+		String urlString = url.toString();
+		final AudioClip sound = new AudioClip(urlString);
 
 		// set up the button
 		JButton button = new JButton("Woof!");
 		button.addActionListener(new ActionListener() {
-			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				sound.play();
 			}

@@ -1,4 +1,4 @@
-package ch22.magicbeans.src.magicbeans;
+package magicbeans;
 
 import java.beans.*;
 

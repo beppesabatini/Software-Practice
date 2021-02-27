@@ -1,4 +1,4 @@
-package ch22.magicbeans.src.magicbeans.sunw.demo.molecule;
+package magicbeans.sunw.demo.molecule;
 
 import java.io.*;
 import java.awt.*;
@@ -131,6 +131,9 @@ public class Molecule extends JComponent implements Serializable, MouseListener,
 	// ----------------------------------------------------------------------
 
 	public synchronized void rotateOnY() {
+		if(height == 0) {
+			return;
+		}
 		int x = prevx;
 		int y = (prevy + 10) % height;
 		rotate(x, y);
@@ -141,6 +144,9 @@ public class Molecule extends JComponent implements Serializable, MouseListener,
 	}
 
 	public synchronized void rotateOnX() {
+		if(width == 0) {
+			return;
+		}
 		int x = (prevx + 10) % width;
 		int y = prevy;
 		rotate(x, y);

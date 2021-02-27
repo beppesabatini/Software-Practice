@@ -2,25 +2,25 @@
 
 	<property name="jar-file" value="${ant.project.name}.jar"/>
 	<property name="src-dir" value="src"/>
-	<property name="build-dir" value="classes"/>
+	<property name="build-dir" value="bin"/>
 	<property name="manifest-file" value="magicbeans.manifest" />
 	<property name="icons-dir" value="icons" />
 
 	<target name="compile" depends="">
 		<mkdir dir="${build-dir}"/>
-		<javac srcdir="${src-dir}" deprecation="true" destdir="${build-dir}"/>
-		<copy todir="${build-dir}/magicbeans/">
+		<javac srcdir="${src-dir}" deprecation="true" destdir="${build-dir}" includeantruntime="false"/>
+		<copy todir="${build-dir}/magicbeans">
             <fileset dir="${icons-dir}"/>
         </copy>
+
 		<copy todir="${build-dir}">
             <fileset dir="${src-dir}">
 				<patternset>
-					<include name="magicbeans/sunw/**/*.gif"/>
-					<include name="magicbeans/sunw/**/*.xyz"/>
+					<include name="/**/magicbeans/sunw/demo/juggler/*.gif"/>
+					<include name="/**/magicbeans/sunw/demo/molecule/*.xyz"/>
 				</patternset>
 			</fileset>
         </copy>
-
 	</target>
 
 	<target name="jar" depends="compile">

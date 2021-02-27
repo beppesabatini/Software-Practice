@@ -1,4 +1,4 @@
-package ch22.magicbeans.src.magicbeans.sunw.demo.molecule;
+package magicbeans.sunw.demo.molecule;
 
 import java.beans.*;
 

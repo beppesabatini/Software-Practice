@@ -1,4 +1,4 @@
-package ch22.magicbeans.src.magicbeans.sunw.demo.juggler;
+package magicbeans.sunw.demo.juggler;
 
 // Updates and Modifications for LearningJava
 // 02/2002, Niemeyer

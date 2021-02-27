@@ -1,4 +1,4 @@
-package ch22.magicbeans.src.magicbeans;
+package magicbeans;
 
 /**
  * From Learning Java, 3rd Edition, p. 777-778.
@@ -25,8 +25,8 @@ public class DialBeanInfo extends SimpleBeanInfo {
 
 	public EventSetDescriptor[] getEventSetDescriptors() {
 		try {
-			EventSetDescriptor dial = new EventSetDescriptor(Dial.class, "dialAdjusted", DialListener.class,
-					"dialAdjusted");
+			EventSetDescriptor dial = null;
+			dial = new EventSetDescriptor(Dial.class, "dialAdjusted", DialListener.class, "dialAdjusted");
 			dial.setDisplayName("Dial Adjusted");
 
 			EventSetDescriptor changed = new EventSetDescriptor(Dial.class, "propertyChange",

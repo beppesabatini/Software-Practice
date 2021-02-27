@@ -1,11 +1,12 @@
-package ch22.magicbeans.src.magicbeans;
+package magicbeans;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
 /**
- * Not in the Learning Java manual.
+ * This code is not in the Learning Java manual. The Dial Bean is discussed in
+ * Learning Java, 3rd Edition, pp. 766-768.
  */
 public class Dial extends JComponent {
 

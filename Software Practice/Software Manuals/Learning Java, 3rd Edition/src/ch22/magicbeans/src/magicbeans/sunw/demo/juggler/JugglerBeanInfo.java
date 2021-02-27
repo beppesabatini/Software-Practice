@@ -1,4 +1,4 @@
-package ch22.magicbeans.src.magicbeans.sunw.demo.juggler;
+package magicbeans.sunw.demo.juggler;
 
 /** 
  * The only thing we define in the Juggler BeanInfo is a GIF icon.
