@@ -64,9 +64,4 @@ public class BubbleSorter {
 	public static int getNumberOfSwaps() {
 		return (numberOfSwaps);
 	}
-
-	public static void setNumberOfSwaps() {
-		numberOfSwaps++;
-	}
-
 }
