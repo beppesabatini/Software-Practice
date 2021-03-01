@@ -28,5 +28,9 @@ public class HankerRankCodingExercises {
 		// Dictionaries and Hashmaps
 		// https://www.hackerrank.com/interview/interview-preparation-kit/dictionaries-hashmaps/challenges
 		new RansomNoteValidatorLauncher().validateNoteAgainstMagazine();
+		
+		// Sorting
+		// https://www.hackerrank.com/interview/interview-preparation-kit/sorting/challenges
+		new BubbleSorterLauncher().bubbleSortArray();
 	}
 }
