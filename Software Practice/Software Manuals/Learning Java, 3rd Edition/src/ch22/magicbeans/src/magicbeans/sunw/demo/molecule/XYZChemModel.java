@@ -22,12 +22,12 @@ class XYZChemModel {
 	static Map<String, Atom> atomTable = new HashMap<String, Atom>();
 	static Atom defaultAtom;
 	static {
-		atomTable.put("c", new Atom(0, 0, 0));
-		atomTable.put("h", new Atom(210, 210, 210));
-		atomTable.put("n", new Atom(0, 0, 255));
-		atomTable.put("o", new Atom(255, 0, 0));
-		atomTable.put("p", new Atom(255, 0, 255));
-		atomTable.put("s", new Atom(255, 255, 0));
+		atomTable.put("c", new Atom(0, 0, 0)); // black
+		atomTable.put("h", new Atom(210, 210, 210)); // light grey
+		atomTable.put("n", new Atom(0, 0, 255)); // blue
+		atomTable.put("o", new Atom(255, 0, 0)); // red
+		atomTable.put("p", new Atom(0, 255, 0)); // green
+		atomTable.put("s", new Atom(255, 255, 0)); // yellow
 		atomTable.put("hn", new Atom(150, 255, 150)); /* !! */
 		defaultAtom = new Atom(255, 100, 200);
 	}

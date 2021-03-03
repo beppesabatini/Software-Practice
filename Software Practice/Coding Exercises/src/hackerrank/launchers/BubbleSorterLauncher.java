@@ -17,14 +17,13 @@ public class BubbleSorterLauncher  {
 	private final int[] testArray00 = {1, 2, 3};
 	@SuppressWarnings("unused")
 	private final int[] testArray01 = {3, 2, 1};
-	@SuppressWarnings("unused")
 	private final int[] testArray02 = {9, 8, 7, 6, 5, 4, 3, 2, 1};
 
 	// Change this for more test cases.
 	private final int[] testArray = testArray02;
 
 	public int bubbleSortArray() {
-		System.out.println("--- Sorting: Bubble Sort ---");
+		System.out.println("--- Problem: Sorting: Bubble Sort ---");
 		System.out.println("Test Array:   " + Arrays.toString(testArray));
 
 		long startTime = System.currentTimeMillis();

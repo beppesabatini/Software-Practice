@@ -62,10 +62,10 @@ public class ImageProcessor extends JComponent {
 
 	public static void main(String[] args) {
 		String filename;
-		if (args.length < 0) {
+		if (args.length > 0) {
 			filename = args[0];
 		} else {
-			filename = "src/ch21/8307507904_ef89929bd8_c.jpg";
+			filename = "input/MatrixLarge.jpg";
 		}
 		ImageIcon icon = new ImageIcon(filename);
 		Image i = icon.getImage();

@@ -4,7 +4,7 @@ package hackerrank;
 
 /**
  * HackerRank provides many sample test questions on its site. This class is one
- * user's solution to the <a href=
+ * solution to the <a href=
  * https://www.hackerrank.com/challenges/ctci-bubble-sort/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=sorting">Sorting:
  * Bubble Sort</a> problem. One way to test the solution is to mouse all the
  * code inside the class definition into HackerRank.

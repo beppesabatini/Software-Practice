@@ -17,6 +17,7 @@ public class MoleculeDataMap {
 		moleculeDataMap.put("Benzene", "benzene");
 		moleculeDataMap.put("Buckminsterfullerine", "buckminsterfullerine");
 		moleculeDataMap.put("Cyclohexane", "cyclohexane");
+		moleculeDataMap.put("DNA", "dna");
 		
 		return(moleculeDataMap);
 	}

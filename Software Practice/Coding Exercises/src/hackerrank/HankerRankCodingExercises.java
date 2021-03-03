@@ -32,5 +32,10 @@ public class HankerRankCodingExercises {
 		// Sorting
 		// https://www.hackerrank.com/interview/interview-preparation-kit/sorting/challenges
 		new BubbleSorterLauncher().bubbleSortArray();
+		
+		// String Manipulation
+		// https://www.hackerrank.com/interview/interview-preparation-kit/strings/challenges
+		new AlternatingCharactersLauncher().enforceAlternatingCharacters();
+		
 	}
 }
