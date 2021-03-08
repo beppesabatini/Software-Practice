@@ -5,7 +5,8 @@ import hackerrank.launchers.*;
 /**
  * This is the only "main()" function in the hackerrank package. It will run all
  * the solutions the author has posted to date, and output short status messages
- * for each one.
+ * for each one. These are all solutions to the example problems posted on the 
+ * HackerRank website.
  * 
  * @author Beppe Sabatini bsabatini@hotmail.com
  *
