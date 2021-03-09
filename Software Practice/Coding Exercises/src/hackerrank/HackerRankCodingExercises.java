@@ -5,8 +5,7 @@ import hackerrank.launchers.*;
 /**
  * This is the only "main()" function in the hackerrank package. It will run all
  * the solutions the author has posted to date, and output short status messages
- * for each one. These are all solutions to the example problems posted on the 
- * HackerRank website.
+ * for each one.
  * 
  * @author Beppe Sabatini bsabatini@hotmail.com
  *
@@ -57,5 +56,10 @@ public class HackerRankCodingExercises {
 		// Graphs
 		// https://www.hackerrank.com/interview/interview-preparation-kit/graphs/challenges
 		new ConnectedCellFinderLauncher().findMaximumConnectedCellRegionSize();
+		
+		// Trees
+		// https://www.hackerrank.com/interview/interview-preparation-kit/trees/challenges
+		new BinaryTreeTesterLauncher().validateBinaryTree();
+		
 	}
 }
