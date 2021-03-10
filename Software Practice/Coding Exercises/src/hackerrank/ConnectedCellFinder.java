@@ -26,13 +26,14 @@ public class ConnectedCellFinder {
 	 * (base 8) tree. The program recurses in eight different directions to find the
 	 * largest contiguous region of ones in the test matrix.
 	 * <p/>
-	 * Each octal search takes on average log base 8 operations to find the largest
-	 * region of ones. In a matrix size M x N, the algorithm will consider each
-	 * element as a possible starting point, and will launch M x N searches, and
-	 * remember the size of largest region. So in the worst case this will take M x
-	 * N octal searches, so M x N log-base-8 searches makes this algorithm O(NlogN).
-	 * Realistically, this has been optimized to the point where even a 70 x 70
-	 * matrix finishes in less than a millisecond.
+	 * Each octal search takes on average log-base-8 operations to find the largest
+	 * region of ones. In a matrix size A x B, the algorithm will consider each
+	 * element as a possible starting point, and will launch A x B searches, and
+	 * remember the size of largest region. So in the worst case this will take A x
+	 * B octal searches, and thus A x B log-base-8 searches makes this algorithm
+	 * O(NlogN). This is where N is equal to A times B, the total number of elements
+	 * in the matrix. Realistically, the implementation below has been optimized to
+	 * the point where even a 70 x 70 matrix finishes in less than a millisecond.
 	 * 
 	 * <pre>
 	 *  | 7 | 6 | 5 |
@@ -57,8 +58,8 @@ public class ConnectedCellFinder {
 	 * @return The number of cells in the largest region found.
 	 * 
 	 * @see <a href=
-	 *      "https://www.hackerrank.com/challenges/ctci-connected-cell-in-a-grid/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=graphs">DFS:
-	 *      Connected Cell in a Grid</a>
+	 *      "https://www.hackerrank.com/challenges/ctci-connected-cell-in-a-grid/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=graphs">Original
+	 *      HackerRank Problem</a>
 	 */
 	public static int maxRegion(int[][] grid) {
 
@@ -71,7 +72,7 @@ public class ConnectedCellFinder {
 		int height = grid.length;
 		int width = grid[0].length;
 
-		int maximumRegionFound = -Integer.MAX_VALUE;
+		int maximumRegionFound = Integer.MIN_VALUE;
 		for (int yValue = 0; yValue < height; yValue++) {
 			for (int xValue = 0; xValue < width; xValue++) {
 				Accumulator accumulator = new Accumulator();

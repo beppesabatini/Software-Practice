@@ -31,7 +31,7 @@ public class TreeNodeSwapperLauncher {
 	private static int[] swapDepth02 = { 0, 2, 4 };
 
 	@SuppressWarnings("unused")
-	private static int[][] testTree03 = initTestTree03();
+	private static int[][] testTree03 = initTestTree03(); // This test takes about a minute to run.
 	@SuppressWarnings("unused")
 	private static int[] swapDepth03 = { 16 };
 
@@ -47,7 +47,7 @@ public class TreeNodeSwapperLauncher {
 	// Generate a massively unbalanced tree, all right nodes only.
 	private static int[][] initTestTree03() {
 		// Higher than this gets a stack overflow.
-		int numberSubArrays = 2 * 2056;
+		int numberSubArrays = 2056;
 		int[][] testTree03 = new int[numberSubArrays][2];
 		for (int i = 0; i < numberSubArrays - 1; i++) {
 			testTree03[i] = new int[2];
@@ -60,7 +60,7 @@ public class TreeNodeSwapperLauncher {
 
 		return (testTree03);
 	}
-	
+
 	public void swapTreeNodes() {
 
 		System.out.println("--- Problem: Swap Nodes [Algo] ---");

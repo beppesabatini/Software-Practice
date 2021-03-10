@@ -21,16 +21,16 @@ public class ArraySubsetSumMaximizer {
 	 * complete problem is posted on the HackerRank website (linked to below) and
 	 * this solution can be tested there. This function makes one pass through the
 	 * specified data array and makes two comparisons for each element, so it's
-	 * linear and runs on O(2n) time.
+	 * linear and runs on O(2N) time.
 	 * 
 	 * @see <a href=
 	 *      "href=https://www.hackerrank.com/challenges/max-array-sum/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=dynamic-programming">Original
-	 *      Hacker Rank Problem</a>
+	 *      HackerRank Problem</a>
 	 */
 	public static int maxSubsetSum(int[] testArray) {
 
 		int[] maximums = new int[testArray.length];
-		Arrays.fill(maximums, -Integer.MAX_VALUE);
+		Arrays.fill(maximums, Integer.MIN_VALUE);
 
 		// Induction - Base Case
 		maximums[0] = testArray[0];

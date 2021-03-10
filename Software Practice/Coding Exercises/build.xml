@@ -1,0 +1,35 @@
+<project name="HackerRankSolutions1.0" default="hackerrank" basedir=".">
+
+	<property name="jar-file" value="${ant.project.name}.jar" />
+	<property name="src-dir" value="src" />
+	<property name="build-dir" value="bin" />
+	<property name="lib-dir" value="lib"/>
+	<property name="output-dir" value="output" />
+	<property name="collect-hankerrank-elements-dir" value="collect-hankerrank-elements" />
+	<property name="manifest-file" value="src/hackerrank/meta-inf/MANIFEST.MF" />
+	<property name="icons-dir" value="icons" />
+
+	<target name="hackerrank" depends="clean,collect.hankerrank.elements">
+		<jar jarfile="${output-dir}/${jar-file}" manifest="${manifest-file}">
+			<fileset dir="${collect-hankerrank-elements-dir}/"/>
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete file="${output-dir}/${jar-file}" />
+		<delete dir="${collect-hankerrank-elements-dir}" />
+	</target>
+	
+	<target name="collect.hankerrank.elements" depends="">
+		<mkdir dir="${collect-hankerrank-elements-dir}" />
+		<copy todir="${collect-hankerrank-elements-dir}">
+			<fileset dir="${build-dir}">
+				<patternset>
+					<include name="/**/hackerrank/*.class" />
+					<include name="/**/hackerrank/launchers/*.class" />
+				</patternset>
+			</fileset>
+		</copy>
+	</target>
+	
+</project>

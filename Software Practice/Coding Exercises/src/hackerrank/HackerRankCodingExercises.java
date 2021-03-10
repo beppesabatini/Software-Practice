@@ -52,14 +52,21 @@ public class HackerRankCodingExercises {
 		// Stacks and Queues
 		// https://www.hackerrank.com/interview/interview-preparation-kit/stacks-queues/challenges
 		DoubleStackQueueLauncher.testDoubleStackQueue();
-		
+
 		// Graphs
 		// https://www.hackerrank.com/interview/interview-preparation-kit/graphs/challenges
 		new ConnectedCellFinderLauncher().findMaximumConnectedCellRegionSize();
-		
+
 		// Trees
 		// https://www.hackerrank.com/interview/interview-preparation-kit/trees/challenges
 		new BinaryTreeTesterLauncher().validateBinaryTree();
-		
+
+		// Linked Lists
+		// https://www.hackerrank.com/interview/interview-preparation-kit/linked-lists/challenges
+		new LinkedListCycleDetectorLauncher().searchForCycle();
+
+		// Recursion and Backtracking
+		// https://www.hackerrank.com/interview/interview-preparation-kit/recursion-backtracking/challenges
+		new FibonacciCalculatorLauncher().calculateFibonacciNumbers();
 	}
 }

@@ -24,14 +24,14 @@ public class BinaryTreeTester {
 	 * Binary Search Tree?" The complete problem is posted on the HackerRank website
 	 * (linked to below) and this solution can be tested there. The goal is to
 	 * determine if a specified tree is well-formed and follows the rules for a
-	 * binary tree. 
+	 * binary tree.
 	 * <p>
-	 * Searching through a balanced binary tree is O(log-base2 of n).
-	 * For the worst most unbalanced tree it's O(n).
+	 * Searching through a balanced binary tree is O(log-base2(N)), where N is the
+	 * number of nodes in the tree. For the worst, most unbalanced tree, it's O(N).
 	 * 
 	 * @see <a href=
-	 *      "https://www.hackerrank.com/challenges/ctci-is-binary-search-tree/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=trees">Tree:
-	 *      Is This a Binary Search Tree?</a>
+	 *      "https://www.hackerrank.com/challenges/ctci-is-binary-search-tree/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=trees">Original
+	 *      HackerRank Problem</a>
 	 */
 	public boolean checkBST(Node root) {
 		if (root == null) {
@@ -154,9 +154,9 @@ public class BinaryTreeTester {
 			rightTree.append(node.data);
 
 			if (node.right == null) {
-				rightTree.append(" --> null");
+				rightTree.append(" R--> null");
 			} else {
-				rightTree.append(" --> " + node.right.data);
+				rightTree.append(" R--> " + node.right.data);
 			}
 			rightTree.append("\n");
 
@@ -167,15 +167,15 @@ public class BinaryTreeTester {
 			leftTree.append(leftMarginPadding, 0, nodeDataWidth);
 
 			if (node.left == null) {
-				leftTree.append(" --> null");
+				leftTree.append(" L--> null");
 			} else {
-				leftTree.append(" --> " + node.left.data);
+				leftTree.append(" L--> " + node.left.data);
 			}
 			leftTree.append("\n");
 
 			StringBuilder returnTree = new StringBuilder().append(rightTree.append(leftTree));
 
-			leftMargin += (nodeDataWidth + 5);
+			leftMargin += (nodeDataWidth + 6);
 
 			returnTree.append(toString(node.right, leftMargin));
 			returnTree.append(toString(node.left, leftMargin));

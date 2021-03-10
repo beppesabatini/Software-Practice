@@ -5,9 +5,9 @@ import java.util.*;
 /**
  * HackerRank provides many sample test questions on its site. This class is one
  * solution to the <a
- * https://www.hackerrank.com/challenges/ctci-queue-using-two-stacks/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=stacks-queues">Max
- * Array Sum</a> problem. One way to test the solution is to mouse all the code
- * inside the outermost class definition into HackerRank.
+ * https://www.hackerrank.com/challenges/ctci-queue-using-two-stacks/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=stacks-queues">Queues:
+ * A Tale of Two Stacks</a> problem. One way to test the solution is to mouse
+ * all the code inside the outermost class definition into HackerRank.
  * 
  * @author Beppe Sabatini bsabatini@hotmail.com
  *
@@ -15,15 +15,15 @@ import java.util.*;
 public class DoubleStackQueue {
 
 	private static String DEBUG = "false";
-	
+
 	public static boolean getDebug() {
 		return (Boolean.valueOf(DEBUG));
 	}
-	
+
 	public static void setDebug(boolean debugValue) {
 		DEBUG = String.valueOf(debugValue);
 	}
-	
+
 	private static enum Operation {
 		PUSH, POP, PEEK
 	};
@@ -33,29 +33,27 @@ public class DoubleStackQueue {
 	 * Stacks." The complete problem is posted on the HackerRank website (linked to
 	 * below) and this solution can be tested there.
 	 * <p/>
-	 * I was indeed asked this question on a job interview once--how would you
-	 * implement a queue with two stacks? And this is how I answer the question
-	 * today. Imagine you have two cans of Pringles potato chips--one can is
-	 * half-full, and one is empty. So you have two stacks, in this case two stacks
-	 * of potato chips. How would you implement a queue with two such stacks? To
-	 * push a new chip onto the rear of the queue, drop a chip onto the top of the
-	 * half-full can. To pop a chip off the front of the queue, pour the half-full
-	 * can into the empty can, and take the top chip from the second can, that is,
-	 * take it from top of the the no-longer-empty can, which is now the front of
-	 * the queue. To peek at what's going to pop off next, peek into that same
-	 * second can while you take that chip out. When you have all the chips and info
-	 * you need from the second can, pour the chips back into the first can, and
-	 * you're back to the beginning state, and ready for more queries. Once you pop
-	 * you can't stop!
+	 * The algorithm is easy to understand. Imagine you have two cans of Pringles
+	 * potato chips--one can is half-full, and one is empty. So you have two stacks,
+	 * in this case two stacks of potato chips. How would you implement a queue with
+	 * two such stacks? To push a new chip onto the rear of the queue, drop a chip
+	 * onto the top of the half-full can. To pop a chip off the front of the queue,
+	 * pour the half-full can into the empty can, and take the top chip from the
+	 * second can, that is, take it from top of the the no-longer-empty can, which
+	 * is now the front of the queue. To peek at what's going to pop off next, peek
+	 * into that same second can while you take that chip out. When you have all the
+	 * chips and info you need from the second can, pour the chips back into the
+	 * first can, and you're back to the beginning state, and ready for more
+	 * queries. 
 	 * <p/>
 	 * For pushing (dropping one chip in), the runtime is constant, and O(1).
 	 * Popping involves pouring all of the chips into the second can, and then
 	 * pouring almost all of them back again into the first can, so the runtime is
-	 * linear, or O(2n).
+	 * linear, or O(2N).
 	 * 
 	 * @see <a href=
 	 *      "https://www.hackerrank.com/challenges/ctci-queue-using-two-stacks/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=stacks-queues">Original
-	 *      Hacker Rank Problem</a>
+	 *      HackerRank Problem</a>
 	 */
 	public class MyQueue<T> {
 

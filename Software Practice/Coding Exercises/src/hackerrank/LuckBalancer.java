@@ -9,17 +9,9 @@ import java.util.List;
  * solution to the <a href=
  * https://www.hackerrank.com/challenges/luck-balance/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=greedy-algorithms">Luck
  * Balance</a> problem. One way to test the solution is to mouse all the code
- * inside the class definition into HackerRank.
- * <p/>
- * The premise of the puzzle is that winning a contest drains the winner's luck
- * reserve, while losing recharges the reserve. Perhaps the contestants are
- * something like leprechauns or black cats having a karma-driven jinxing
- * contest. The user (called Lisa) has a plan to lose all the preliminary
- * trials, to recharge her luck to the maximum for the main contest. Certain
- * early contests are considered more significant and the user can only lose a
- * specified number of them before being eliminated altogether. The requirement
- * is to figure out the best strategy for the user to use to reverse-jinx
- * herself and maximize her good luck.
+ * inside the class definition into HackerRank. The goal is for a user to
+ * reverse-jinx herself and get as much good luck as possible by losing as many
+ * contests as is allowable.
  * 
  * @author Beppe Sabatini bsabatini@hotmail.com
  *
@@ -33,13 +25,28 @@ public class LuckBalancer {
 	/**
 	 * This function is the solution to the practice problem "Luck Balance." The
 	 * complete problem is posted on the HackerRank website (linked to below) and
-	 * this solution can be tested there. The goal is for a user to reverse-jinx
-	 * herself and get as much good luck as possible by losing as many contests as
-	 * is allowable.
+	 * this solution can be tested there.
+	 * <p/>
+	 * The premise of the puzzle is that winning a contest drains the winner's luck
+	 * reserve, while losing recharges the reserve. Perhaps the contestants are
+	 * something like leprechauns or black cats having a karma-driven jinxing
+	 * contest. The user (called Lisa) has a plan to lose all the preliminary
+	 * trials, to recharge her luck to the maximum for the main contest. Certain
+	 * early contests are considered more significant and the user can only lose a
+	 * specified number of them before being eliminated altogether. The requirement
+	 * is to figure out the best strategy for the user to use to reverse-jinx
+	 * herself and maximize her good luck.
+	 * <p>
+	 * Take N to be the combined number of elements in the two input arrays. The two
+	 * input arrays are sorted using the Java sort function. This function's
+	 * behavior varies according to the data it receive, but we can meaningfully
+	 * assume that it runs in O(NlogN). The logic then makes one pass through each
+	 * of the two sorted arrays, and performs one mathematical operation on each
+	 * element. So this solution runs in O(NlogN + N) time.
 	 * 
 	 * @see <a href=
 	 *      "https://www.hackerrank.com/challenges/luck-balance/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=greedy-algorithms">Original
-	 *      Hacker Rank Problem</a>
+	 *      HackerRank Problem</a>
 	 */
 	public static int luckBalance(int numberLoseableContests, int[][] contests) {
 		int luckReserve = 0;

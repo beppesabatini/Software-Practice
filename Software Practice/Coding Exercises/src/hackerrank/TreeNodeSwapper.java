@@ -30,20 +30,29 @@ public class TreeNodeSwapper {
 	 * and this solution can be tested there. This implementation parses the input
 	 * into a binary tree, and swaps the two child nodes for all parent nodes at
 	 * certain specified levels of the tree. There isn't any particular difficulty
-	 * in that concept; the problems arise mainly in trying to interpret the format
-	 * of the input data and the specifications for the output. The binary tree
+	 * in that concept; the problems arise mainly in trying to understand the format
+	 * of the input data, and the specifications for the output. The binary tree
 	 * should be traversed using the most common form of depth-first search, which
 	 * always gives preference to the left child node.
 	 * <p/>
 	 * The worst run time is when a tree is entirely lopsided, and is made up
 	 * entirely of either left node children or right-node children. (There is one
 	 * such tree in the test cases.) In that case, execution will be linear, and
-	 * will run in O(n) time. For a well-balanced binary tree, an average search
-	 * runs in O(log-base2 (n)).
+	 * will run in O(N) time, where N is the number of tree nodes. For a
+	 * well-balanced binary tree, an average search runs in O(log-base2(N)).
 	 * 
+	 * @param testTree   A binary tree represented as an array of integer arrays.
+	 *                   This is the tree which will have its nodes swapped at
+	 *                   certain levels.
+	 * @param swapDepths These are the levels at which each binary tree node will
+	 *                   have its left and right child nodes swapped. Swapping
+	 *                   actually takes place at every multiple of this value; so
+	 *                   for a value of 3, swapping would take place at levels 3, 6,
+	 *                   9, 12, and so on. Note levels start numbering with 1.
+	 * @return The binary tree with its nodes swapped as specified.
 	 * @see <a href=
 	 *      "https://www.hackerrank.com/challenges/swap-nodes-algo/problem?h_l=interview&playlist_slugs%5B%5D=interview-preparation-kit&playlist_slugs%5B%5D=search">Original
-	 *      Hacker Rank Problem</a>
+	 *      HackerRank Problem</a>
 	 */
 	public static int[][] swapNodes(int[][] testTree, int[] swapDepths) {
 
@@ -59,16 +68,17 @@ public class TreeNodeSwapper {
 			if (Boolean.valueOf(DEBUG) == true) {
 				System.out.println("");
 				String swapMessage = "";
-				swapMessage += "Swapping - Swap Depth: " + swapDepths[i];
+				swapMessage += "Swapping - Swap Depth " + swapDepths[i];
 				if (swapDepths[i] == 0) {
 					swapMessage += " (no swapping)";
 				}
 				if (swapDepths[i] > 0) {
 					swapMessage += " (swapping at levels ";
-					swapMessage += +swapDepths[i] + ", 2x" + swapDepths[i] + ", 3x" + swapDepths[i] + " ...)";
+					swapMessage += +swapDepths[i] + ", 2x" + swapDepths[i] + ", 3x" + swapDepths[i] + " ...):";
 				}
 				System.out.println(swapMessage);
-				rootNode.display(0);
+				String treeString = rootNode.toString(rootNode, 0);
+				System.out.println(treeString);
 			}
 
 			List<Integer> traverseList = traverseTree(rootNode, numberTreeNodes);
@@ -257,9 +267,12 @@ public class TreeNodeSwapper {
 		private int level;
 		private TreeNode leftNode;
 		private TreeNode rightNode;
+		private StringBuilder leftMarginPadding;
 
 		public TreeNode(int index) {
 			this.setIndex(index);
+			this.leftMarginPadding = new StringBuilder();
+			this.leftMarginPadding.append("                ");
 		}
 
 		public int getIndex() {
@@ -294,59 +307,58 @@ public class TreeNodeSwapper {
 			this.rightNode = rightNode;
 		}
 
-		public void display(int level) {
-			TreeNode leftNode = getLeftNode();
-			TreeNode rightNode = getRightNode();
-			// Node
-			String message01 = "";
-			if (level > 0) {
-				for (int i = 0; i < level; i++)
-					message01 += "         ";
+		public String toString(TreeNode node, int leftMargin) {
+			if (node == null) {
+				return ("");
 			}
-			message01 += "(" + index + ")";
 
-			if (rightNode != null) {
-				message01 += " R--> (" + rightNode.getIndex() + ")";
+			if (leftMargin > leftMarginPadding.length()) {
+				leftMarginPadding.append(leftMarginPadding);
+			}
+			StringBuilder rightTree = new StringBuilder();
+			rightTree.append(leftMarginPadding, 0, leftMargin);
+
+			rightTree.append(node.index);
+
+			if (node.rightNode == null) {
+				rightTree.append(" R--> null");
 			} else {
-				message01 += " R--> null";
+				rightTree.append(" R--> " + node.rightNode.index);
 			}
-			System.out.println(message01);
+			rightTree.append("\n");
 
-			// Left node
-			String message02 = "";
-			if (level == 0) {
-				message02 += "    ";
-			}
-			if (level > 0) {
-				message02 += "             ";
-			}
-			if (level > 1) {
-				for (int i = 1; i < level; i++) {
-					message02 += "         ";
-				}
-			}
-			if (index > 9) {
-				message02 += " ";
-			}
-			if (index > 99) {
-				message02 += " ";
-			}
-			if (leftNode != null) {
-				message02 += "L--> (" + leftNode.getIndex() + ")";
+			int nodeDataWidth = integerWidth(node.index);
+
+			StringBuilder leftTree = new StringBuilder();
+			leftTree.append(leftMarginPadding, 0, leftMargin);
+			leftTree.append(leftMarginPadding, 0, nodeDataWidth);
+
+			if (node.leftNode == null) {
+				leftTree.append(" L--> null");
 			} else {
-				message02 += "L--> null";
+				leftTree.append(" L--> " + node.leftNode.index);
 			}
-			System.out.println(message02);
+			leftTree.append("\n");
 
-			if (leftNode == null && rightNode == null) {
-				return;
+			StringBuilder returnTree = new StringBuilder().append(rightTree.append(leftTree));
+
+			leftMargin += (nodeDataWidth + 6);
+
+			returnTree.append(toString(node.rightNode, leftMargin));
+			returnTree.append(toString(node.leftNode, leftMargin));
+			return (returnTree.toString());
+		}
+
+		private static int integerWidth(int integer) {
+			if (integer <= 0) {
+				return (0);
 			}
-			if (rightNode != null) {
-				rightNode.display(level + 1);
+			int width = 0;
+			while (integer > 0) {
+				integer = integer / 10;
+				width++;
 			}
-			if (leftNode != null) {
-				leftNode.display(level + 1);
-			}
+			return (width);
 		}
 	}
 }

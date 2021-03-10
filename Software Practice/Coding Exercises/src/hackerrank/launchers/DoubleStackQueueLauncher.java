@@ -35,6 +35,16 @@ public class DoubleStackQueueLauncher {
 
 	public static void testDoubleStackQueue() {
 
+		/*
+		 * The Double Stack Queue solution runs in the Eclipse version, but doesn't run
+		 * yet in the executable jar file, so add a test here.
+		 */
+		boolean runDoubleStackQueue = Boolean.valueOf(System.getProperty("run.double.stack.queue"));
+		if (runDoubleStackQueue != true) {
+			System.out.println("Not testing DoubleStackQueue yet.\n");
+			return;
+		}
+
 		System.out.println("--- Problem: Queues: A Tale of Two Stacks ---");
 		System.out.println("Test Input: ");
 		FileEchoer.echoFileToScreen(inputFile);

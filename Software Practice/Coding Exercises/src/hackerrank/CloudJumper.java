@@ -15,26 +15,6 @@ import java.util.List;
  */
 public class CloudJumper {
 
-	private class CloudJump {
-		public int jumpStart;
-		public int jumpEnd;
-
-		CloudJump(int jumpStart, int jumpEnd) {
-			this.jumpStart = jumpStart;
-			this.jumpEnd = jumpEnd;
-		}
-
-		public String toString() {
-			String newString = "";
-			newString += "{";
-			newString += this.jumpStart;
-			newString += ", ";
-			newString += this.jumpEnd;
-			newString += "}";
-			return (newString);
-		}
-	}
-
 	/**
 	 * This function is the solution to the practice problem "Jumping on the
 	 * Clouds." The complete problem is posted on the HackerRank website (linked to
@@ -42,6 +22,9 @@ public class CloudJumper {
 	 * another, the goal is to find the shortest path of jumps from the start-point
 	 * cloud to the end-point cloud, and then return the number of jumps in that
 	 * path.
+	 * <p>
+	 * The method makes just one pass through the input array, so it runs in linear
+	 * time, or O(N).
 	 * 
 	 * @param int[] clouds An array of zeroes and ones, in which zeroes represent a
 	 *              cumulus cloud--safe to jump to--and a 1 represents a
@@ -155,6 +138,26 @@ public class CloudJumper {
 			buildCloudJumpPath(clouds, newStartIndex, cloudJumps); // Recursive call
 		}
 		return (cloudJumps);
+	}
+
+	private class CloudJump {
+		public int jumpStart;
+		public int jumpEnd;
+
+		CloudJump(int jumpStart, int jumpEnd) {
+			this.jumpStart = jumpStart;
+			this.jumpEnd = jumpEnd;
+		}
+
+		public String toString() {
+			String newString = "";
+			newString += "{";
+			newString += this.jumpStart;
+			newString += ", ";
+			newString += this.jumpEnd;
+			newString += "}";
+			return (newString);
+		}
 	}
 
 	private static String cloudArrayToString(Cloud[] clouds) {
