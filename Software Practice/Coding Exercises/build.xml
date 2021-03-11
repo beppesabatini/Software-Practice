@@ -1,9 +1,19 @@
 <project name="HackerRankSolutions1.0" default="hackerrank" basedir=".">
-
+	<!-- -->
+	<!-- The author's Eclipse installation as of this writing compiles with Java 12. -->
+	<!-- The executable jar files will only run in an earlier version of Java. -->
+	<!-- The author has both Java 8 and Java 12 installed. -->
+	<!-- To compile in Eclipse using Java 8, settings must be changed in three places: -->
+	<!-- 	Window/Preferences/Java/Installed JREs -->
+	<!-- 	Window/Preferences/Java/Installed JREs/Execution Environments -->
+	<!-- 	Project/Properties/Java Compiler -->
+	<!-- 	- check Enable project specific settings -->
+	<!-- 	- set Compiler Compliance Level to 1.8 -->
+	<!-- -->
 	<property name="jar-file" value="${ant.project.name}.jar" />
 	<property name="src-dir" value="src" />
 	<property name="build-dir" value="bin" />
-	<property name="lib-dir" value="lib"/>
+	<property name="lib-dir" value="lib" />
 	<property name="output-dir" value="output" />
 	<property name="collect-hankerrank-elements-dir" value="collect-hankerrank-elements" />
 	<property name="manifest-file" value="src/hackerrank/meta-inf/MANIFEST.MF" />
@@ -11,7 +21,7 @@
 
 	<target name="hackerrank" depends="clean,collect.hankerrank.elements">
 		<jar jarfile="${output-dir}/${jar-file}" manifest="${manifest-file}">
-			<fileset dir="${collect-hankerrank-elements-dir}/"/>
+			<fileset dir="${collect-hankerrank-elements-dir}/" />
 		</jar>
 	</target>
 
@@ -19,7 +29,7 @@
 		<delete file="${output-dir}/${jar-file}" />
 		<delete dir="${collect-hankerrank-elements-dir}" />
 	</target>
-	
+
 	<target name="collect.hankerrank.elements" depends="">
 		<mkdir dir="${collect-hankerrank-elements-dir}" />
 		<copy todir="${collect-hankerrank-elements-dir}">
@@ -31,5 +41,5 @@
 			</fileset>
 		</copy>
 	</target>
-	
+
 </project>

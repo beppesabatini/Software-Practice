@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="create_run_jar" name="Create Runnable Jar for Project Puzzles for Programmers and Pros">
-    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
-    <!--ANT 1.7 is required                                        -->
-    <!--define folder properties-->
+<project default="sudoku.solver" name="Create Runnable Jar for the Sudoko Solver">
+	<!-- -->
+	<!-- ANT 1.7 is required -->
+	<!-- -->
+	<!-- The author's Eclipse installation as of this writing compiles with Java 12. -->
+	<!-- The executable jar files will only run in an earlier version of Java. -->
+	<!-- The author has both Java 8 and Java 12 installed. -->
+	<!-- To compile in Eclipse using Java 8, settings must be changed in three places: -->
+	<!-- 	Window/Preferences/Java/Installed JREs -->
+	<!-- 	Window/Preferences/Java/Installed JREs/Execution Environments -->
+	<!-- 	Project/Properties/Java Compiler -->
+	<!-- 	- check Enable project specific settings -->
+	<!-- 	- set Compiler Compliance Level to 1.8 -->
+	<!-- -->
     <property name="dir.buildfile" value="."/>
     <property name="dir.workspace" value="${dir.buildfile}/../.."/>
     <property name="dir.jarfile" value="${dir.buildfile}/src/partII/output"/>
-    <target name="create_run_jar">
+    <target name="sudoku.solver">
         <jar destfile="${dir.jarfile}/SudokuSolver.jar" filesetmanifest="mergewithoutmain">
             <manifest>
-                <attribute name="Main-Class" value="partII.PuzzlesPartIICodingExercises"/>
+                <attribute name="Main-Class" value="partII.launchers.SudokuConsole"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="${dir.buildfile}/bin"/>

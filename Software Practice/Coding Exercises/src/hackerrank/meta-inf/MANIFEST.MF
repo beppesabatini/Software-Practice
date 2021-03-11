@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
-Main-Class: hackerrank.HackerRankCodingExercises
+Main-Class: hackerrank.launchers.HackerRankConsole
 Class-Path: . 
 
