@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.javaApplet">
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/Java Examples in a Nutshell - Applets/src/je3/ch12/graphics/ColorGradient.java"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="1"/>
+    </listAttribute>
+    <intAttribute key="org.eclipse.jdt.launching.APPLET_HEIGHT" value="950"/>
+    <stringAttribute key="org.eclipse.jdt.launching.APPLET_NAME" value=""/>
+    <mapAttribute key="org.eclipse.jdt.launching.APPLET_PARAMETERS">
+        <mapEntry key="endColor" value="#ff0000"/>
+        <mapEntry key="startColor" value="#00ff00"/>
+    </mapAttribute>
+    <intAttribute key="org.eclipse.jdt.launching.APPLET_WIDTH" value="500"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="je3.ch12.graphics.ColorGradient"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="Java Examples in a Nutshell - Applets"/>
+</launchConfiguration>
