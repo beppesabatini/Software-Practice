@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<project name="FlanaganServlet1.0" default="war" basedir=".">
+
+	<!-- -->
+	<!-- The author has both Java 12 and Java 8 installed. -->
+	<!-- The author's Eclipse installation as of this writing compiles with Java 12. -->
+	<!-- The executable jar files need to support earlier versions of Java. -->
+	<!-- To compile the jars using Java 8: -->
+	<!--     • In Project Explorer or Package Explorer, right-click on this build.xml -->
+	<!--     • Click on Run As/External Tools Configuration -->
+	<!--     • Highlight the current build ("Java Examples in a Nutshell - FlanaganServlet1.0.war") -->
+	<!--     • Click on the tab JRE; select "Separate JRE" and select Java 8 -->
+	<!--     • Note that in the target "compile.classes" below, source="1.8" is specified. -->
+	<!-- -->
+
+	<property name="war-file" value="${ant.project.name}.war" />
+	<property name="src-dir" value="src" />
+	<property name="lib-dir" value="lib" />
+	<property name="build-dir" value="bin" />
+	<property name="output-dir" value="output" />
+	<property name="war-root-dir" value="${build-dir}/je3/ch20/servlet/" />
+
+	<target name="war" depends="print-version, clean, compile.classes">
+		<copy todir="${war-root-dir}/WEB-INF/lib/">
+			<fileset dir="${lib-dir}">
+				<include name="jstl-1.2.jar" />
+				<include name="sqlite-jdbc-3.34.0.jar" />
+			</fileset>
+		</copy>
+		<war destfile="${output-dir}/${war-file}" webxml="${war-root-dir}/WEB-INF/web.xml">
+			<fileset dir="${war-root-dir}">
+				<patternset>
+					<include name="index.html" />
+					<include name="*.jsp" />
+					<include name="*.jspx" />
+					<include name="ListManager/*.jsp" />
+					<include name="WEB-INF/tags/*.tag" />
+					<include name="WEB-INF/lib/*.jar" />
+					<include name="WEB-INF/classes/*/*/*/*.class" />
+
+				</patternset>
+			</fileset>
+		</war>
+	</target>
+
+	<target name="print-version">
+		<echo>Java/JVM version: ${ant.java.version}</echo>
+		<echo>Java/JVM detail version: ${java.version}</echo>
+		<echo>Ant version: ${ant.version}</echo>
+		<echo>Building: ${output-dir}/${war-file}</echo>
+	</target>
+
+	<target name="clean">
+		<mkdir dir="${build-dir}/je3/ch20/servlet/WEB-INF/classes/" />
+		<delete dir="${build-dir}/je3/ch20/servlet/WEB-INF/classes/" />
+		<delete dir="${build-dir}/je3/ch20/servlet/WEB-INF/lib/jstl-1.2.jar" />
+		<delete file="${output-dir}/${war-file}" />
+	</target>
+
+	<target name="compile.classes">
+		<mkdir dir="${build-dir}/je3/ch20/servlet/WEB-INF/classes/" />
+		<javac srcdir="${src-dir}/je3/ch20/servlet" destdir="${build-dir}/je3/ch20/servlet/WEB-INF/classes/" debug="on" source="1.8" includeantruntime="false">
+			<classpath>
+				<pathelement location="${lib-dir}/servlet-api.jar" />
+				<pathelement location="${lib-dir}/sqlite-jdbc-3.34.0.jar" />
+			</classpath>
+		</javac>
+	</target>
+
+</project>

@@ -1,0 +1,4429 @@
+<html><script type="text/javascript">try {
+(function injectPageScriptAPI(scriptName, shouldOverrideWebSocket, shouldOverrideWebRTC, isInjected) { 
+
+    'use strict';
+
+    /**
+     * If script have been injected into a frame via contentWindow then we can simply take the copy of messageChannel left for us by parent document
+     * Otherwise creates new message channel that sends a message to the content-script to check if request should be allowed or not.
+     */
+    var messageChannel = isInjected ? window[scriptName] : (function () {
+
+        // Save original postMessage and addEventListener functions to prevent webpage from tampering both.
+        var postMessage = window.postMessage;
+        var addEventListener = window.addEventListener;
+
+        // Current request ID (incremented every time we send a new message)
+        var currentRequestId = 0;
+        var requestsMap = {};
+
+        /**
+         * Handles messages sent from the content script back to the page script.
+         *
+         * @param event Event with necessary data
+         */
+        var onMessageReceived = function (event) {
+
+            if (!event.data || !event.data.direction || event.data.direction !== "to-page-script@abu") {
+                return;
+            }
+
+            var requestData = requestsMap[event.data.requestId];
+            if (requestData) {
+                var wrapper = requestData.wrapper;
+                requestData.onResponseReceived(wrapper, event.data.block);
+                delete requestsMap[event.data.requestId];
+            }
+        };
+
+        /**
+         * @param url                The URL to which wrapped object is willing to connect
+         * @param requestType        Request type ( WEBSOCKET or WEBRTC)
+         * @param wrapper            WebSocket wrapper instance
+         * @param onResponseReceived Called when response is received
+         */
+        var sendMessage = function (url, requestType, wrapper, onResponseReceived) {
+
+            if (currentRequestId === 0) {
+                // Subscribe to response when this method is called for the first time
+                addEventListener.call(window, "message", onMessageReceived, false);
+            }
+
+            var requestId = ++currentRequestId;
+            requestsMap[requestId] = {
+                wrapper: wrapper,
+                onResponseReceived: onResponseReceived
+            };
+
+            var message = {
+                requestId: requestId,
+                direction: 'from-page-script@abu',
+                elementUrl: url,
+                documentUrl: document.URL,
+                requestType: requestType
+            };
+
+            // Send a message to the background page to check if the request should be blocked
+            postMessage.call(window, message, "*");
+        };
+
+        return {
+            sendMessage: sendMessage
+        };
+
+    })();
+
+    /*
+     * In some case Chrome won't run content scripts inside frames.
+     * So we have to intercept access to contentWindow/contentDocument and manually inject wrapper script into this context
+     *
+     * Based on: https://github.com/adblockplus/adblockpluschrome/commit/1aabfb3346dc0821c52dd9e97f7d61b8c99cd707
+     */
+    var injectedToString = Function.prototype.toString.bind(injectPageScriptAPI);
+
+    var injectedFramesAdd;
+    var injectedFramesHas;
+    if (window.WeakSet instanceof Function) {
+        var injectedFrames = new WeakSet();
+        injectedFramesAdd = WeakSet.prototype.add.bind(injectedFrames);
+        injectedFramesHas = WeakSet.prototype.has.bind(injectedFrames);
+    } else {
+        var frames = [];
+        injectedFramesAdd = function (el) {
+            if (frames.indexOf(el) < 0) {
+                frames.push(el);
+            }
+        };
+        injectedFramesHas = function (el) {
+            return frames.indexOf(el) >= 0;
+        };
+    }
+
+    /**
+     * Injects wrapper's script into passed window
+     * @param contentWindow Frame's content window
+     */
+    function injectPageScriptAPIInWindow(contentWindow) {
+        try {
+            if (contentWindow && !injectedFramesHas(contentWindow)) {
+                injectedFramesAdd(contentWindow);
+                contentWindow[scriptName] = messageChannel; // Left message channel for the injected script
+                var args = "'" + scriptName + "', " + shouldOverrideWebSocket + ", " + shouldOverrideWebRTC + ", true";
+                contentWindow.eval("(" + injectedToString() + ")(" + args + ");");
+                delete contentWindow[scriptName];
+            }
+        } catch (e) {
+        }
+    }
+
+    /**
+     * Overrides access to contentWindow/contentDocument for the passed HTML element's interface (iframe, frame, object)
+     * If the content of one of these objects is requested we will inject our wrapper script.
+     * @param iface HTML element's interface
+     */
+    function overrideContentAccess(iface) {
+
+        var contentWindowDescriptor = Object.getOwnPropertyDescriptor(iface.prototype, "contentWindow");
+        var contentDocumentDescriptor = Object.getOwnPropertyDescriptor(iface.prototype, "contentDocument");
+
+        // Apparently in HTMLObjectElement.prototype.contentWindow does not exist
+        // in older versions of Chrome such as 42.
+        if (!contentWindowDescriptor) {
+            return;
+        }
+
+        var getContentWindow = Function.prototype.call.bind(contentWindowDescriptor.get);
+        var getContentDocument = Function.prototype.call.bind(contentDocumentDescriptor.get);
+
+        contentWindowDescriptor.get = function () {
+            var contentWindow = getContentWindow(this);
+            injectPageScriptAPIInWindow(contentWindow);
+            return contentWindow;
+        };
+        contentDocumentDescriptor.get = function () {
+            injectPageScriptAPIInWindow(getContentWindow(this));
+            return getContentDocument(this);
+        };
+
+        Object.defineProperty(iface.prototype, "contentWindow", contentWindowDescriptor);
+        Object.defineProperty(iface.prototype, "contentDocument", contentDocumentDescriptor);
+    }
+
+    var interfaces = [HTMLFrameElement, HTMLIFrameElement, HTMLObjectElement];
+    for (var i = 0; i < interfaces.length; i++) {
+        overrideContentAccess(interfaces[i]);
+    }
+
+    /**
+     * Defines properties in destination object
+     * @param src Source object
+     * @param dest Destination object
+     * @param properties Properties to copy
+     */
+    var copyProperties = function (src, dest, properties) {
+        for (var i = 0; i < properties.length; i++) {
+            var prop = properties[i];
+            var descriptor = Object.getOwnPropertyDescriptor(src, prop);
+            // Passed property may be undefined
+            if (descriptor) {
+                Object.defineProperty(dest, prop, descriptor);
+            }
+        }
+    };
+
+    /**
+     * Check request by sending message to content script
+     * @param url URL to block
+     * @param type Request type
+     * @param callback Result callback
+     */
+    var checkRequest = function (url, type, callback) {
+        messageChannel.sendMessage(url, type, this, function (wrapper, blockConnection) {
+            callback(blockConnection);
+        });
+    };
+
+    /**
+     * The function overrides window.WebSocket with our wrapper, that will check url with filters through messaging with content-script.
+     *
+     * IMPORTANT NOTE:
+     * This function is first loaded as a content script. The only purpose of it is to call
+     * the "toString" method and use resulting string as a text content for injected script.
+     */
+    var overrideWebSocket = function () { 
+
+        if (!(window.WebSocket instanceof Function)) {
+            return;
+        }
+
+        /**
+         * WebSocket wrapper implementation.
+         * https://github.com/AdguardTeam/AdguardBrowserExtension/issues/349
+         *
+         * Based on:
+         * https://github.com/adblockplus/adblockpluschrome/commit/457a336ee55a433217c3ffe5d363e5c6980f26f4
+         */
+
+        /**
+         * As far as possible we must track everything we use that could be sabotaged by the website later in order to circumvent us.
+         */
+        var RealWebSocket = WebSocket;
+        var closeWebSocket = Function.prototype.call.bind(RealWebSocket.prototype.close);
+
+        function WrappedWebSocket(url, protocols) {
+            // Throw correct exceptions if the constructor is used improperly.
+            if (!(this instanceof WrappedWebSocket)) {
+                return RealWebSocket();
+            }
+            if (arguments.length < 1) {
+                return new RealWebSocket();
+            }
+
+            var websocket = new RealWebSocket(url, protocols);
+
+            // This is the key point: checking if this WS should be blocked or not
+            // Don't forget that the type of 'websocket.url' is String, but 'url 'parameter might have another type.
+            checkRequest(websocket.url, 'WEBSOCKET', function (blocked) {
+                if (blocked) {
+                    closeWebSocket(websocket);
+                }
+            });
+
+            return websocket;
+        }
+
+        // https://github.com/AdguardTeam/AdguardBrowserExtension/issues/488
+        WrappedWebSocket.prototype = RealWebSocket.prototype;
+        window.WebSocket = WrappedWebSocket.bind();
+
+        copyProperties(RealWebSocket, WebSocket, ["CONNECTING", "OPEN", "CLOSING", "CLOSED", "name", "prototype"]);
+
+        RealWebSocket.prototype.constructor = WebSocket;
+
+    };
+
+    /**
+     * The function overrides window.RTCPeerConnection with our wrapper, that will check ice servers URLs with filters through messaging with content-script.
+     *
+     * IMPORTANT NOTE:
+     * This function is first loaded as a content script. The only purpose of it is to call
+     * the "toString" method and use resulting string as a text content for injected script.
+     */
+    var overrideWebRTC = function () { 
+
+
+        if (!(window.RTCPeerConnection instanceof Function) &&
+            !(window.webkitRTCPeerConnection instanceof Function)) {
+            return;
+        }
+
+        /**
+         * RTCPeerConnection wrapper implementation.
+         * https://github.com/AdguardTeam/AdguardBrowserExtension/issues/588
+         *
+         * Based on:
+         * https://github.com/adblockplus/adblockpluschrome/commit/af0585137be19011eace1cf68bf61eed2e6db974
+         *
+         * Chromium webRequest API doesn't allow the blocking of WebRTC connections
+         * https://bugs.chromium.org/p/chromium/issues/detail?id=707683
+         */
+
+        var RealRTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection;
+        var closeRTCPeerConnection = Function.prototype.call.bind(RealRTCPeerConnection.prototype.close);
+
+        var RealArray = Array;
+        var RealString = String;
+        var createObject = Object.create;
+        var defineProperty = Object.defineProperty;
+
+        /**
+         * Convert passed url to string
+         * @param url URL
+         * @returns {string}
+         */
+        function urlToString(url) {
+            if (typeof url !== "undefined") {
+                return RealString(url);
+            }
+        }
+
+        /**
+         * Creates new immutable array from original with some transform function
+         * @param original
+         * @param transform
+         * @returns {*}
+         */
+        function safeCopyArray(original, transform) {
+
+            if (original === null || typeof original !== "object") {
+                return original;
+            }
+
+            var immutable = RealArray(original.length);
+            for (var i = 0; i < immutable.length; i++) {
+                defineProperty(immutable, i, {
+                    configurable: false, enumerable: false, writable: false,
+                    value: transform(original[i])
+                });
+            }
+            defineProperty(immutable, "length", {
+                configurable: false, enumerable: false, writable: false,
+                value: immutable.length
+            });
+            return immutable;
+        }
+
+        /**
+         * Protect configuration from mutations
+         * @param configuration RTCPeerConnection configuration object
+         * @returns {*}
+         */
+        function protectConfiguration(configuration) {
+
+            if (configuration === null || typeof configuration !== "object") {
+                return configuration;
+            }
+
+            var iceServers = safeCopyArray(
+                configuration.iceServers,
+                function (iceServer) {
+
+                    var url = iceServer.url;
+                    var urls = iceServer.urls;
+
+                    // RTCPeerConnection doesn't iterate through pseudo Arrays of urls.
+                    if (typeof urls !== "undefined" && !(urls instanceof RealArray)) {
+                        urls = [urls];
+                    }
+
+                    return createObject(iceServer, {
+                        url: {
+                            configurable: false, enumerable: false, writable: false,
+                            value: urlToString(url)
+                        },
+                        urls: {
+                            configurable: false, enumerable: false, writable: false,
+                            value: safeCopyArray(urls, urlToString)
+                        }
+                    });
+                }
+            );
+
+            return createObject(configuration, {
+                iceServers: {
+                    configurable: false, enumerable: false, writable: false,
+                    value: iceServers
+                }
+            });
+        }
+
+        /**
+         * Check WebRTC connection's URL and close if it's blocked by rule
+         * @param connection Connection
+         * @param url URL to check
+         */
+        function checkWebRTCRequest(connection, url) {
+            checkRequest(url, 'WEBRTC', function (blocked) {
+                if (blocked) {
+                    try {
+                        closeRTCPeerConnection(connection);
+                    } catch (e) {
+                        // Ignore exceptions
+                    }
+                }
+            });
+        }
+
+        /**
+         * Check each URL of ice server in configuration for blocking.
+         *
+         * @param connection RTCPeerConnection
+         * @param configuration Configuration for RTCPeerConnection
+         * https://developer.mozilla.org/en-US/docs/Web/API/RTCConfiguration
+         */
+        function checkConfiguration(connection, configuration) {
+
+            if (!configuration || !configuration.iceServers) {
+                return;
+            }
+
+            var iceServers = configuration.iceServers;
+            for (var i = 0; i < iceServers.length; i++) {
+
+                var iceServer = iceServers[i];
+                if (!iceServer) {
+                    continue;
+                }
+
+                if (iceServer.url) {
+                    checkWebRTCRequest(connection, iceServer.url);
+                }
+
+                if (iceServer.urls) {
+                    for (var j = 0; j < iceServer.urls.length; j++) {
+                        checkWebRTCRequest(connection, iceServer.urls[j]);
+                    }
+                }
+            }
+        }
+
+        /**
+         * Overrides setConfiguration method
+         * https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/setConfiguration
+         */
+        if (RealRTCPeerConnection.prototype.setConfiguration) {
+
+            var realSetConfiguration = Function.prototype.call.bind(RealRTCPeerConnection.prototype.setConfiguration);
+
+            RealRTCPeerConnection.prototype.setConfiguration = function (configuration) {
+                configuration = protectConfiguration(configuration);
+                // Call the real method first, so that validates the configuration
+                realSetConfiguration(this, configuration);
+                checkConfiguration(this, configuration);
+            };
+        }
+
+        function WrappedRTCPeerConnection(configuration, arg) {
+
+            if (!(this instanceof WrappedRTCPeerConnection)) {
+                return RealRTCPeerConnection();
+            }
+
+            configuration = protectConfiguration(configuration);
+
+            /**
+             * The old webkitRTCPeerConnection constructor takes an optional second argument and we must pass it.
+             */
+            var connection = new RealRTCPeerConnection(configuration, arg);
+            checkConfiguration(connection, configuration);
+            return connection;
+        }
+
+        WrappedRTCPeerConnection.prototype = RealRTCPeerConnection.prototype;
+
+        var boundWrappedRTCPeerConnection = WrappedRTCPeerConnection.bind();
+        copyProperties(RealRTCPeerConnection, boundWrappedRTCPeerConnection, ["caller", "generateCertificate", "name", "prototype"]);
+        RealRTCPeerConnection.prototype.constructor = boundWrappedRTCPeerConnection;
+
+        if ("RTCPeerConnection" in window) {
+            window.RTCPeerConnection = boundWrappedRTCPeerConnection;
+        }
+        if ("webkitRTCPeerConnection" in window) {
+            window.webkitRTCPeerConnection = boundWrappedRTCPeerConnection;
+        }
+    };
+
+    if (shouldOverrideWebSocket) {
+        overrideWebSocket();
+    }
+
+    if (shouldOverrideWebRTC) {
+        overrideWebRTC();
+    }
+})('wrapper-script-967596977597726', false, true);
+} catch (ex) { console.error('Error executing AG js: ' + ex); }
+(function () {
+            var current = document.currentScript;
+            var parent = current && current.parentNode;
+            if (parent) {
+                parent.removeChild(current);
+            }
+        })();</script><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+   <meta http-equiv="Cont&nbsp;-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Miles Davis">
+   <meta name="GENERATOR" content="Mozilla/4.04 [en] (X11; U; Linux 2.0.32 i586) [Netscape]">
+	<title>ASCII/ISO 8859 (Latin-1) Table</title>
+</head>
+<body vlink="#FF0000" text="#000000" link="#0000FF" bgcolor="#FFFFFF" alink="#000088">
+&nbsp;
+
+<h1>
+ASCII / ISO 8859-1 (Latin-1) Table with HTML Entity Names</h1>
+
+<ul>
+<li><a href="#US-ASCII">US-ASCII Entities</a></li>
+<ul>
+	<li><a href="#ASCII-CONTROL">Control Characters</a></li>
+	<li><a href="#ASCII-SPECIAL">Special Characters and Numbers</a></li>
+	<li><a href="#ASCII-UPPER">Upper Case Letters</a></li>
+	<li><a href="#ASCII-LOWER">Lower Case Letters</a></li>
+	<li><a href="#ASCII-EXTENDED">Extended Control Characters</a></li>
+	</ul>
+	
+<li><a href="#ISO">ISO-8859-1 (Latin-1) Entities</a></li>
+<ul>
+	<li><a href="#ISO-SPECIAL">Special Characters</a></li>
+	<li><a href="#ISO-UPPER">Upper Case Latin-1 Letters</a></li>
+	<li><a href="#ISO-LOWER">Lower Case Latin-1 Letters</a></li>
+	</ul>
+<li><a href="#REFERENCES">References</a></li>
+</ul>
+<p>
+&nbsp;
+
+<table cellspacing="0" cellpadding="3" border="1">
+
+<tbody><tr>
+<td colspan="6" bgcolor="#0000a0"><font color="#FFFFFF"><a name="US-ASCII">US-ASCII Entities</a></font></td>
+</tr>
+<tr>
+
+<td colspan="6" bgcolor="#000000"><font color="#FFFFFF"><a name="ASCII-CONTROL">Control Characters</a></font></td>
+</tr>
+
+<tr bgcolor="#A00000">
+<td><font color="#FFFFFF"><b>Character<br>Reference</b></font></td>
+
+<td><font color="#FFFFFF"><b>Hex</b></font></td>
+
+<td><font color="#FFFFFF"><b>Character</b></font></td>
+
+<td><font color="#FFFFFF"><b>Entity Name</b></font></td>
+
+<td colspan="2"><font color="#FFFFFF"><b>Description</b></font></td>
+
+</tr>
+<tr>
+<td><tt>&amp;#000;</tt></td>
+
+<td><tt>00</tt></td>
+
+<td><tt>^@</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>null</td>
+
+<td><b><tt>NUL</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#001;</tt></td>
+
+<td><tt>01</tt></td>
+
+<td><tt>^A</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>start of heading</td>
+
+<td><b><tt>SOH</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#002;</tt></td>
+
+<td><tt>02</tt></td>
+
+<td><tt>^B</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>start of text</td>
+
+<td><b><tt>STX</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#003;</tt></td>
+
+<td><tt>03</tt></td>
+
+<td><tt>^C</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>end of text</td>
+
+<td><b><tt>EOT</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#004;</tt></td>
+
+<td><tt>04</tt></td>
+
+<td><tt>^D</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>end of transmission</td>
+
+<td><b><tt>EOT</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#005;</tt></td>
+
+<td><tt>05</tt></td>
+
+<td><tt>^E</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>enquiry</td>
+
+<td><b><tt>ENQ</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#006;</tt></td>
+
+<td><tt>06</tt></td>
+
+<td><tt>^F</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>acknowledge</td>
+
+<td><b><tt>ACK</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#007;</tt></td>
+
+<td><tt>07</tt></td>
+
+<td><tt>^G</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>bell</td>
+
+<td><b><tt>BEL</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#008;</tt></td>
+
+<td><tt>08</tt></td>
+
+<td><tt>^H</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>backpace</td>
+
+<td><b><tt>BS</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#009;</tt></td>
+
+<td><tt>09</tt></td>
+
+<td><tt>^I</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>horizontal tab</td>
+
+<td><b><tt>HT</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#010;</tt></td>
+
+<td><tt>0A</tt></td>
+
+<td><tt>^J</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>line feed, new line</td>
+
+<td><b><tt>LF, NL</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#011;</tt></td>
+
+<td><tt>0B</tt></td>
+
+<td><tt>^K</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>vertical tab</td>
+
+<td><b><tt>VT</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#012;</tt></td>
+
+<td><tt>0C</tt></td>
+
+<td><tt>^L</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>form feed, new page</td>
+
+<td><b><tt>FF, NP</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#013;</tt></td>
+
+<td><tt>0D</tt></td>
+
+<td><tt>^M</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>carriage return</td>
+
+<td><b><tt>CR</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#014;</tt></td>
+
+<td><tt>0E</tt></td>
+
+<td><tt>^N</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>shift out</td>
+
+<td><b><tt>SO</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#015;</tt></td>
+
+<td><tt>0F</tt></td>
+
+<td><tt>^O</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>shift in</td>
+
+<td><b><tt>SI</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#016;</tt></td>
+
+<td><tt>10</tt></td>
+
+<td><tt>^P</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>data link escape</td>
+
+<td><b><tt>DLE</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#017;</tt></td>
+
+<td><tt>11</tt></td>
+
+<td><tt>^Q</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>device control 1</td>
+
+<td><b><tt>DC1</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#018;</tt></td>
+
+<td><tt>12</tt></td>
+
+<td><tt>^R</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>device control 2</td>
+
+<td><b><tt>DC2</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#019;</tt></td>
+
+<td><tt>13</tt></td>
+
+<td><tt>^S</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>device control 3</td>
+
+<td><b><tt>DC3</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#020;</tt></td>
+
+<td><tt>14</tt></td>
+
+<td><tt>^T</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>device control 4</td>
+
+<td><b><tt>DC4</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#021;</tt></td>
+
+<td><tt>15</tt></td>
+
+<td><tt>^U</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>negative acknowledge</td>
+
+<td><b><tt>NAK</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#022;</tt></td>
+
+<td><tt>16</tt></td>
+
+<td><tt>^V</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>synchonous idle</td>
+
+<td><b><tt>SYN</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#023;</tt></td>
+
+<td><tt>17</tt></td>
+
+<td><tt>^W</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>end of transmission block</td>
+
+<td><b><tt>ETB</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#024;</tt></td>
+
+<td><tt>18</tt></td>
+
+<td><tt>^X</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>cancel</td>
+
+<td><b><tt>CAN</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#025;</tt></td>
+
+<td><tt>19</tt></td>
+
+<td><tt>^Y</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>end of medium</td>
+
+<td><b><tt>EM</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#026;</tt></td>
+
+<td><tt>1A</tt></td>
+
+<td><tt>^Z</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>substitute</td>
+
+<td><b><tt>SUB</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#027;</tt></td>
+
+<td><tt>1B</tt></td>
+
+<td><tt>^[</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>escape</td>
+
+<td><b><tt>ESC</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#028;</tt></td>
+
+<td><tt>1C</tt></td>
+
+<td><tt>^\</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>file separator</td>
+
+<td><b><tt>FS</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#029;</tt></td>
+
+<td><tt>1D</tt></td>
+
+<td><tt>^]</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>group separator</td>
+
+<td><b><tt>GS</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#030;</tt></td>
+
+<td><tt>1E</tt></td>
+
+<td><tt>^^</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>record separator</td>
+
+<td><b><tt>RS</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#031;</tt></td>
+
+<td><tt>1F</tt></td>
+
+<td><tt>^_</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>unit separator</td>
+
+<td><b><tt>US</tt></b></td>
+</tr>
+
+<tr>
+<td colspan="6" bgcolor="#000000"><font color="#FFFFFF"><a name="ASCII-SPECIAL">Special Characters and Numbers</a></font></td>
+</tr>
+
+<tr bgcolor="#A00000">
+<td><font color="#FFFFFF"><b>Character<br>Reference</b></font></td>
+
+<td><font color="#FFFFFF"><b>Hex</b></font></td>
+
+<td><font color="#FFFFFF"><b>Character</b></font></td>
+
+<td><font color="#FFFFFF"><b>Entity Name</b></font></td>
+
+<td colspan="2"><font color="#FFFFFF"><b>Description</b></font></td>
+
+</tr>
+<tr>
+<td><tt>&amp;#032;</tt></td>
+
+<td><tt>20</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td><tt>&amp;sp;</tt></td>
+
+<td>space</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#033;</tt></td>
+
+<td><tt>21</tt></td>
+
+<td><tt>!</tt></td>
+
+<td><tt>&amp;excl;</tt></td>
+
+<td>exclamation mark</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#034;</tt></td>
+
+<td><tt>22</tt></td>
+
+<td><tt>"</tt></td>
+
+<td><tt>&amp;quot;</tt></td>
+
+<td>double quotation mark</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#035;</tt></td>
+
+<td><tt>23</tt></td>
+
+<td><tt>#</tt></td>
+
+<td><tt>&amp;num;</tt></td>
+
+<td>number sign, pound</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#036;</tt></td>
+
+<td><tt>24</tt></td>
+
+<td><tt>$</tt></td>
+
+<td><tt>&amp;dollar;</tt></td>
+
+<td>dollar sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#037;</tt></td>
+
+<td><tt>25</tt></td>
+
+<td><tt>%</tt></td>
+
+<td><tt>&amp;percnt;</tt></td>
+
+<td>percent sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#038;</tt></td>
+
+<td><tt>26</tt></td>
+
+<td><tt>&amp;</tt></td>
+
+<td><tt>&amp;amp;</tt></td>
+
+<td>ampersand</td>
+
+<td><b><tt>&nbsp;<tt></tt></tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#039;</tt></td>
+
+<td><tt>27</tt></td>
+
+<td><tt>'</tt></td>
+
+<td><tt>&amp;apos;</tt></td>
+
+<td>apostrophe, single quote mark</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#040;</tt></td>
+
+<td><tt>28</tt></td>
+
+<td><tt>(</tt></td>
+
+<td><tt>&amp;lpar;</tt></td>
+
+<td>left parenthesis</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#041;</tt></td>
+
+<td><tt>29</tt></td>
+
+<td><tt>)</tt></td>
+
+<td><tt>&amp;rpar;</tt></td>
+
+<td>right parenthesis</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#042;</tt></td>
+
+<td><tt>2A</tt></td>
+
+<td><tt>*</tt></td>
+
+<td><tt>&amp;ast;</tt></td>
+
+<td>asterisk</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#043;</tt></td>
+
+<td><tt>2B</tt></td>
+
+<td><tt>+</tt></td>
+
+<td><tt>&amp;plus;</tt></td>
+
+<td>plus sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#044;</tt></td>
+
+<td><tt>2C</tt></td>
+
+<td><tt>,</tt></td>
+
+<td><tt>&amp;comma;</tt></td>
+
+<td>comma</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#045;</tt></td>
+
+<td><tt>2D</tt></td>
+
+<td><tt>-</tt></td>
+
+<td><tt>&amp;minus; &nbsp; &amp;hyphen;</tt></td>
+
+<td>minus sign, hyphen</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#046;</tt></td>
+
+<td><tt>2E</tt></td>
+
+<td><tt>.</tt></td>
+
+<td><tt>&amp;period;</tt></td>
+
+<td>period, decimal point, full stop</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#047;</tt></td>
+
+<td><tt>2F</tt></td>
+
+<td><tt>/</tt></td>
+
+<td><tt>&amp;sol;</tt></td>
+
+<td>slash, virgule, solidus</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#048;</tt></td>
+
+<td><tt>30</tt></td>
+
+<td><tt>0</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>digit 0</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#049;</tt></td>
+
+<td><tt>31</tt></td>
+
+<td><tt>1<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>digit 1</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#050;</tt></td>
+
+<td><tt>32</tt></td>
+
+<td><tt>2</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>digit 2</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#051;</tt></td>
+
+<td><tt>33</tt></td>
+
+<td><tt>3</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>digit 3</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#052;</tt></td>
+
+<td><tt>34</tt></td>
+
+<td><tt>4</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>digit 4</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#053;</tt></td>
+
+<td><tt>35</tt></td>
+
+<td><tt>5</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>digit 5</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#054;</tt></td>
+
+<td><tt>36</tt></td>
+
+<td><tt>6</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>digit 6</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#055;</tt></td>
+
+<td><tt>37</tt></td>
+
+<td><tt>7</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>digit 7</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#056;</tt></td>
+
+<td><tt>38</tt></td>
+
+<td><tt>8</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>digit 8</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#057;</tt></td>
+
+<td><tt>39</tt></td>
+
+<td><tt>9</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>digit 9</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#058;</tt></td>
+
+<td><tt>3A</tt></td>
+
+<td><tt>:</tt></td>
+
+<td><tt>&amp;colon;</tt></td>
+
+<td>colon</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#059;</tt></td>
+
+<td><tt>3B</tt></td>
+
+<td><tt>;</tt></td>
+
+<td><tt>&amp;semi;</tt></td>
+
+<td>semicolon</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#060;</tt></td>
+
+<td><tt>3C</tt></td>
+
+<td><tt>&lt;</tt></td>
+
+<td><tt>&amp;lt;</tt></td>
+
+<td>less-than sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#061;</tt></td>
+
+<td><tt>3D</tt></td>
+
+<td><tt>=</tt></td>
+
+<td><tt>&amp;equals;</tt></td>
+
+<td>equal sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#062;</tt></td>
+
+<td><tt>3E</tt></td>
+
+<td><tt>&gt;</tt></td>
+
+<td><tt>&amp;gt;</tt></td>
+
+<td>greater-than sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#063;</tt></td>
+
+<td><tt>3F</tt></td>
+
+<td><tt>?</tt></td>
+
+<td><tt>&amp;quest;</tt></td>
+
+<td>question mark</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td colspan="6" bgcolor="#000000"><font color="#FFFFFF"><a name="ASCII-UPPER">Upper Case Letters</a></font></td>
+</tr>
+
+<tr bgcolor="#A00000">
+<td><font color="#FFFFFF"><b>Character<br>Reference</b></font></td>
+
+<td><font color="#FFFFFF"><b>Hex</b></font></td>
+
+<td><font color="#FFFFFF"><b>Character</b></font></td>
+
+<td><font color="#FFFFFF"><b>Entity Name</b></font></td>
+
+<td colspan="2"><font color="#FFFFFF"><b>Description</b></font></td>
+
+</tr>
+<tr>
+<td><tt>&amp;#064;</tt></td>
+
+<td><tt>40</tt></td>
+
+<td><tt>@</tt></td>
+
+<td><tt>&amp;commat;</tt></td>
+
+<td>commercial at sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#065;</tt></td>
+
+<td><tt>41</tt></td>
+
+<td><tt>A</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital A</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#066;</tt></td>
+
+<td><tt>42</tt></td>
+
+<td><tt>B<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital B</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#067;</tt></td>
+
+<td><tt>43</tt></td>
+
+<td><tt>C</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital C</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#068;</tt></td>
+
+<td><tt>44</tt></td>
+
+<td><tt>D</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital D</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#069;</tt></td>
+
+<td><tt>45</tt></td>
+
+<td><tt>E</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital E</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#070;</tt></td>
+
+<td><tt>46</tt></td>
+
+<td><tt>F</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital F</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#071;</tt></td>
+
+<td><tt>47</tt></td>
+
+<td><tt>G</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital G</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#072;</tt></td>
+
+<td><tt>48</tt></td>
+
+<td><tt>H</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital H</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#073;</tt></td>
+
+<td><tt>49</tt></td>
+
+<td><tt>I</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital I</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#074;</tt></td>
+
+<td><tt>4A</tt></td>
+
+<td><tt>J</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital J</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#075;</tt></td>
+
+<td><tt>4B</tt></td>
+
+<td><tt>K</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital K</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#076;</tt></td>
+
+<td><tt>4C</tt></td>
+
+<td><tt>L</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital L</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#077;</tt></td>
+
+<td><tt>4D</tt></td>
+
+<td><tt>M</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital M</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#078;</tt></td>
+
+<td><tt>4E</tt></td>
+
+<td><tt>N</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital N</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#079;</tt></td>
+
+<td><tt>4F</tt></td>
+
+<td><tt>O</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital O</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#080;</tt></td>
+
+<td><tt>50</tt></td>
+
+<td><tt>P</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital P</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#081;</tt></td>
+
+<td><tt>51</tt></td>
+
+<td><tt>Q</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital Q</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#082;</tt></td>
+
+<td><tt>52</tt></td>
+
+<td><tt>R</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital R</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#083;</tt></td>
+
+<td><tt>53</tt></td>
+
+<td><tt>S</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital S</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#084;</tt></td>
+
+<td><tt>54</tt></td>
+
+<td><tt>T</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital T</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#085;</tt></td>
+
+<td><tt>55</tt></td>
+
+<td><tt>U</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital U</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#086;</tt></td>
+
+<td><tt>56</tt></td>
+
+<td><tt>V</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital V</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#087;</tt></td>
+
+<td><tt>57</tt></td>
+
+<td><tt>W</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital W</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#088;</tt></td>
+
+<td><tt>58</tt></td>
+
+<td><tt>X</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital X</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#089;</tt></td>
+
+<td><tt>59</tt></td>
+
+<td><tt>Y</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital Y</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#090;</tt></td>
+
+<td><tt>5A</tt></td>
+
+<td><tt>Z</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>capital Z</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#091;</tt></td>
+
+<td><tt>5B</tt></td>
+
+<td><tt>[</tt></td>
+
+<td><tt>&amp;lsqb;</tt></td>
+
+<td>left square bracket</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#092;</tt></td>
+
+<td><tt>5C</tt></td>
+
+<td><tt>\</tt></td>
+
+<td><tt>&amp;bsol;</tt></td>
+
+<td>backslash, reverse solidus</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#093;</tt></td>
+
+<td><tt>5D</tt></td>
+
+<td><tt>]</tt></td>
+
+<td><tt>&amp;rsqb;</tt></td>
+
+<td>right square bracket</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#094;</tt></td>
+
+<td><tt>5E</tt></td>
+
+<td><tt>^</tt></td>
+
+<td><tt>&amp;circ;</tt></td>
+
+<td>spacing circumflex accent</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#095;</tt></td>
+
+<td><tt>5F</tt></td>
+
+<td><tt>_</tt></td>
+
+<td><tt>&amp;lowbar; &nbsp; &amp;horbar;</tt></td>
+
+<td>spacing underscore, low line, horizontal bar</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td colspan="6" bgcolor="#000000"><font color="#FFFFFF"><a name="ASCII-LOWER">Lower Case Letters</a></font></td>
+</tr>
+
+<tr bgcolor="#A00000">
+<td><font color="#FFFFFF"><b>Character<br>Reference</b></font></td>
+
+<td><font color="#FFFFFF"><b>Hex</b></font></td>
+
+<td><font color="#FFFFFF"><b>Character</b></font></td>
+
+<td><font color="#FFFFFF"><b>Entity Name</b></font></td>
+
+<td colspan="2"><font color="#FFFFFF"><b>Description</b></font></td>
+
+</tr>
+<tr>
+<td><tt>&amp;#096;</tt></td>
+
+<td><tt>60</tt></td>
+
+<td><tt>`</tt></td>
+
+<td><tt>&amp;grave;</tt></td>
+
+<td>spacing grave accent, back apostrophe</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#097;</tt></td>
+
+<td><tt>61</tt></td>
+
+<td><tt>a</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small a</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#098;</tt></td>
+
+<td><tt>62</tt></td>
+
+<td><tt>b</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small b</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#099;</tt></td>
+
+<td><tt>63</tt></td>
+
+<td><tt>c</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small c</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#100;</tt></td>
+
+<td><tt>64</tt></td>
+
+<td><tt>d</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small d</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#101;</tt></td>
+
+<td><tt>65</tt></td>
+
+<td><tt>e</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small e</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#102;</tt></td>
+
+<td><tt>66</tt></td>
+
+<td><tt>f</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small f</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#103;</tt></td>
+
+<td><tt>67</tt></td>
+
+<td><tt>g</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small g</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#104;</tt></td>
+
+<td><tt>68</tt></td>
+
+<td><tt>h</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small h</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#105;</tt></td>
+
+<td><tt>69</tt></td>
+
+<td><tt>i</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small i</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#106;</tt></td>
+
+<td><tt>6A</tt></td>
+
+<td><tt>j</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small j</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#107;</tt></td>
+
+<td><tt>6B</tt></td>
+
+<td><tt>k</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small k</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#108;</tt></td>
+
+<td><tt>6C</tt></td>
+
+<td><tt>l</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small l</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#109;</tt></td>
+
+<td><tt>6D</tt></td>
+
+<td><tt>m</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small m</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#110;</tt></td>
+
+<td><tt>6E</tt></td>
+
+<td><tt>n</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small n</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#111;</tt></td>
+
+<td><tt>6F</tt></td>
+
+<td><tt>o</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small o</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#112;</tt></td>
+
+<td><tt>70</tt></td>
+
+<td><tt>p</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small p</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#113;</tt></td>
+
+<td><tt>71</tt></td>
+
+<td><tt>q</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small q</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#114;</tt></td>
+
+<td><tt>72</tt></td>
+
+<td><tt>r</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small r</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#115;</tt></td>
+
+<td><tt>73</tt></td>
+
+<td><tt>s</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small s</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#116;</tt></td>
+
+<td><tt>74</tt></td>
+
+<td><tt>t</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small t</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#117;</tt></td>
+
+<td><tt>75</tt></td>
+
+<td><tt>u</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small u</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#118;</tt></td>
+
+<td><tt>76</tt></td>
+
+<td><tt>v</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small v</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#119;</tt></td>
+
+<td><tt>77</tt></td>
+
+<td><tt>w</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small w</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#120;</tt></td>
+
+<td><tt>78</tt></td>
+
+<td><tt>x</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small x</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#121;</tt></td>
+
+<td><tt>79</tt></td>
+
+<td><tt>y</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small y</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#122;</tt></td>
+
+<td><tt>7A</tt></td>
+
+<td><tt>z</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>small z</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#123;</tt></td>
+
+<td><tt>7B</tt></td>
+
+<td><tt>{</tt></td>
+
+<td><tt>&amp;lcub;</tt></td>
+
+<td>left brace, left curly bracket</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#124;</tt></td>
+
+<td><tt>7C</tt></td>
+
+<td><tt>|</tt></td>
+
+<td><tt>&amp;verbar;</tt></td>
+
+<td>vertical bar</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#125;</tt></td>
+
+<td><tt>7D</tt></td>
+
+<td><tt>}</tt></td>
+
+<td><tt>&amp;rcub;</tt></td>
+
+<td>right brace, right curly bracket</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#126;</tt></td>
+
+<td><tt>7E</tt></td>
+
+<td><tt>~</tt></td>
+
+<td><tt>&amp;tilde;</tt></td>
+
+<td>tilde accent</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#127;</tt></td>
+
+<td><tt>7F</tt></td>
+
+<td><tt>^?</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>delete</td>
+
+<td><b><tt>DEL</tt></b></td>
+</tr>
+
+<tr>
+<td colspan="6" bgcolor="#000000"><font color="#FFFFFF"><a name="ASCII-EXTENDED">Extended Control Characters</a></font></td>
+</tr>
+
+<tr bgcolor="#A00000">
+<td><font color="#FFFFFF"><b>Character<br>Reference</b></font></td>
+
+<td><font color="#FFFFFF"><b>Hex</b></font></td>
+
+<td><font color="#FFFFFF"><b>Character</b></font></td>
+
+<td><font color="#FFFFFF"><b>Entity Name</b></font></td>
+
+<td colspan="2"><font color="#FFFFFF"><b>Description</b></font></td>
+
+</tr>
+<tr>
+<td><tt>&amp;#128;</tt></td>
+
+<td><tt>80</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp;</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#129;</tt></td>
+
+<td><tt>81</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp;</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#130;</tt></td>
+
+<td><tt>82</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#131;</tt></td>
+
+<td><tt>83</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#132;</tt></td>
+
+<td><tt>84</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#133;</tt></td>
+
+<td><tt>85</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#134;</tt></td>
+
+<td><tt>86</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#135;</tt></td>
+
+<td><tt>87</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#136;</tt></td>
+
+<td><tt>88</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#137;</tt></td>
+
+<td><tt>89</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#138;</tt></td>
+
+<td><tt>8A</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#139;</tt></td>
+
+<td><tt>8B</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#140;</tt></td>
+
+<td><tt>8C</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#141;</tt></td>
+
+<td><tt>8D</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#142;</tt></td>
+
+<td><tt>8E</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#143;</tt></td>
+
+<td><tt>8F</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#144;</tt></td>
+
+<td><tt>90</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#145;</tt></td>
+
+<td><tt>91</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#146;</tt></td>
+
+<td><tt>92</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#147;</tt></td>
+
+<td><tt>93</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#148;</tt></td>
+
+<td><tt>94</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#149;</tt></td>
+
+<td><tt>95</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#150;</tt></td>
+
+<td><tt>96</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#151;</tt></td>
+
+<td><tt>97</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#152;</tt></td>
+
+<td><tt>98</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#153;</tt></td>
+
+<td><tt>99</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#154;</tt></td>
+
+<td><tt>9A</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#155;</tt></td>
+
+<td><tt>9B</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#156;</tt></td>
+
+<td><tt>9C</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#157;</tt></td>
+
+<td><tt>9D</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#158;</tt></td>
+
+<td><tt>9E</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#159;</tt></td>
+
+<td><tt>9F</tt></td>
+
+<td><tt>&nbsp;<tt></tt></tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td>&nbsp; </td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td colspan="6" bgcolor="#0000a0"><font color="#FFFFFF"><a name="ISO">ISO 8859-1 (Latin-1) Entities</a></font></td>
+</tr>
+
+<tr>
+<td colspan="6" bgcolor="#000000"><font color="#FFFFFF"><a name="ISO-SPECIAL">Special Characters</a></font></td>
+</tr>
+
+<tr bgcolor="#A00000">
+<td><font color="#FFFFFF"><b>Character<br>Reference</b></font></td>
+
+<td><font color="#FFFFFF"><b>Hex</b></font></td>
+
+<td><font color="#FFFFFF"><b>Character</b></font></td>
+
+<td><font color="#FFFFFF"><b>Entity Name</b></font></td>
+
+<td colspan="2"><font color="#FFFFFF"><b>Description</b></font></td>
+
+</tr>
+<tr>
+<td><tt>&amp;#160;</tt></td>
+
+<td><tt>A0</tt></td>
+
+<td><tt>&nbsp;</tt></td>
+
+<td><tt>&amp;nbsp;</tt></td>
+
+<td>non-breaking space</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#161;</tt></td>
+
+<td><tt>A1</tt></td>
+
+<td><tt>¡</tt></td>
+
+<td><tt>&amp;iexcl;</tt></td>
+
+<td>inverted exclamation mark</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#162;</tt></td>
+
+<td><tt>A2</tt></td>
+
+<td><tt>¢</tt></td>
+
+<td><tt>&amp;cent;</tt></td>
+
+<td>cent sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#163;</tt></td>
+
+<td><tt>A3</tt></td>
+
+<td><tt>£</tt></td>
+
+<td><tt>&amp;pound;</tt></td>
+
+<td>pound sterling sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#164;</tt></td>
+
+<td><tt>A4</tt></td>
+
+<td><tt>¤</tt></td>
+
+<td><tt>&amp;curren;</tt></td>
+
+<td>general currency sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#165;</tt></td>
+
+<td><tt>A5</tt></td>
+
+<td><tt>¥</tt></td>
+
+<td><tt>&amp;yen;</tt></td>
+
+<td>yen sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#166;</tt></td>
+
+<td><tt>A6</tt></td>
+
+<td><tt>¦</tt></td>
+
+<td><tt>&amp;brkbar; &amp;brvbar;</tt></td>
+
+<td>broken vertical bar</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#167;</tt></td>
+
+<td><tt>A7</tt></td>
+
+<td><tt>§</tt></td>
+
+<td><tt>&amp;sect;</tt></td>
+
+<td>section sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#168;</tt></td>
+
+<td><tt>A8</tt></td>
+
+<td><tt>¨</tt></td>
+
+<td><tt>&amp;uml; &amp;die;</tt></td>
+
+<td>spacing dieresis or umlaut</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#169;</tt></td>
+
+<td><tt>A9</tt></td>
+
+<td><tt>©</tt></td>
+
+<td><tt>&amp;copy;</tt></td>
+
+<td>copyright sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#170;</tt></td>
+
+<td><tt>AA</tt></td>
+
+<td><tt>ª</tt></td>
+
+<td><tt>&amp;ordf;</tt></td>
+
+<td>feminine ordinal sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#171;</tt></td>
+
+<td><tt>AB</tt></td>
+
+<td><tt>«</tt></td>
+
+<td><tt>&amp;laquo;</tt></td>
+
+<td>left double angle quote or guillemet</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#172;</tt></td>
+
+<td><tt>AC</tt></td>
+
+<td><tt>¬</tt></td>
+
+<td><tt>&amp;not;</tt></td>
+
+<td>logical not sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#173;</tt></td>
+
+<td><tt>AD</tt></td>
+
+<td><tt>­</tt></td>
+
+<td><tt>&amp;shy;</tt></td>
+
+<td>soft hyphen</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#174;</tt></td>
+
+<td><tt>AE</tt></td>
+
+<td><tt>®</tt></td>
+
+<td><tt>&amp;reg;</tt></td>
+
+<td>registered trademark sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#175;</tt></td>
+
+<td><tt>AF</tt></td>
+
+<td><tt>¯</tt></td>
+
+<td><tt>&amp;macr; &amp;hibar;</tt></td>
+
+<td>spacing macron long accent</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#176;</tt></td>
+
+<td><tt>B0</tt></td>
+
+<td><tt>°</tt></td>
+
+<td><tt>&amp;deg;</tt></td>
+
+<td>degree sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#177;</tt></td>
+
+<td><tt>B1</tt></td>
+
+<td><tt>±</tt></td>
+
+<td><tt>&amp;plusmn;</tt></td>
+
+<td>plus-or-minus sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#178;</tt></td>
+
+<td><tt>B2</tt></td>
+
+<td><tt>²</tt></td>
+
+<td><tt>&amp;sup2;</tt></td>
+
+<td>superscript 2</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#179;</tt></td>
+
+<td><tt>B3</tt></td>
+
+<td><tt>³</tt></td>
+
+<td><tt>&amp;sup3;</tt></td>
+
+<td>superscript 3</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#180;</tt></td>
+
+<td><tt>B4</tt></td>
+
+<td><tt>´</tt></td>
+
+<td><tt>&amp;acute;</tt></td>
+
+<td>spacing accute accent</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#181;</tt></td>
+
+<td><tt>B5</tt></td>
+
+<td><tt>µ</tt></td>
+
+<td><tt>&amp;micro;</tt></td>
+
+<td>micro sign, mu</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#182;</tt></td>
+
+<td><tt>B6</tt></td>
+
+<td><tt>¶</tt></td>
+
+<td><tt>&amp;para;</tt></td>
+
+<td>paragraph sign, pilcrow sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#183;</tt></td>
+
+<td><tt>B7</tt></td>
+
+<td><tt>·</tt></td>
+
+<td><tt>&amp;middot;</tt></td>
+
+<td>middle dot, centered dot</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#184;</tt></td>
+
+<td><tt>B8</tt></td>
+
+<td><tt>¸</tt></td>
+
+<td><tt>&amp;cedil;</tt></td>
+
+<td>spacing cedilla</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#185;</tt></td>
+
+<td><tt>B9</tt></td>
+
+<td><tt>¹</tt></td>
+
+<td><tt>&amp;sup1;</tt></td>
+
+<td>superscript 1</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#186;</tt></td>
+
+<td><tt>BA</tt></td>
+
+<td><tt>º</tt></td>
+
+<td><tt>&amp;ordm;</tt></td>
+
+<td>masculine ordinal indicator</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#187;</tt></td>
+
+<td><tt>BB</tt></td>
+
+<td><tt>»</tt></td>
+
+<td><tt>&amp;raquo;;</tt></td>
+
+<td>right double angle quote or guillemet</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#188;</tt></td>
+
+<td><tt>BC</tt></td>
+
+<td><tt>¼</tt></td>
+
+<td><tt>&amp;frac14;</tt></td>
+
+<td>fraction 1/4</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#189;</tt></td>
+
+<td><tt>BD</tt></td>
+
+<td><tt>½</tt></td>
+
+<td><tt>&amp;frac12; &amp;half;</tt></td>
+
+<td>fraction 1/2</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#190;</tt></td>
+
+<td><tt>BE</tt></td>
+
+<td><tt>¾</tt></td>
+
+<td><tt>&amp;frac34;</tt></td>
+
+<td>fraction 3/4</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#191;</tt></td>
+
+<td><tt>BF</tt></td>
+
+<td><tt>¿</tt></td>
+
+<td><tt>&amp;iquest;</tt></td>
+
+<td>inverted question mark</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td colspan="6" bgcolor="#000000"><font color="#FFFFFF"><a name="ISO-UPPER">Upper Case Latin-1 Letters</a></font></td>
+</tr>
+
+<tr bgcolor="#A00000">
+<td><font color="#FFFFFF"><b>Character<br>Reference</b></font></td>
+
+<td><font color="#FFFFFF"><b>Hex</b></font></td>
+
+<td><font color="#FFFFFF"><b>Character</b></font></td>
+
+<td><font color="#FFFFFF"><b>Entity Name</b></font></td>
+
+<td colspan="2"><font color="#FFFFFF"><b>Description</b></font></td>
+
+</tr>
+<tr>
+<td><tt>&amp;#192;</tt></td>
+
+<td><tt>C0</tt></td>
+
+<td><tt>À</tt></td>
+
+<td><tt>&amp;Agrave;</tt></td>
+
+<td>capital A grave</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#193;</tt></td>
+
+<td><tt>C1</tt></td>
+
+<td><tt>Á</tt></td>
+
+<td><tt>&amp;Aacute;</tt></td>
+
+<td>capital A acute</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#194;</tt></td>
+
+<td><tt>C2</tt></td>
+
+<td><tt>Â</tt></td>
+
+<td><tt>&amp;Acirc;</tt></td>
+
+<td>capital A circumflex</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#195;</tt></td>
+
+<td><tt>C3</tt></td>
+
+<td><tt>Ã</tt></td>
+
+<td><tt>&amp;Atilde;</tt></td>
+
+<td>capital A tilde</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#196;</tt></td>
+
+<td><tt>C4</tt></td>
+
+<td><tt>Ä</tt></td>
+
+<td><tt>&amp;Auml;</tt></td>
+
+<td>capital A dieresis or umlaut</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#197;</tt></td>
+
+<td><tt>C5</tt></td>
+
+<td><tt>Å</tt></td>
+
+<td><tt>&amp;Aring;</tt></td>
+
+<td>capital A ring</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#198;</tt></td>
+
+<td><tt>C6</tt></td>
+
+<td><tt>Æ</tt></td>
+
+<td><tt>&amp;AElig;</tt></td>
+
+<td>capital AE ligature</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#199;</tt></td>
+
+<td><tt>C7</tt></td>
+
+<td><tt>Ç</tt></td>
+
+<td><tt>&amp;Ccedil;</tt></td>
+
+<td>capital C cedilla</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#200;</tt></td>
+
+<td><tt>C8</tt></td>
+
+<td><tt>È</tt></td>
+
+<td><tt>&amp;Egrave;</tt></td>
+
+<td>capital E grave</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#201;</tt></td>
+
+<td><tt>C9</tt></td>
+
+<td><tt>É</tt></td>
+
+<td><tt>&amp;Eacute;</tt></td>
+
+<td>capital E acute</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#202;</tt></td>
+
+<td><tt>CA</tt></td>
+
+<td><tt>Ê</tt></td>
+
+<td><tt>&amp;Ecirc;</tt></td>
+
+<td>capital E circumflex</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#203;</tt></td>
+
+<td><tt>CB</tt></td>
+
+<td><tt>Ë</tt></td>
+
+<td><tt>&amp;Euml;</tt></td>
+
+<td>capital E dieresis or umlaut</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#204;</tt></td>
+
+<td><tt>CC</tt></td>
+
+<td><tt>Ì</tt></td>
+
+<td><tt>&amp;Igrave;</tt></td>
+
+<td>capital I grave</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#205;</tt></td>
+
+<td><tt>CD</tt></td>
+
+<td><tt>Í</tt></td>
+
+<td><tt>&amp;Iacute;</tt></td>
+
+<td>capital I acute</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#206;</tt></td>
+
+<td><tt>CE</tt></td>
+
+<td><tt>Î</tt></td>
+
+<td><tt>&amp;Icirc;</tt></td>
+
+<td>capital I circumflex</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#207;</tt></td>
+
+<td><tt>CF</tt></td>
+
+<td><tt>Ï</tt></td>
+
+<td><tt>&amp;Iuml;</tt></td>
+
+<td>capital I dieresis or umlaut</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#208;</tt></td>
+
+<td><tt>D0</tt></td>
+
+<td><tt>Ð</tt></td>
+
+<td><tt>&amp;ETH;</tt></td>
+
+<td>capital ETH</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#209;</tt></td>
+
+<td><tt>D1</tt></td>
+
+<td><tt>Ñ</tt></td>
+
+<td><tt>&amp;Ntilde;</tt></td>
+
+<td>capital N tilde</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#210;</tt></td>
+
+<td><tt>D2</tt></td>
+
+<td><tt>Ò</tt></td>
+
+<td><tt>&amp;Ograve;</tt></td>
+
+<td>capital O grave</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#211;</tt></td>
+
+<td><tt>D3</tt></td>
+
+<td><tt>Ó</tt></td>
+
+<td><tt>&amp;Oacute;</tt></td>
+
+<td>capital O acute</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#212;</tt></td>
+
+<td><tt>D4</tt></td>
+
+<td><tt>Ô</tt></td>
+
+<td><tt>&amp;Ocirc;</tt></td>
+
+<td>capital O circumflex</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#213;</tt></td>
+
+<td><tt>D5</tt></td>
+
+<td><tt>Õ</tt></td>
+
+<td><tt>&amp;Otilde;</tt></td>
+
+<td>capital O tilde</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#214;</tt></td>
+
+<td><tt>D6</tt></td>
+
+<td><tt>Ö</tt></td>
+
+<td><tt>&amp;Ouml;</tt></td>
+
+<td>capital O dieresis or umlaut</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#215;</tt></td>
+
+<td><tt>D7</tt></td>
+
+<td><tt>×</tt></td>
+
+<td><tt>&amp;times;</tt></td>
+
+<td>multiplication sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#216;</tt></td>
+
+<td><tt>D8</tt></td>
+
+<td><tt>Ø</tt></td>
+
+<td><tt>&amp;Oslash;</tt></td>
+
+<td>capital O slash</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#217;</tt></td>
+
+<td><tt>D9</tt></td>
+
+<td><tt>Ù</tt></td>
+
+<td><tt>&amp;Ugrave;;</tt></td>
+
+<td>capital U grave</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#218;</tt></td>
+
+<td><tt>DA</tt></td>
+
+<td><tt>Ú</tt></td>
+
+<td><tt>&amp;Uacute;</tt></td>
+
+<td>capital U acute</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#219;</tt></td>
+
+<td><tt>DB</tt></td>
+
+<td><tt>Û</tt></td>
+
+<td><tt>&amp;Ucirc;</tt></td>
+
+<td>capital U circumflex</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#220;</tt></td>
+
+<td><tt>DC</tt></td>
+
+<td><tt>Ü<tt></tt></tt></td>
+
+<td><tt>&amp;Uuml;<tt></tt></tt></td>
+
+<td>capital U dieresis or umlaut</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#221;</tt></td>
+
+<td><tt>DD</tt></td>
+
+<td><tt>Ý</tt></td>
+
+<td><tt>&amp;Yacute;</tt></td>
+
+<td>capital Y acute</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#222;</tt></td>
+
+<td><tt>DE</tt></td>
+
+<td><tt>Þ</tt></td>
+
+<td><tt>&amp;THORN;</tt></td>
+
+<td>capital THORN</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#223;</tt></td>
+
+<td><tt>DF</tt></td>
+
+<td><tt>ß</tt></td>
+
+<td><tt>&amp;szlig;</tt></td>
+
+<td>small sharp s, sz ligature</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td colspan="6" bgcolor="#000000"><font color="#FFFFFF"><a name="ISO-LOWER">Lower Case Latin-1 Letters</a></font></td>
+</tr>
+
+<tr bgcolor="#A00000">
+<td><font color="#FFFFFF"><b>Character<br>Reference</b></font></td>
+
+<td><font color="#FFFFFF"><b>Hex</b></font></td>
+
+<td><font color="#FFFFFF"><b>Character</b></font></td>
+
+<td><font color="#FFFFFF"><b>Entity Name</b></font></td>
+
+<td colspan="2"><font color="#FFFFFF"><b>Description</b></font></td>
+
+</tr>
+<tr>
+<td><tt>&amp;#224;</tt></td>
+
+<td><tt>E0</tt></td>
+
+<td><tt>à</tt></td>
+
+<td><tt>&amp;agrave;</tt></td>
+
+<td>small a grave</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#225;</tt></td>
+
+<td><tt>E1</tt></td>
+
+<td><tt>á</tt></td>
+
+<td><tt>&amp;aacute;</tt></td>
+
+<td>small a acute</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#226;</tt></td>
+
+<td><tt>E2</tt></td>
+
+<td><tt>â<tt></tt></tt></td>
+
+<td><tt>&amp;acirc;</tt></td>
+
+<td>small a circumflex</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#227;</tt></td>
+
+<td><tt>E3</tt></td>
+
+<td><tt>ã</tt></td>
+
+<td><tt>&amp;atilde;</tt></td>
+
+<td>small a tilde</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#228;</tt></td>
+
+<td><tt>E4</tt></td>
+
+<td><tt>ä</tt></td>
+
+<td><tt>&amp;auml;</tt></td>
+
+<td>small a dieresis or umlaut</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#229;</tt></td>
+
+<td><tt>E5</tt></td>
+
+<td><tt>å</tt></td>
+
+<td><tt>&amp;aring;</tt></td>
+
+<td>small a ring</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#230;</tt></td>
+
+<td><tt>E6</tt></td>
+
+<td><tt>æ</tt></td>
+
+<td><tt>&amp;aelig;</tt></td>
+
+<td>small ae ligature</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#231;</tt></td>
+
+<td><tt>E7</tt></td>
+
+<td><tt>ç</tt></td>
+
+<td><tt>&amp;ccedil;</tt></td>
+
+<td>small c cedilla</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#232;</tt></td>
+
+<td><tt>E8</tt></td>
+
+<td><tt>è</tt></td>
+
+<td><tt>&amp;egrave;</tt></td>
+
+<td>small e grave</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#233;</tt></td>
+
+<td><tt>E9</tt></td>
+
+<td><tt>é</tt></td>
+
+<td><tt>&amp;eacute;</tt></td>
+
+<td>small e acute</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#234;</tt></td>
+
+<td><tt>EA</tt></td>
+
+<td><tt>ê</tt></td>
+
+<td><tt>&amp;ecirc;</tt></td>
+
+<td>small e circumflex</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#235;</tt></td>
+
+<td><tt>EB</tt></td>
+
+<td><tt>ë</tt></td>
+
+<td><tt>&amp;euml;</tt></td>
+
+<td>small e dieresis or umlaut</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#236;</tt></td>
+
+<td><tt>EC</tt></td>
+
+<td><tt>ì</tt></td>
+
+<td><tt>&amp;igrave;</tt></td>
+
+<td>small i grave</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#237;</tt></td>
+
+<td><tt>ED</tt></td>
+
+<td><tt>í</tt></td>
+
+<td><tt>&amp;iacute;</tt></td>
+
+<td>small i acute</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#238;</tt></td>
+
+<td><tt>EE</tt></td>
+
+<td><tt>î</tt></td>
+
+<td><tt>&amp;icirc;</tt></td>
+
+<td>small i circumflex</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#239;</tt></td>
+
+<td><tt>EF</tt></td>
+
+<td><tt>ï</tt></td>
+
+<td><tt>&amp;iuml;</tt></td>
+
+<td>small i dieresis or umlaut</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#240;</tt></td>
+
+<td><tt>F0</tt></td>
+
+<td><tt>ð</tt></td>
+
+<td><tt>&amp;eth;</tt></td>
+
+<td>small eth</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#241;</tt></td>
+
+<td><tt>F1</tt></td>
+
+<td><tt>ñ</tt></td>
+
+<td><tt>&amp;ntilde;</tt></td>
+
+<td>small n tilde</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#242;</tt></td>
+
+<td><tt>F2</tt></td>
+
+<td><tt>ò</tt></td>
+
+<td><tt>&amp;ograve;</tt></td>
+
+<td>small o grave</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#243;</tt></td>
+
+<td><tt>F3</tt></td>
+
+<td><tt>ó</tt></td>
+
+<td><tt>&amp;oacute;</tt></td>
+
+<td>small o acute</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#244;</tt></td>
+
+<td><tt>F4</tt></td>
+
+<td><tt>ô</tt></td>
+
+<td><tt>&amp;ocirc;</tt></td>
+
+<td>small o circumflex</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#245;</tt></td>
+
+<td><tt>F5</tt></td>
+
+<td><tt>õ</tt></td>
+
+<td><tt>&amp;otilde;</tt></td>
+
+<td>small o tilde</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#246;</tt></td>
+
+<td><tt>F6</tt></td>
+
+<td><tt>ö</tt></td>
+
+<td><tt>&amp;ouml;</tt></td>
+
+<td>small o dieresis or umlaut</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#247;</tt></td>
+
+<td><tt>F7</tt></td>
+
+<td><tt>÷</tt></td>
+
+<td><tt>&amp;divide;</tt></td>
+
+<td>division sign</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#248;</tt></td>
+
+<td><tt>F8</tt></td>
+
+<td><tt>ø</tt></td>
+
+<td><tt>&amp;oslash;</tt></td>
+
+<td>small o slash</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#249;</tt></td>
+
+<td><tt>F9</tt></td>
+
+<td><tt>ù</tt></td>
+
+<td><tt>&amp;ugrave;</tt></td>
+
+<td>small u grave</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#250;</tt></td>
+
+<td><tt>FA</tt></td>
+
+<td><tt>ú</tt></td>
+
+<td><tt>&amp;uacute;</tt></td>
+
+<td>small u acute</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#251;</tt></td>
+
+<td><tt>FB</tt></td>
+
+<td><tt>û</tt></td>
+
+<td><tt>&amp;ucirc;</tt></td>
+
+<td>small u circumflex</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#252;</tt></td>
+
+<td><tt>FC</tt></td>
+
+<td><tt>ü</tt></td>
+
+<td><tt>&amp;uuml;</tt></td>
+
+<td>small u dieresis or umlaut</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#253;</tt></td>
+
+<td><tt>FD</tt></td>
+
+<td><tt>ý</tt></td>
+
+<td><tt>&amp;yacute;</tt></td>
+
+<td>small y acute</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#254;</tt></td>
+
+<td><tt>FE</tt></td>
+
+<td><tt>þ</tt></td>
+
+<td><tt>&amp;thorn;</tt></td>
+
+<td>small thorn</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+
+<tr>
+<td><tt>&amp;#255;</tt></td>
+
+<td><tt>FF</tt></td>
+
+<td><tt>ÿ</tt></td>
+
+<td><tt>&amp;yuml;</tt></td>
+
+<td>small y dieresis or umlaut</td>
+
+<td><b><tt>&nbsp;</tt></b></td>
+</tr>
+</tbody></table>
+
+&nbsp;<a name="REFERENCES"></a>
+</p><h2>
+References</h2>
+
+
+<p>Other sources of information regarding ASCII, ISO-8859 and Unicode:
+</p><ul>
+<li>
+<a href="http://bbsinc.com/iso8859.html">ISO 8859-1 Table with HTML Entities</a>.</li>
+
+<li>
+<a href="http://www.stonehand.com/unicode.html">Unicode</a> Tables</li>
+
+<ul>
+<li>
+The <a href="ftp://unicode.org/pub/UNIX/UNIDATA/NAMES2.TXT">Unicode®
+Character Set</a> with equivalent character names and related characters.</li>
+
+<ul>
+<li>
+<a href="ftp://unicode.org/pub/UNIX/UNIDATA/BLOCKS.TXT">Character Subset
+Blocks</a> within the Unicode Character Set.</li>
+</ul>
+
+<li>
+Mapping <a href="ftp://unicode.org/pub/UNIX/MAPPINGS/ISO8859/8859-1.TXT">ISO
+8859-1 (Latin-1)</a> onto Unicode.</li>
+
+<li>
+Mapping Microsoft® <a href="ftp://unicode.org/pub/UNIX/MAPPINGS/VENDORS/MICSFT/WINDOWS/CP1252.TXT">Windows
+Latin-1 (Code Page 1252)</a>, a superset of ISO 8859-1, onto Unicode in
+CP1252 order.</li>
+
+<li>
+Mapping <a href="ftp://unicode.org/pub/UNIX/MAPPINGS/VENDORS/ADOBE/SYMBOL.TXT">Adobe®
+Symbol</a> font onto Unicode in Unicode order.</li>
+
+<br>&nbsp;&nbsp; <i>Note that the Microsoft® Windows font named "Symbol"
+and the Adobe Symbol font are equivalent.</i>
+<li>
+Mapping ISO 8859-1 and Adobe Symbol font (an ISO 8879 subset) entity names
+onto Unicode</li>
+
+<br>in <a href="http://www.w3.org/hypertext/WWW/MarkUp/HTMLPlus/htmlplus_59.html">HTML+
+Proposed Character Entities</a> Discussion Document by the W3C in ISO 8859-1
+and Adobe orders.
+<br><i>This table cross references <a href="https://cs.stanford.edu/people/miles/iso8879.html">ISO 8879</a>,
+<a href="http://www.adobe.com/prodindex/postscript/overview.html">Adobe®
+PostScript®</a>, and Unicode® names along with ISO 8859-1 / PostScript
+and Unicode hexadecimal character codes.</i>
+<li>
+Mathematica® 3.0's Mapping <a href="http://www.ams.org/html-math/wolframchartables/assignedzone.html">ISO
+8879 (SGML)</a> entity names onto Unicode in Unicode order.</li>
+
+<li>
+Mapping <a href="ftp://unicode.org/pub/UNIX/MAPPINGS/OBSOLETE/UNI2SGML.TXT">ISO
+8879</a> entity names onto Unicode in Unicode order.</li>
+</ul>
+
+<li>
+All <a href="https://cs.stanford.edu/people/miles/iso8879b.html">ISO 8879 Entity Names</a>.</li>
+
+<li>
+<a href="https://cs.stanford.edu/people/miles/iso8879.html">ISO 8879 Entity Sets</a> List.</li>
+
+<li>
+Martin Ramsch's <a href="http://www.uni-passau.de/~ramsch/iso8859-1.html">"ISO
+8859-1 Table"</a>.</li>
+
+<li>
+HTML+ <a href="http://www.cs.indiana.edu/elisp/entities-list.html">Complete
+Entities Listing</a></li>
+
+<li>
+<a href="http://www.w3.org/hypertext/WWW/MarkUp/html3/mathsym.html">Ellipsis,
+Spacing, and Lower Case Greek "HTML 3.0 Math Entities"</a></li>
+
+<li>
+&nbsp;<a href="http://www.w3.org/hypertext/WWW/MarkUp/HTMLPlus/htmlplus_13.html">HTML+
+Character Sets and Entity Definitions"</a> -- the trademark sign, <sup><font size="-1">TM</font></sup>,
+one such character listed, is of particular interest).</li>
+
+<li>
+<a href="http://www.w3.org/hypertext/WWW/MarkUp/HTMLPlus/htmlplus_45.html">HTML+
+Mathematical Equations</a> and <a href="http://www.w3.org/hypertext/WWW/MarkUp/html3/mathscripts.html">HTML
+3.0 Math - SUB and SUP</a></li>
+
+<li>
+<a href="http://www.w3.org/hypertext/WWW/Arena/tour/symbols.html">HTML
+3.0 Symbol Support in the Arena Browser for Mathematics</a></li>
+
+<li>
+<a href="http://www.w3.org/hypertext/WWW/Arena/tour/math2.html">An Introduction
+to HTML 3.0 Math (Support in the Arena Browser) - More Examples</a></li>
+
+<li>
+<a href="http://www.w3.org/hypertext/WWW/MarkUp/html3/specialchars.html">HTML
+3.0 Special Characters</a> which specifically indicates those control characters
+used by HTML.</li>
+
+<li>
+<a href="http://www.w3.org/hypertext/WWW/MarkUp/html-spec/html-spec_13.html">The
+HTML 2.0 Coded Character Set</a></li>
+
+<li>
+Sandia Labs' <a href="http://www.sandia.gov/sci_compute/iso_symbol.html">"ISO
+Latin 1 Character HTML Entity Names"</a>, and <a href="http://www.w3.org/hypertext/WWW/MarkUp/html3/latin1.html">"HTML
+3.0 Character Entity Sets"</a> which list all 256 character references
+and indicate those control characters not used by HTML.</li>
+
+<li>
+The Character Set of Microsoft® Internet Explorer <a href="http://www.edasz.hu/~dino/ie30/char_set.htm#Complete">2.0</a>
+and <a href="http://www.microsoft.com/workshop/author/newhtml/htmlr018.htm">3.0</a>.</li>
+
+<li>
+<a href="http://www.utoronto.ca/webdocs/HTMLdocs/NewHTML/iso_table.html">ISO
+8859-1 (Latin-1) Characters List </a>which lists all 256 character references.</li>
+
+<li>
+<a href="http://www.bbsinc.com/symbol.html">ISO Latin 1 Character Entities
+and HTML Escape Sequence Table"</a> which lists nearly all 256 character
+references.</li>
+
+<li>
+<a href="http://www.cs.tu-berlin.de/~czyborra/charsets/">The ISO 8859-x
+(including Latin-x) Series</a></li>
+
+<li>
+Sandia Labs' <a href="http://www.sandia.gov/sci_compute/symbols.html">HTML
+Special Character Entity Names</a></li>
+
+<li>
+The <a href="ftp://dkuug.dk/i18n/WG15-collection/charmaps/ANSI_X3.4-1968">ASCII
+Character Set</a>, ANSI Standard X3.4-1968 (see also the <a href="ftp://dkuug.dk/i18n/WG15-collection/charmaps/ANSI_X3.110-1983">ANSI
+Standard X3.110-1983</a>)</li>
+</ul>
+
+<hr width="100%">
+<br>The <b>HTML</b> concepts of <i>character references</i> and <i>entity
+references (entity names)</i> are defined in the document <a href="http://www.utoronto.ca/webdocs/HTMLdocs/NewHTML/entities.html">"Special
+Characters" in HTML</a>.
+
+<p>The following is a list of known problems with the set of HTML entities:
+</p><ul>
+<li>
+There is a namespace collision between <a href="https://cs.stanford.edu/people/miles/iso8879b.html">ISO 8879</a>
+entities <tt><font size="+1">&amp;map;</font></tt> and <tt><font size="+1"><a href="#image">&amp;image;</a></font></tt>
+(an HTML entity as shown in <a href="http://www.w3.org/hypertext/WWW/MarkUp/HTMLPlus/htmlplus_59.html">HTML+
+Proposed Character Entities</a>) and two of the HTML+ icon entities defined
+in <a href="http://www.w3.org/hypertext/WWW/MarkUp/html3/icons.txt">"Standard
+ISO WWW/HTML Icon" Entities</a> and shown graphically in <a href="http://www.sandia.gov/sci_compute/icons.html">Proposed
+HTML Icon Entity Names.</a></li>
+
+<br><i>Note that the namespace collision for</i> <tt><font size="+1"><a href="#image">&amp;image;</a></font></tt>
+<i>is <b>very</b> significant.</i>
+<li>
+There are disagreements between the various documents as to the correct
+names for several of the entities:</li>
+
+<ul><a href="http://www.w3.org/hypertext/WWW/MarkUp/html3/specialchars.html">"HTML
+3.0 Special Characters"</a> disagrees with <a href="http://www.w3.org/hypertext/WWW/MarkUp/HTMLPlus/htmlplus_13.html">"HTML+
+Character Sets and Entity Definitions"</a> on the names for <i><a href="#emdash">em
+dash</a></i> and <i><a href="#endash">en dash</a></i>.
+<li>
+<a href="http://www.w3.org/hypertext/WWW/MarkUp/html3/mathscripts.html">"HTML
+3.0 Math - SUB and SUP"</a> and <a href="http://www.w3.org/hypertext/WWW/Arena/tour/symbols.html">"HTML
+3.0 Symbol Support in Arena for Mathematics"</a> disagree with <a href="http://www.w3.org/hypertext/WWW/MarkUp/HTMLPlus/htmlplus_45.html">"HTML+
+Mathematical Equations"</a> on the name for <i><a href="#infinity">infinity</a></i>.</li>
+
+<li>
+<a href="http://www.w3.org/hypertext/WWW/Arena/tour/math2.html">"HTML 3.0
+Math - More Examples"</a> disagrees with <a href="http://www.w3.org/hypertext/WWW/MarkUp/HTMLPlus/htmlplus_59.html">HTML+
+Proposed Character Entities</a> on the name for the <i><a href="#partial">partial
+differential symbol</a></i>.</li>
+
+<li>
+<a href="http://www.w3.org/hypertext/WWW/Arena/tour/symbols.html">"HTML
+3.0 Symbol Support in Arena for Mathematics"</a> disagrees with <a href="http://www.w3.org/hypertext/WWW/MarkUp/html3/mathsym.html">"HTML
+3.0 Math Entities"</a> on the names for <i>lower case <a href="#epsilon">epsilon</a>,
+<a href="#script-theta">script theta</a>, <a href="#final-sigma">final
+sigma</a>, <a href="#upsilon">upsilon</a>, <a href="#script-phi">script
+phi</a></i> and <i><a href="#omega-pi">omega-pi</a></i>.</li>
+
+<li>
+The glyphs of <i><a href="#epsilon">lower case epsilon</a></i> and <i><a href="#element">element
+of</a></i> are the same in some fonts.</li>
+</ul>
+</ul>
+Until such time that all browsers used by readers of your pages display
+the <i><a href="#trademark">trademark</a></i> character, that character
+can be emulated by the following:
+
+<p><font size="+1"><tt>Company Trademark &lt;SUP&gt;&lt;SMALL&gt;TM&lt;/SMALL&gt;&lt;/SUP&gt;</tt>
+</font>which renders to:
+
+</p><p>Company Trademark <sup><font size="-1">TM</font></sup>
+<br>
+</p><hr>
+<!--#include file="footer.html"-->
+
+
+</body></html>

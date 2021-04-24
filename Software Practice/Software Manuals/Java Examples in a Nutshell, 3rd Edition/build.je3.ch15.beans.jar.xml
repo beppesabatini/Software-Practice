@@ -1,0 +1,73 @@
+<project name="FlanaganBeans1.0" default="jar" basedir=".">
+	<!-- -->
+	<!-- The author has both Java 12 and Java 8 installed. -->
+	<!-- The author's Eclipse installation as of this writing compiles with Java 12. -->
+	<!-- The executable jar files need to support earlier versions of Java. -->
+	<!-- To compile the jars using Java 8: -->
+	<!--     • In Project Explorer or Package Explorer, right-click on this build.xml -->
+	<!--     • Click on Run As/External Tools Configuration -->
+	<!--     • Highlight the current build ("Java Examples in a Nutshell - FlanaganBeans1.0.jar") -->
+	<!--     • Click on the tab JRE; select "Separate JRE" and select Java 8 -->
+	<!--     • Note that in the target "compile.classes" below, source="1.8" is specified. -->
+	<!-- -->
+	<!-- Changes to the jar file are reflected in NetBeans immediately, so probably NetBeans --> 
+	<!-- is expecting the jar file to remain in its current location indefinitely. -->
+	<property name="jar-file" value="${ant.project.name}.jar" />
+	<property name="src-dir" value="src" />
+	<property name="build-dir" value="bin" />
+	<property name="output-dir" value="output" />
+	<property name="reusable-dir" value="reusable" />
+
+	<target name="jar" depends="print-version,clean,compile.classes,assemble.reusable">
+		<jar jarfile="${output-dir}/${jar-file}">
+			<manifest>
+				<section name="je3/ch15/beans/YesNoPanel.class">
+					<attribute name="Java-Bean" value="true"/>
+				</section>
+			</manifest>
+			<fileset dir="${reusable-dir}" />
+		</jar>
+	</target>
+
+	<target name="print-version">
+		<echo>Java/JVM version: ${ant.java.version}</echo>
+		<echo>Java/JVM detail version: ${java.version}</echo>
+		<echo>Ant version: ${ant.version}</echo>
+		<echo>Building: ${output-dir}/${jar-file}</echo>
+	</target>
+
+	<target name="clean">
+		<delete>
+			<fileset dir="${build-dir}/je3/ch15/beans">
+				<patternset>
+					<include name="/*.class" />
+					<include name="/images/*.*" />
+				</patternset>
+			</fileset>
+		</delete>
+		
+		<delete dir="${reusable-dir}"/>
+		<delete file="${output-dir}/${jar-file}" />
+	</target>
+
+	<target name="compile.classes">
+		<javac srcdir="${src-dir}/je3/ch15/beans" destdir="${build-dir}" debug="on" source="1.8" includeantruntime="false" />
+	</target>
+
+	<target name="assemble.reusable" depends="">
+		<mkdir dir="${reusable-dir}" />
+		<copy todir="${reusable-dir}">
+			<fileset dir="${build-dir}">
+				<patternset>
+					<include name="/**/je3/ch15/beans/*.class" />
+				</patternset>
+			</fileset>
+			<fileset dir="${src-dir}">
+				<patternset>
+					<include name="/**/je3/ch15/beans/images/61+Yyszc3LL.*.png"/>
+				</patternset>
+			</fileset>
+		</copy>
+	</target>
+
+</project>

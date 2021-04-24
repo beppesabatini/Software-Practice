@@ -1,0 +1,35 @@
+The file you are reading is a demonstration of the character encoding called Windows-1252. The special characters below will display correctly if interpreted as Windows-1252 (the old Microsoft Word character set). Windows-1252 is often referred to as "ANSI" (a misnomer). If you're reading this in Notepad, you will see "ANSI" in the lower right of the window frame. That is, unless this file has been converted to a different charset. 
+
+Those special characters below won't display correctly if they are mis-identified as ISO-8951 (the old Linux default character set), or as most other encodings. You will instead see question marks or black diamonds or gibberish, but you will not see the special characters. You will most often see these encoding problems when you are trying to read the euro sign or the curly quotation marks, also called smart quotes.
+
+€	euro
+‚	low single quote
+ƒ	function, as in "assume ƒ(a) and ƒ(b) have opposite signs" 
+„	low double quote
+…	ellipsis
+†	dagger (an old footnote symbol)
+‡	double dagger (an old footnote symbol)
+ˆ	carat (or hat) - combines with letters, as in coconut mâtchâ lâtte
+‰	per thousand or (in French) per mille
+Š	capital letter S with hacek, as in the Czech musician František Štorm
+‹	left single angle quotation mark, also called guillemet simple
+Œ	upper-case OE ligature, as in Stravinsky's Œdipus rex
+Ž	capital Z with hacek
+‘	curly left single quote 
+’	curly right single quote
+“	left curly quote (or smart quote)
+”	right curly quote (or smart quote)
+•	bullet
+–	en dash , as in 3–4 minutes (used between numbers)
+—	em dash—yes, yes, really—an em dash (used between words)
+˜	tilde (or squiggle), as in jalapeño pepper
+™	trademark
+š	lower-case s with hacek
+›	right single angle quotation mark, also called guillemet simple
+œ	oe ligature, as in Hors-d'œuvre
+ž	lower-case z with hacek, dictionary pronunciation symbol for /zh/
+Ÿ 	capital Y with umlaut or diaresis
+
+The angle quotes are sometimes used in French and other languages, with single quotes used inside double quotes, as in «Comme je te l'ai dit une fois, je lui ai répété, Mark Twain n'a pas dit : ‹L'honnêteté est la meilleure politique.› Il a dit : ‹L'honnêteté est la meilleure politique… quand il y a de l'argent en jeu.›» These quote marks are also called guillemets or chevrons. (There is also an ellipsis (…) in that quote.) 
+
+The characters above, the ones that cause the most trouble for software, are at the positions in the alphabet from 128 through 159, or in base 16, 0x80 through 0x9f. Unicode or UTF-8 documents will often display those characters above as the authors intended, as Euro signs and curly quotes and so on, but software such as that is being forgiving, and is compromising on the Unicode standard. In ASCII, and in very rigorous UTF-8, those slots in the alphabet are used for signals that control old hardware devices such as printers. The takeaway is that those characters (we call them the "danger zone" characters) are the first place to check when you are working which character-set conversion.
