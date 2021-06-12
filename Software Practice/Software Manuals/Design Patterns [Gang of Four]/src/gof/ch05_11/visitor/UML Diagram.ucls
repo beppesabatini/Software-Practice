@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.2.4" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="gof.ch05_11.visitor.Chassis" project="Design Patterns [Gang of Four]" 
+    file="/Design Patterns [Gang of Four]/src/gof/ch05_11/visitor/Chassis.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="122" y="461"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="gof.ch05_11.visitor.EquipmentVisitor" project="Design Patterns [Gang of Four]" 
+    file="/Design Patterns [Gang of Four]/src/gof/ch05_11/visitor/EquipmentVisitor.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="544" y="174"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="gof.ch05_11.visitor.InventoryVisitor" project="Design Patterns [Gang of Four]" 
+    file="/Design Patterns [Gang of Four]/src/gof/ch05_11/visitor/InventoryVisitor.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="544" y="427"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="gof.ch05_11.visitor.PricingVisitor" project="Design Patterns [Gang of Four]" 
+    file="/Design Patterns [Gang of Four]/src/gof/ch05_11/visitor/PricingVisitor.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="773" y="428"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="5" language="java" name="gof.designpatterns.Visitor" project="Design Patterns [Gang of Four]" 
+    file="/Design Patterns [Gang of Four]/src/gof/designpatterns/Visitor.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="773" y="175"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="6" language="java" name="gof.designpatterns.GangOfFour" project="Design Patterns [Gang of Four]" 
+    file="/Design Patterns [Gang of Four]/src/gof/designpatterns/GangOfFour.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="772" y="51"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="7" language="java" name="gof.ch04_03.composite.Equipment" project="Design Patterns [Gang of Four]" 
+    file="/Design Patterns [Gang of Four]/src/gof/ch04_03/composite/Equipment.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="124" y="158"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="gof.ch05_11.visitor.Card" project="Design Patterns [Gang of Four]" 
+    file="/Design Patterns [Gang of Four]/src/gof/ch05_11/visitor/Card.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="332" y="435"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <generalization id="9">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <generalization id="10">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="7"/>  
+  </generalization>  
+  <realization id="11">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
+  <generalization id="12">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
+  <association id="13">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="14" name="parts"/>      
+      <multiplicity id="15" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="7" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="16">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <realization id="17">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
+  <generalization id="18">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <realization id="19">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
