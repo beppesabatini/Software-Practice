@@ -5,17 +5,18 @@ import gof.ch03_00.intro.Maze;
 import gof.ch03_00.intro.Room;
 import gof.ch03_00.intro.WallWithDoor;
 import gof.ch03_00.intro.WallWithoutDoor;
-import gof.designpatterns.Builder;
 
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], pp.
- * 102-104. An element in a {@linkplain Builder} pattern. This code gets invoked
- * and tested from the {@linkplain MazeDirector}. The UML diagram is
- * below.</div>
+ * 102-104. An element in a {@linkplain gof.designpatterns.Builder Builder}
+ * pattern. One of two MazeBuilders which implement the MazeBuilder interface.
+ * This code gets invoked and tested from the {@linkplain MazeDirector}. The UML
+ * diagram is below.</div>
  * 
- * <pre></pre>
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch03_02/builder/UML%20Diagram.jpg"
+ * /> </div>
  * 
- * <div class="javadoc-diagram"> <img src="UML Diagram.jpg" /> </div>
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class StandardMazeBuilder extends Maze implements MazeBuilder {

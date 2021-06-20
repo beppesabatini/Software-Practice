@@ -5,11 +5,13 @@ import gof.ch03_04.prototype.BackgroundJobPriority.SampleSize;
 import gof.designpatterns.Prototype;
 
 /**
- * <div class="javadoc-text">Demonstrating the {@linkplain Prototype} design
- * pattern, which is discussed in Design Patterns [Gang of Four], pp. 117-126.
- * These classes being tested are mostly stubs, and do not appear in the manual.
- * The point is that the priorities for the Jobs are being stored, cloned,
- * retrieved, and dynamically updated, in a Prototype object.</div>
+ * <div class="javadoc-text">Demonstrating the
+ * {@linkplain gof.designpatterns.Prototype Prototype} design pattern, which is
+ * discussed in Design Patterns [Gang of Four], pp. 117-126. These classes being
+ * tested are mostly stubs, and do not appear in the manual. The point is that
+ * the priorities for the Jobs are being stored, cloned, retrieved, and
+ * dynamically updated, in a Prototype object.</div>
+ * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class Demo implements Prototype {

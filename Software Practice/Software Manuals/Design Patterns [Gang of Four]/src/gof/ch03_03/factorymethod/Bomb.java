@@ -1,10 +1,9 @@
 package gof.ch03_03.factorymethod;
 
-import gof.designpatterns.FactoryMethod;
-
 /**
- * <div style="javadoc-text">Not in the manual. An element in the illustration
- * of the {@linkplain FactoryMethod} design pattern.</div>
+ * <div style="javadoc-text">Not in the manual. A class in the sample code for
+ * the {@linkplain gof.designpatterns.FactoryMethod FactoryMethod} design
+ * pattern.</div>
  * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */

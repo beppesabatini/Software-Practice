@@ -1,32 +1,27 @@
 package gof.ch04_03.composite;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Iterator;
-
 import gof.ch05_11.visitor.EquipmentVisitor;
 import gof.designpatterns.Composite;
-import gof.designpatterns.Visitor;
 
 /**
  * <div class="javadoc-text">From Design Patterns [Gang of Four], p. 171. An
- * element of the sample code for the {@linkplain Composite} and
- * {@linkplain Visitor} design patterns. The FloppyDisk is included in that
- * sample as an instance of a concrete subclass of the abstract Equipment root
- * class.</div>
+ * element of the sample code for the {@linkplain gof.designpatterns.Composite
+ * Composite} and {@linkplain gof.designpatterns.Visitor Visitor} design
+ * patterns. The FloppyDisk is included in that sample as an instance of a
+ * concrete subclass of the abstract Equipment root class. See the
+ * {@linkplain Equipment} class for more detail.</div>
  * 
- * <pre></pre>
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch04_03/composite/UML%20Diagram.jpg"
+ * /> </div>
  * 
- * <div class="javadoc-diagram"> <img src="UML Diagram.jpg" /> </div>
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class FloppyDisk extends Equipment implements Composite {
 
-	private List<Equipment> equipmentDispenser;
-
 	public FloppyDisk(String name) {
 		super(name);
-		this.equipmentDispenser = new ArrayList<Equipment>();
+		setPricePoint(PricePoint.NET_PRICE);
 	}
 
 	@Override
@@ -44,20 +39,25 @@ public class FloppyDisk extends Equipment implements Composite {
 		return new Currency(25);
 	}
 
-	@Override
-	public void add(Equipment equipment) {
-		this.equipmentDispenser.add(equipment);
-	}
+	/*
+	 * Don't implement these next three--they are not meaningful for simple
+	 * (non-composite) equipment like a FloppyDisk.
+	 */
 
-	@Override
-	public void remove(Equipment equipment) {
-		this.equipmentDispenser.remove(equipment);
-	}
-
-	@Override
-	public Iterator<Equipment> createIterator() {
-		return (this.equipmentDispenser.iterator());
-	}
+//	@Override
+//	public void add(Equipment equipment) {
+//		this.equipmentDispenser.add(equipment);
+//	}
+//
+//	@Override
+//	public void remove(Equipment equipment) {
+//		this.equipmentDispenser.remove(equipment);
+//	}
+//
+//	@Override
+//	public Iterator<Equipment> createIterator() {
+//		return (this.equipmentDispenser.iterator());
+//	}
 
 	public void acceptVisitor(EquipmentVisitor equipmentVisitor) {
 		accept(equipmentVisitor);

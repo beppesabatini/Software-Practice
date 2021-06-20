@@ -7,12 +7,15 @@ import gof.designpatterns.Singleton;
 
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], p. 93.
- * An earlier version was used to illustrate a different design pattern. Here a
- * new version is used to illustrate a {@linkplain Singleton}. </div>
+ * An earlier version of EnchantedMazeFactory was used to illustrate a different
+ * design pattern. Here a new version is used to illustrate a
+ * {@linkplain gof.designpatterns.Singleton Singleton}. See also
+ * {@linkplain StandardMazeFactory} for more detail.</div>
  * 
- * <pre></pre>
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch03_05/singleton/UML%20Diagram.jpg"
+ * /> </div>
  * 
- * <div class="javadoc-diagram"> <img src="UML Diagram.jpg" /> </div>
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class EnchantedMazeFactory extends StandardMazeFactory implements Singleton {

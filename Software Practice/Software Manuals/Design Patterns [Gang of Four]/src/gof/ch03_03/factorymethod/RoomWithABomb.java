@@ -1,11 +1,13 @@
 package gof.ch03_03.factorymethod;
 
 import gof.ch03_00.intro.Room;
-import gof.designpatterns.FactoryMethod;
 
 /**
  * <div class="javadoc-text">Mentioned at Design Patterns [Gang of Four], p.
- * 115. An element in the {@linkplain FactoryMethod} example.</div>
+ * 115. A class used in the {@linkplain gof.designpatterns.FactoryMethod
+ * FactoryMethod} sample code. See {@linkplain BombedMazeFactory} for more
+ * information.</div>
+ * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class RoomWithABomb extends Room {

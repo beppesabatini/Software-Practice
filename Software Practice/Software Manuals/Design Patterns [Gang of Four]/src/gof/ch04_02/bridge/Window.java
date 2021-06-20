@@ -6,14 +6,13 @@ import gof.ch02_06.multiplewindows.WindowSystemFactory;
 import gof.ch02_06.multiplewindows.PMWindowSystemFactory;
 import gof.ch02_06.multiplewindows.XWindowSystemFactory;
 import gof.ch04_01.adapter.text.Coordinate;
-import gof.designpatterns.AbstractFactory;
 import gof.designpatterns.Bridge;
 
 /**
  * <div class="javadoc-text">From Design Patterns [Gang of Four], pp. 156-159.
- * An illustration of the {@linkplain Bridge} design pattern. The Bridge pattern
- * can be useful in situations such as servicing third-party requests by
- * invoking a fourth-party service.
+ * An illustration of the {@linkplain gof.designpatterns.Bridge Bridge} design
+ * pattern. The Bridge pattern can be useful in situations such as servicing
+ * third-party requests by invoking a fourth-party service.
  * <p/>
  * In the example code, an abstract hierarchy of UI widgets and commands is very
  * loosely coupled to a second abstract UI hierarchy, and the second version
@@ -24,15 +23,17 @@ import gof.designpatterns.Bridge;
  * same unit tests against two or three or four alternative, platform-specific
  * GUIs. This is the kind of situation which this example code addresses. The
  * second, third, and fourth GUIs are generalized, perhaps with an
- * {@linkplain AbstractFactory}. Our Bridge design pattern maps requests from
- * the original GUI tester, onto the platform-generalized hierarchy of GUI
- * widgets and functions. This scenario may seem contrived, or an exercise in
- * adding empty complication, but may be more real-world practical when, for
- * example, mapping functionality between out-of-house microservices.</div>
+ * {@linkplain gof.designpatterns.AbstractFactory AbstractFactory}. Our Bridge
+ * design pattern maps requests from the original GUI tester, onto the
+ * platform-generalized hierarchy of GUI widgets and functions. This scenario
+ * may seem contrived, but the Bridge pattern may be more real-world practical
+ * when, for example, mapping functionality between out-of-house
+ * microservices.</div>
  * 
- * <pre></pre>
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch04_02/bridge/UML%20Diagram.jpg"
+ * /> </div>
  * 
- * <div class="javadoc-diagram"> <img src="UML Diagram.jpg" /> </div>
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public abstract class Window implements Bridge {
@@ -62,10 +63,16 @@ public abstract class Window implements Bridge {
 	}
 
 	/**
-	 * The manual (p.159) assumes there is an {@link AbstractFactory} which returns
-	 * the correct WindowImpl for the current platform. These were actually noted
-	 * earlier in passing on p. 57. For the current example they are
-	 * {@linkplain PMWindowSystemFactory} and {@linkplain XWindowSystemFactory}.
+	 * <div class="javadoc-text">The manual (p.159) assumes there is an
+	 * {@linkplain gof.designpatterns.AbstractFactory AbstractFactory} which returns
+	 * the correct WindowImpl for the current platform. These were actually defined
+	 * earlier (as stubs at least) on p. 57. They are
+	 * {@linkplain gof.ch02_06.multiplewindows.PMWindowSystemFactory
+	 * PMWindowSystemFactory} and
+	 * {@linkplain gof.ch02_06.multiplewindows.XWindowSystemFactory
+	 * XWindowSystemFactory}.</div>
+	 * 
+	 * <link rel="stylesheet" href="../../styles/gof.css">
 	 */
 	protected WindowImpl getWindowImpl() {
 		if (this.windowImpl != null) {
@@ -80,8 +87,9 @@ public abstract class Window implements Bridge {
 
 	/**
 	 * <div style="width: 580px; ">The manual doesn't specify how the
-	 * AbstractFactories know which Windowing system is in use. We specify it here
-	 * with a Java feature, a properties bundle.<div>
+	 * AbstractFactories know which Windowing system is in use. We specify it in the
+	 * current class, gof.ch04_02.bridge.Window, with a Java feature--a properties
+	 * bundle.<div>
 	 */
 	public static WindowSystemFactory getWindowSystemFactory() {
 

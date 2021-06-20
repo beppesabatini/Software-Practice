@@ -1,17 +1,17 @@
 package gof.ch04_01.adapter.text;
 
-import gof.ch04_01.adapter.drawing.TextShape;
-import gof.designpatterns.Adapter;
-
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], pp.
- * 146, 147. An element in the illustration of the {@linkplain Adapter} pattern.
- * This is a stand-in for some hypothetical fully-featured text widget. See
- * {@linkplain TextShape} for more detail.</div>
+ * 146, 147. This object is used in the illustration of the
+ * {@linkplain gof.designpatterns.Adapter Adapter} pattern. The TextView class
+ * is a stand-in for some hypothetical fully-featured text widget. See
+ * {@linkplain gof.ch04_01.adapter.drawing.TextShape TextShape} for more
+ * detail.</div>
  * 
- * <pre></pre>
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch04_01/adapter/drawing/UML%20Diagram.jpg"
+ * /> </div>
  * 
- * <div class="javadoc-diagram"> <img src="../drawing/UML Diagram.jpg" /> </div>
  * <link rel="stylesheet" href="../../../styles/gof.css">
  */
 public abstract class TextView {

@@ -2,28 +2,31 @@ package gof.ch03_03.factorymethod;
 
 import gof.ch03_00.intro.Room;
 import gof.ch03_00.intro.WallWithoutDoor;
-import gof.ch03_01.abstractfactory.EnchantedMazeFactory;
 import gof.ch03_01.abstractfactory.MazeFactory;
 import gof.ch03_01.abstractfactory.MazeGame;
 import gof.designpatterns.AbstractFactory;
 import gof.designpatterns.FactoryMethod;
 
 /**
- * <div class="javadoc-text">From Design Patterns [Gang of Four], p. 93, 115. An
- * element in a {@linkplain FactoryMethod} pattern. The earlier pattern
- * {@linkplain AbstractFactory} was implemented using FactoryMethods, and the
- * manual uses exactly the same sample code to illustrate both sections. Below,
- * we have implemented one additional brief FactoryMethod not included in our
- * sample Java code for the AbstractFactory. The UML Diagram is below.
+ * <div class="javadoc-text">From Design Patterns [Gang of Four], p. 93, 115.
+ * Part of the sample code illustrating a
+ * {@linkplain gof.designpatterns.FactoryMethod FactoryMethod} pattern. The
+ * earlier pattern {@linkplain gof.designpatterns.AbstractFactory
+ * AbstractFactory} was implemented using FactoryMethods, and the manual uses
+ * exactly the same sample code to illustrate both sections. Below, we have
+ * implemented one additional brief FactoryMethod not included in our sample
+ * Java code for the AbstractFactory. The UML Diagram is below.
  * <p/>
  * As the manual defines the term, all of the public functions in this class,
- * and in the {@linkplain EnchantedMazeFactory} class, can be considered
- * FactoryMethods. None of their return values are hard-coded in the original
- * MazeFactory; all are decided in its subclasses.</div>
+ * and in the {@linkplain gof.ch03_01.abstractfactory.EnchantedMazeFactory
+ * EnchantedMazeFactory} class, can be considered FactoryMethods. None of their
+ * return values are hard-coded in the original MazeFactory; all are decided in
+ * its subclasses.</div>
  * 
- * <pre></pre>
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch03_03/factorymethod/UML%20Diagram.jpg"
+ * /> </div>
  * 
- * <div class="javadoc-diagram"> <img src="UML Diagram.jpg" /> </div>
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class BombedMazeFactory extends MazeFactory implements AbstractFactory, FactoryMethod {
