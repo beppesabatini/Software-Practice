@@ -2,12 +2,11 @@ package gof.ch05_07.observer;
 
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], p.
- * 303. Part of the sample code that demonstrates the
+ * 303. One class in the sample code that demonstrates the
  * {@linkplain gof.designpatterns.Observer Observer} or
- * <b>publisher-subscriber</b> design pattern.</div>
+ * <b>publisher-subscriber</b> design pattern. This class is not in the manual;
+ * it is provided to let clients test the sample code.</div>
  *
- * <pre></pre>
- * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class Demo {

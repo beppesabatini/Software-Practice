@@ -9,34 +9,36 @@ import gof.designpatterns.Memento;
  * <table class="javadoc-text">
  * <tr>
  * <td>Adapted from Design Patterns [Gang of Four], p. 288. Part of the sample
- * code illustrating the {@linkplain Memento} design pattern.
+ * code illustrating the {@linkplain gof.designpatterns.Memento Memento} design
+ * pattern.
  * <p/>
- * The goal for MoveCommand is to relocate a Graphic in a manner which can be
- * undone and then redone. We want to do this by saving the state and the
- * context of the Graphic in Memento objects, which must be secure, and which
- * must not violate encapsulation.
+ * The goal for MoveCommand is to reposition a Graphic in a manner which can be
+ * undone and then redone. We want to do this by saving the context of the
+ * Graphic in Memento objects, which must be secure, and which must not violate
+ * encapsulation.
  * <p/>
  * These days many desktop programs maintain a two-ended queue of about twenty
- * states, that is, twenty checkpoints, and allow the user to travel back and
- * forth across the queue of states. On Windows, by convention, the shortcut for
+ * edits, that is, twenty checkpoints, and allow the user to travel back and
+ * forth across the queue of edits. On Windows, by convention, the shortcut for
  * Undo is Control-Z, and the shortcut for Redo is Control-Y. The user should be
- * able to Control-Z and Control-Y back and forth between states indefinitely.
- * Before the initial edit, the system pops the original state onto the front
- * end of the queue. When the length of the queue goes over twenty, it pops off
- * and discards states from the most remote end. If the size of the saved states
- * becomes very large, the length of the queue may be shortened. (None of this
- * is mentioned in the manual.)
+ * able to undo, undo, and redo, redo, back and forth between edits
+ * indefinitely. Before the initial edit, the system pops the original condition
+ * of the graphic onto the front end of the queue. When the length of the queue
+ * goes over twenty, it pops off and discards edits from the most remote end. If
+ * the size of the saved edits becomes very large, the length of the queue may
+ * be shortened. (None of this comes from the manual.)
  * <p/>
- * For further research, as of this writing, a nice alternate version of the
- * Memento pattern (with more implementation details) can be found on the
+ * See also the {@linkplain ConstraintSolver}. For further research, as of this
+ * writing, a nice alternate version of the Memento pattern (with more
+ * implementation details) can be found on the
  * <a href="https://refactoring.guru/design-patterns/memento">internet</a>.</td>
  * </tr>
  * <tr>
- * <td><img src="UML Diagram.jpg" /></td>
+ * <td><img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch05_06/memento/UML%20Diagram.jpg"
+ * /></td>
  * </tr>
  * </table>
- *
- * <pre></pre>
  * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */

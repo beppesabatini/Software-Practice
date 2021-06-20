@@ -4,16 +4,13 @@ import java.io.IOException;
 
 import gof.ch05_04.iterator.List;
 import gof.ch05_04.iterator.ListIterator.ListDirection;
-import gof.ch05_04.iterator.ListSupport.*;
 
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], p.
  * 265. Part of the sample code used to illustrate the
  * {@linkplain gof.designpatterns.Iterator Iterator} design pattern. The Demo
  * class below does not appear in the manual, and is included to let users test
- * the design pattern.</div>
- *
- * <pre></pre>
+ * the sample code. </div>
  * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
@@ -58,7 +55,7 @@ public class Demo {
 		internalTraversal.traverse();
 		System.out.println();
 
-		System.out.println(" • Now iterating with a subclass that counts employees: ");
+		System.out.println(" • Now iterating with a subclass that counts total employees: ");
 		ListTraverser<Employee> printNEmployees = new PrintNEmployees<Employee>(employeeList, 10);
 		printNEmployees.traverse();
 		System.out.println();

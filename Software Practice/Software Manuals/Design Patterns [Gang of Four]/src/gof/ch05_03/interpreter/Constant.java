@@ -1,14 +1,11 @@
 package gof.ch05_03.interpreter;
 
-import gof.designpatterns.Interpreter;
-
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], p.
- * 252. An element in the sample code illustrating the {@linkplain Interpreter}
- * design pattern. The Constant class does not appear in the manual, it is only
- * mentioned in passing.</div>
- *
- * <pre></pre>
+ * 252. An element in the sample code illustrating the
+ * {@linkplain gof.designpatterns.Interpreter Interpreter} design pattern. The
+ * Constant class does not appear in the manual, it is only mentioned in
+ * passing.</div>
  * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */

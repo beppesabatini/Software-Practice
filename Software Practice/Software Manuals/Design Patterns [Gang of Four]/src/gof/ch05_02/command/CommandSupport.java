@@ -3,14 +3,15 @@ package gof.ch05_02.command;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <div class="javadoc-text">More non-functional stubs. Most of these classes
+ * are only mentioned in passing in the manual. These are included here
+ * primarily to get other stubs to compile.</div>
+ * 
+ * <link rel="stylesheet" href="../../styles/gof.css">
+ */
 public class CommandSupport {
 
-	/**
-	 * <div class="javadoc-text">More non-functional stubs. Most of these are only
-	 * mentioned in passing in the manual. These are included here primarily to get
-	 * other stubs to compile.</div>
-	 * <link rel="stylesheet" href="../../styles/gof.css">
-	 */
 	public static class Application {
 		private Document document;
 

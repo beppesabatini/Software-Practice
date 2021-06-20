@@ -1,14 +1,11 @@
 package gof.ch05_05.mediator;
 
 import gof.ch04_07.proxy.GraphicSupport.MouseEvent;
-import gof.designpatterns.Mediator;
 
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], p.
- * 278. Part of the sample code illustrating the {@linkplain Mediator} design
- * pattern.</div>
- *
- * <pre></pre>
+ * 278. This Widget is part of the sample code illustrating the
+ * {@linkplain gof.designpatterns.Mediator Mediator} design pattern. </div>
  * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */

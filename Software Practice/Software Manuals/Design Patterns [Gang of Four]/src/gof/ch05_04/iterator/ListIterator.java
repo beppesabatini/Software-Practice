@@ -6,14 +6,21 @@ import gof.ch05_04.iterator.List;
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], pp.
  * 263-265. Part of the sample code used to illustrate the
- * {@linkplain gof.designpatterns.Iterator Iterator} design pattern. This is the
- * most finished example of an <b>external iterator</b>, which advances the
- * traversal and requests the next element explicitly from the iterator (p.
- * 260).</div>
- *
- * <pre></pre>
+ * {@linkplain gof.designpatterns.Iterator Iterator} design pattern.
+ * <p/>
+ * {@linkplain ListTraverser} and {@linkplain PrintNEmployees} represent an
+ * <b>internal traverser</b>, while {@linkplain ListIterator} and
+ * {@linkplain ListDirection} represent an <b>external traverser</b>. Both
+ * traverse the same Genericized List.
+ * <p/>
+ * This ListIterator is the most finished example in the code of an <b>external
+ * iterator</b>, which advances the traversal, and requests the next element
+ * explicitly from the iterator (p. 260).</div>
  * 
- * <div class="javadoc-diagram"> <img src="UML Diagram.jpg" /> </div>
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch05_04/iterator/UML%20Diagram.jpg"
+ * /> </div>
+ * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class ListIterator<DataType> implements Iterator<DataType>, gof.designpatterns.Iterator {

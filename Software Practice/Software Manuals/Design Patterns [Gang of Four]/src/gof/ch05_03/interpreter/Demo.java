@@ -1,12 +1,11 @@
 package gof.ch05_03.interpreter;
 
-import gof.designpatterns.Interpreter;
-
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], pp.
  * 251-254. An element in the sample code illustrating the
- * {@linkplain Interpreter} design pattern. The particular class below is not in
- * the manual. This Demo attempts to evaluate the boolean expression:
+ * {@linkplain gof.designpatterns.Interpreter Interpreter} design pattern. The
+ * particular class below is not in the manual. This Demo attempts to evaluate
+ * the boolean expression:
  * <p/>
  * <code>(true AND x) OR (y AND (NOT x))</code>
  * <p/>
@@ -15,13 +14,12 @@ import gof.designpatterns.Interpreter;
  * values to the variables by writing to the Context map, and re-evaluate the
  * expressions with the new values.
  * <p/>
- * In real life every language has a native boolean library, and no one would
- * ever have to reinvent it. The only reason to do so would be to teach students
- * about boolean expressions, or to teach developers about the Interpreter
- * design pattern, which is why it's done here. See the mouse-over definition of
- * {@linkplain Interpreter} for some more practical uses for the pattern.</div>
- *
- * <pre></pre>
+ * In real life every language has a native boolean function set, and no one
+ * would ever have to reinvent it. The only reason to do so would be to teach
+ * students about boolean expressions, or to teach developers about the
+ * Interpreter design pattern, which is why it's done here. See the mouse-over
+ * definition of {@linkplain gof.designpatterns.Interpreter Interpreter} for
+ * some additional practical uses for the pattern.</div>
  * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */

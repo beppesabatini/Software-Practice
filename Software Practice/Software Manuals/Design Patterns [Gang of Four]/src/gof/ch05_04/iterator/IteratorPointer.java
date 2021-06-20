@@ -5,13 +5,11 @@ import java.io.IOException;
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], p.
  * 265. Part of the sample code used to illustrate the
- * {@linkplain gof.designpatterns.Iterator Iterator} design pattern. This is no
- * more than a wrapper that uses the deconstructor function (finalize()) to
- * automatically deallocate the wrapped Iterator. The C++ version adds a few
- * more tweaks with overloaded operators, but these are not supported in
- * Java.</div>
- *
- * <pre></pre>
+ * {@linkplain gof.designpatterns.Iterator Iterator} design pattern. The
+ * IteratorPointer class is no more than a wrapper that uses the deconstructor
+ * function (finalize()) which a client can use to deallocate the wrapped
+ * Iterator. The C++ version adds a few more tweaks with overloaded operators,
+ * but these are not supported in Java.</div>
  * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */

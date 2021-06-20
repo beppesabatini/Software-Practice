@@ -2,16 +2,15 @@ package gof.ch04_05.facade;
 
 import java.io.ByteArrayInputStream;
 
-import gof.ch04_05.facade.Subsystem.ExpressionNode;
-import gof.ch04_05.facade.Subsystem.StatementNode;
+import gof.ch04_05.facade.FacadeSupport.ExpressionNode;
+import gof.ch04_05.facade.FacadeSupport.StatementNode;
 import gof.designpatterns.Visitor;
 
 /**
  * <div class="javadoc-text">From Design Patterns [Gang of Four], p. 190. An
- * element in the sample code for the {@linkplain Facade} design pattern. See
- * the {@linkplain Compiler} class for the actual Facade.</div>
- * 
- * <pre></pre>
+ * element in the sample code for the {@linkplain gof.designpatterns.Facade
+ * Facade} design pattern. See the {@linkplain Compiler} class for the actual
+ * Facade.</div>
  * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */

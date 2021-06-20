@@ -2,15 +2,13 @@ package gof.ch05_03.interpreter;
 
 import java.util.HashMap;
 import java.util.Map;
-import gof.designpatterns.Interpreter;
 
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], pp.
  * 251-254. An element in the sample code illustrating the
- * {@linkplain Interpreter} design pattern. In the manual, this class is only
- * mentioned in passing.</div>
- *
- * <pre></pre>
+ * {@linkplain gof.designpatterns.Interpreter Interpreter} design pattern. In
+ * the manual, this class is only mentioned in passing. See the mouse-over
+ * definition of Interpreter for more detail. </div>
  * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */

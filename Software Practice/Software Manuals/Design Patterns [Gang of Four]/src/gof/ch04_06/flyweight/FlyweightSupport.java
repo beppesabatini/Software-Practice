@@ -5,8 +5,6 @@ package gof.ch04_06.flyweight;
  * mentioned in passing in the manual. These are included here only to get other
  * stubs to compile.</div>
  * 
- * <pre></pre>
- * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class FlyweightSupport {

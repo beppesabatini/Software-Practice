@@ -1,17 +1,14 @@
 package gof.ch04_05.facade;
 
-import gof.ch04_05.facade.Subsystem.ExpressionNode;
-import gof.ch04_05.facade.Subsystem.StatementNode;
+import gof.ch04_05.facade.FacadeSupport.ExpressionNode;
+import gof.ch04_05.facade.FacadeSupport.StatementNode;
 import gof.designpatterns.Builder;
-import gof.designpatterns.Facade;
 
 /**
  * <div class="javadoc-text">From Design Patterns [Gang of Four], pp. 189-191.
- * Sample code for an illustration of the {@linkplain Facade} design pattern.
- * See the {@linkplain Compiler} for the actual Facade. All the Facade sample
- * code is composed of non-functional stubs.</div>
- * 
- * <pre></pre>
+ * One class from the sample code for an illustration of the
+ * {@linkplain gof.designpatterns.Facade Facade} design pattern. See the
+ * {@linkplain Compiler} for the actual Facade. </div>
  * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
@@ -24,7 +21,7 @@ public class ProgramNodeBuilder implements Builder {
 	}
 
 	public ProgramNodeBuilder() {
-
+		// Stub
 	}
 
 	public final StatementNode newVariable(final String variable) {

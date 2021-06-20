@@ -1,14 +1,10 @@
 package gof.ch05_03.interpreter;
 
-import gof.designpatterns.Interpreter;
-
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], pp.
  * 251-254. An element in the sample code illustrating the
- * {@linkplain Interpreter} design pattern.</div>
+ * {@linkplain gof.designpatterns.Interpreter Interpreter} design pattern.</div>
  *
- * <pre></pre>
- * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class VariableExpression implements BooleanExpression {
@@ -31,7 +27,7 @@ public class VariableExpression implements BooleanExpression {
 	}
 
 	/**
-	 * Not functional as in the manual (p. 253), do not use.
+	 * Not functional either here or in the manual (p. 253), do not use.
 	 */
 	@Override
 	@Deprecated

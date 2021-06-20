@@ -23,18 +23,19 @@ import gof.designpatterns.Singleton;
  * calculations are captured and stored in a form which can be restored out of
  * context.
  * <p/>
- * As of this writing, Vlissides's original article explaining a
- * ConstraintSolver, which he calls a csolver, is <a href=
+ * See also the {@linkplain MoveCommand}. As of this writing, Vlissides's
+ * original article explaining a ConstraintSolver, which he calls a csolver, is
+ * <a href=
  * "http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.95.6572&rep=rep1&type=pdf">on
  * line</a>.</td>
  * </tr>
  * <tr>
- * <td align="center"><img src="UML Diagram.jpg" /></td>
+ * <td><img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch05_06/memento/UML%20Diagram.jpg"
+ * /></td>
  * </tr>
  * </table>
  *
- * <pre></pre>
- * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class ConstraintSolver implements Singleton, Memento {

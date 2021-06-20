@@ -1,17 +1,14 @@
 package gof.ch05_05.mediator;
 
-import gof.designpatterns.Mediator;
-
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], pp.
- * 278-281. Part of the sample code illustrating the {@linkplain Mediator}
- * design pattern. This Demo class does not appear in the manual.
+ * 278-281. Part of the sample code illustrating the
+ * {@linkplain gof.designpatterns.Mediator Mediator} design pattern. This Demo
+ * class does not appear in the manual.
  * <p/>
  * A Mediator is like the moderator in a chat room. In the example here, the
  * Mediator acts like Control Central, to coordinate different widgets in a Font
  * Select dialog.</div>
- *
- * <pre></pre>
  * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
@@ -47,8 +44,8 @@ public class Demo {
 		okButton.handleMouse(null);
 		System.out.println();
 
-		System.out.println(" • Deallocating the FontDialogDirector: ");
-		fontDialogDirector.finalize(); // Note this is NOT called automatically.
+		System.out.println(" • Deallocating the FontDialogDirector. Note this is NOT called automatically: ");
+		fontDialogDirector.finalize();
 		fontDialogDirector = null;
 	}
 

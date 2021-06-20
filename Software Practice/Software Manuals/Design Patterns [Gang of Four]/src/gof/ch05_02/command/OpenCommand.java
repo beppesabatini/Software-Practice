@@ -6,7 +6,8 @@ import gof.ch05_02.command.CommandSupport.Document;
 /**
  * <div class="javadoc-text">From Design Patterns [Gang of Four], p. 239-240.
  * Sample code to illustrate the {@linkplain gof.designpatterns.Command Command}
- * design pattern. Mostly non-functional stubs.</div>
+ * design pattern. This OpenCommand class and the {@linkplain PasteCommand}
+ * class are each hard-coded to specific bits of functionality.</div>
  *
  * <link rel="stylesheet" href="../../styles/gof.css">
  */

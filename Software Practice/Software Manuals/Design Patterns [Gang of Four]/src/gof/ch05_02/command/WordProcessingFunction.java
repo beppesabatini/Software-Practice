@@ -1,19 +1,20 @@
 package gof.ch05_02.command;
 
 import gof.ch05_02.command.CommandSupport.WordProcessingDocument;
-import gof.designpatterns.Command;
 
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], p.
  * 239-241. This class does not appear in the manual. This is used by the sample
- * code to illustrate the {@linkplain Command} design pattern. The manual uses
- * C++ and invokes a pointer to a function; here instead, we define a lambda (λ)
- * that invokes the desired function, and store the lambda in the corresponding
- * enum.</div>
+ * code to illustrate the {@linkplain gof.designpatterns.Command Command} design
+ * pattern. The manual uses C++ and invokes a pointer to a function; here
+ * instead, we define a lambda (λ) that invokes the desired function, and store
+ * the lambda in the corresponding enum. This enum can then be used to
+ * initialize up to five different Command objects. </div>
  * 
- * <pre></pre>
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch05_02/command/UML%20Diagram.jpg"
+ * /> </div>
  * 
- * <div class="javadoc-diagram"> <img src="UML Diagram.jpg" /> </div>
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public enum WordProcessingFunction {

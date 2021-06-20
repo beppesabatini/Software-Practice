@@ -7,7 +7,9 @@ import java.util.ListIterator;
 /**
  * <div class="javadoc-text">From Design Patterns [Gang of Four], p. 241-242.
  * Sample code to illustrate the {@linkplain gof.designpatterns.Command Command}
- * design pattern. This class merely manages a list of Commands. The manual
+ * design pattern. 
+ * <p/>
+ * This class merely manages a list of Commands. The manual
  * notes (p. 241) that to implement unexecute(), the logic must traverse the
  * list in reverse order.</div>
  *
