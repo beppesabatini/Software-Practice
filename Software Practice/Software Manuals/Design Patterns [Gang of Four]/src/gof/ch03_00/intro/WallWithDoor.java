@@ -3,12 +3,15 @@ package gof.ch03_00.intro;
 import java.io.IOException;
 
 /**
- * Adapted from Design Patterns [Gang of Four], pp. 82-83. The manual calls this
- * class just "Door". Used in several design pattern illustrations.
+ * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], pp.
+ * 82-83. The manual refers to this class as just "Door," which is confusing. We
+ * have renamed it "WallWithDoor" here. The WallWithDoor is used to define Mazes
+ * in several design pattern illustrations. </div>
  * 
- * <pre></pre>
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch03_00/intro/UML%20Diagram.jpg"/>
+ * </div>
  * 
- * <div class="javadoc-diagram"><img src="UML Diagram.jpg"/></div>
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class WallWithDoor extends MapSite implements Wall {

@@ -12,14 +12,17 @@ import gof.designpatterns.Singleton;
  * <div class="javadoc-text">From Design Patterns [Gang of Four], p. 57, 159.
  * Part of an early introduction to the {@linkplain Bridge} design pattern. The
  * pattern and the sample code to illustrate Bridge are dealt with at greater
- * length later, in the Pattern Catalog, on pp. 151-161. Included in this
- * package are elements of an {@linkplain AbstractFactory} which will be used to
- * help construct the Bridge. In this class, XWindow refers an old Linux widget
- * library.</div>
+ * length later, in the design pattern catalog on pp. 151-161. Included in
+ * Section 2.6 are elements of an {@linkplain gof.designpatterns.AbstractFactory
+ * AbstractFactory} which will be used to help construct the Bridge.
+ * <p/>
+ * In the class name <i>XWindowSystemFactory</i>, XWindow refers an old Linux
+ * widget library</div>
  * 
- * <pre></pre>
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch02_06/multiplewindows/UML%20Diagram.jpg"
+ * /> </div>
  * 
- * <div class="javadoc-diagram"> <img src="UML Diagram.jpg" /> </div>
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class XWindowSystemFactory extends WindowSystemFactory implements AbstractFactory, Singleton {

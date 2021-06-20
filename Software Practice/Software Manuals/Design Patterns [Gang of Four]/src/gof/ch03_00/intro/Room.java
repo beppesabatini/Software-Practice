@@ -5,14 +5,23 @@ import java.util.EnumMap;
 import java.util.Map;
 
 /**
- * Adapted from Design Patterns [Gang of Four], pp. 82-83.
+ * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], pp.
+ * 82-83. Defining some of the classes which will be used in several design
+ * pattern illustrations. A Room is defined with a room number and a map of four
+ * Walls.</div>
+ * 
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch03_00/intro/UML%20Diagram.jpg"/>
+ * </div>
+ * 
+ * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class Room extends MapSite {
 
 	private static final String DEBUG = "true";
 
 	private final int roomNumber;
-	
+
 	public int getRoomNumber() {
 		return this.roomNumber;
 	}

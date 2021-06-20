@@ -1,7 +1,12 @@
 package gof.ch03_00.intro;
 
 /**
- * Adapted from Design Patterns [Gang of Four], p. 84.
+ * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], p. 84.
+ * Defining some of the classes which will be used in several design pattern
+ * illustrations. In this early version, one maze is defined simply by
+ * hard-coding a collection of components. </div>
+ * 
+ * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class MazeGame {
 
@@ -28,5 +33,5 @@ public class MazeGame {
 
 		return (maze);
 	}
-	
+
 }

@@ -9,13 +9,14 @@ import gof.designpatterns.Composite;
 
 /**
  * <div class="javadoc-text">Adapted from DesignPatterns [Gang of Four], p. 38,
- * 68. A brief intro to the {@linkplain gof.designpatterns.Iterator Iterator}
- * design pattern. A Row aggregates 0 to N number of glyphs, typically instances
- * of Character.</div>
+ * 68. One class in the sample code for a brief intro to the
+ * {@linkplain gof.designpatterns.Iterator Iterator} design pattern. A Row
+ * aggregates 0-to-N number of glyphs, typically instances of Character.</div>
  * 
- * <pre></pre>
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch02_08/spelling/Iterator%20UML%20Diagram.jpg"
+ * /> </div>
  * 
- * <div class="javadoc-diagram"> <img src="Iterator UML Diagram.jpg" /> </div>
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class Row extends GlyphImpl implements Composite {

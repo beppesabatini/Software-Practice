@@ -1,17 +1,18 @@
 package gof.ch02_08.spelling;
 
 /**
- * <div class="javadoc-text">From DesignPatterns [Gang of Four], pp. 67-69. A
- * brief intro to the {@linkplain gof.designpatterns.Iterator Iterator} design
- * pattern. PreorderIterator is an old name for the common Depth-First Search
- * algorithm for a binary tree, which can be implemented by a stack of stacks.
- * There are a few fragments of this stack-of-stacks algorithm in the manual.
- * This is not being implemented at this time, as the point of the exercise is
- * to demonstrate the Iterator pattern.</div>
+ * <div class="javadoc-text">From DesignPatterns [Gang of Four], pp. 67-69. One
+ * class in the sample code for a brief intro to the
+ * {@linkplain gof.designpatterns.Iterator Iterator} design pattern.
+ * PreorderIterator is an old name for the common Depth-First Search algorithm
+ * for a binary tree, which can be implemented by a stack of stacks. The
+ * stack-of-stacks algorithm is not fully implemented either here or in the
+ * manual.</div>
  * 
- * <pre></pre>
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch02_08/spelling/Iterator%20UML%20Diagram.jpg"
+ * /> </div>
  * 
- * <div class="javadoc-diagram"> <img src="Iterator UML Diagram.jpg" /> </div>
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class PreorderIterator<DataType> extends Iterator<DataType> {

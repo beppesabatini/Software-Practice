@@ -8,8 +8,6 @@ import gof.ch04_02.bridge.WindowImpl;
  * mentioned in passing in the manual. These are included here primarily to get
  * other stubs to compile.</div>
  * 
- * <pre></pre>
- * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class MultipleWindowsSupport {
@@ -23,11 +21,12 @@ public class MultipleWindowsSupport {
 	}
 
 	/**
-	 * <div class="javadoc-text">With the classes in this package we can now define
+	 * <div class="javadoc-text">With the classes in this package, we can now define
 	 * a concrete factory for each Window system. These are
 	 * {@linkplain PMWindowSystemFactory} and {@linkplain XWindowSystemFactory}.
 	 * With these defined, a client can build a Window of the desired type like so.
 	 * This is our equivalent of the code fragment from p. 58.</div>
+	 * 
 	 * <link rel="stylesheet" href="../../styles/gof.css">
 	 */
 	public static final WindowImpl platformSpecificWindow = initPlatformSpecificWindow();

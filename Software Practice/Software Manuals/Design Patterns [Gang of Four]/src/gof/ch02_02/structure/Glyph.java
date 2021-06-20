@@ -4,16 +4,20 @@ import gof.designpatterns.Composite;
 
 /**
  * <div class="javadoc-text">Adapted from DesignPatterns [Gang of Four], p. 39.
- * An early introduction to the {@linkplain Composite} design pattern.
+ * Part of the sample code for an early introduction to the
+ * {@linkplain gof.designpatterns.Composite Composite} design pattern. "Glyph"
+ * is a generalized term for characters, images, rows, columns, and most other
+ * elements of a word processing programming being designed.
  * <p/>
- * Surprisingly, as represented in the manual, this actually isn't very good
- * data modeling or interface design. Every object is a Glyph, which is so
- * broadly defined it's not much different from every object being defined as
- * "Object." Structural elements, characters, and images are all "Glyphs."</div>
+ * The Glyph object has some weaknesses from the standpoint of data modeling or
+ * interface design. Every object is a Glyph, which is so broadly defined it's
+ * not much different from every object being handled as an "Object."
+ * Improvements to the Glyph will be made in upcoming chapters.</div>
  * 
- * <pre></pre>
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch02_02/structure/UML%20Diagram.jpg"
+ * /> </div>
  * 
- * <div class="javadoc-diagram"> <img src="UML Diagram.jpg" /> </div>
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public interface Glyph extends Composite {
@@ -44,6 +48,9 @@ public interface Glyph extends Composite {
 	 */
 	public Glyph getChild(int index);
 
-	// This is not meaningful for a Singleton.
+	/**
+	 * This is not meaningful for a {@linkplain gof.designpatterns.Singleton
+	 * Singleton}.
+	 */
 	public Glyph getParent();
 }

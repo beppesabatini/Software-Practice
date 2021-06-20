@@ -1,10 +1,10 @@
 package gof.ch02_02.structure;
 
-import gof.designpatterns.Composite;
-
 /**
  * <div class="javadoc-text">Adapted from DesignPatterns [Gang of Four], p. 38.
- * An early introduction to the {@linkplain Composite} design pattern.</div>
+ * Part of the sample code for an early introduction to the
+ * {@linkplain gof.designpatterns.Composite Composite} design pattern.</div>
+ * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class Point {

@@ -1,12 +1,9 @@
 package gof.ch02_02.structure;
 
-import gof.designpatterns.Composite;
-
 /**
  * <div class="javadoc-text">Adapted from DesignPatterns [Gang of Four], pp. 20,
- * 39. An early introduction to the {@linkplain Composite} design pattern.</div>
- * 
- * <pre></pre>
+ * 39. Part of the sample code for an early introduction to the
+ * {@linkplain gof.designpatterns.Composite Composite} design pattern.</div>
  * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
@@ -37,12 +34,12 @@ public class Window {
 		return (area);
 	}
 
-	/* From p.55.*/
+	/* From p.55. */
 	public void drawRectangle() {
 		if (this.rectangle == null) {
 			return;
 		}
-		
+
 		// Not functional yet.
 		System.out.println("Drawing rectangle: " + this.rectangle);
 	}

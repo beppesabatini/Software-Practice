@@ -11,14 +11,21 @@ import gof.ch03_00.intro.blueprints.Blueprint;
 import gof.ch03_02.builder.MazeDirector;
 
 /**
- * Adapted from Design Patterns [Gang of Four], p. 84.
+ * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], p. 84.
+ * Defining some of the classes which will be used in several design pattern
+ * illustrations. The Maze is an aggregation of classes which define the basic
+ * layout for one level of a video game or something similar. The Standard Maze
+ * game might be something like PacMan. The Enchanted Maze might have a
+ * character like Princess Peach opening Maze doors with a magic spell. The
+ * Bombed Maze might have foot soldiers opening doors with a bomb. The basic
+ * layout of the maze, that is, the game level, remains the same for all three
+ * games. </div>
  * 
- * <pre>
- *   <div> 
- *     <img src="UML Diagram.jpg" /> 
- *   </div>
- * </pre>
- *
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch03_00/intro/UML%20Diagram.jpg"/>
+ * </div>
+ * 
+ * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class Maze {
 
@@ -68,6 +75,9 @@ public class Maze {
 		return (highestKey + 1);
 	}
 
+	/*
+	 * Not in the manual, though related issues are discussed.
+	 */
 	public Maze clone() {
 		if (this.currentBlueprint == null) {
 			System.err.println("Sorry, unable to clone this Maze");
@@ -77,6 +87,9 @@ public class Maze {
 		return (cloneMaze);
 	}
 
+	/*
+	 * Not in the manual, though related issues are discussed.
+	 */
 	public boolean deepEquals(Maze otherMaze) {
 		if (this == otherMaze) {
 			if (Boolean.valueOf(DEBUG) == true) {

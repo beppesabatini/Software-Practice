@@ -5,8 +5,11 @@ import gof.ch03_00.intro.Maze;
 import gof.ch03_02.builder.MazeBuilder;
 
 /**
- * The Blueprint concept is not in the manual. We have designed it to work
- * together with a MazeBuilder.
+ * <div class="javadoc-text">The Blueprint concept is not in the manual. It is
+ * designed to work together with a {@linkplain gof.ch03_02.builder.MazeBuilder
+ * MazeBuilder}.</div>
+ * 
+ * <link rel="stylesheet" type="text/css" href="../../../styles/gof.css">
  */
 public class SimpleMazeBlueprint implements Blueprint {
 

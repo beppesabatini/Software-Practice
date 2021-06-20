@@ -2,16 +2,16 @@ package gof.ch03_01.abstractfactory;
 
 import gof.ch03_00.intro.Room;
 import gof.ch03_00.intro.WallWithDoor;
-import gof.designpatterns.AbstractFactory;
 
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], p. 84.
- * Part of the sample code for the {@linkplain AbstractFactory} design pattern.
- * The manual calls this class "DoorNeedingSpell".</div>
+ * Part of the sample code for the
+ * {@linkplain gof.designpatterns.AbstractFactory AbstractFactory} design
+ * pattern. The manual calls this class "DoorNeedingSpell".</div>
  * 
- * <pre></pre>
+ * <div class="javadoc-diagram"><img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch03_01/abstractfactory/UML%20Diagram.jpg"/></div>
  * 
- * <div class="javadoc-diagram"><img src="UML Diagram.jpg"/></div>
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class WallWithDoorNeedingSpell extends WallWithDoor {

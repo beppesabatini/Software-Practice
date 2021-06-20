@@ -7,12 +7,8 @@ import gof.ch02_02.structure.Window;
 
 /**
  * <div class="javadoc-text">Adapted from DesignPatterns [Gang of Four], pp. 39,
- * 67. A brief intro to the {@linkplain gof.designpatterns.Iterator Iterator}
- * design pattern. The Glyph has been modified here to eliminate the dubious
- * index into the collection of children. It's not worth porting all the old
- * classes to the new version of the Glyph; most of them are just stubs.</div>
- * 
- * <pre></pre>
+ * 67. One class in the sample code for a brief intro to the
+ * {@linkplain gof.designpatterns.Iterator Iterator} design pattern. </div>
  * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
@@ -51,7 +47,7 @@ public class GlyphImpl implements Glyph {
 	public Iterator<?> createIterator(Object root) {
 		System.out.println("Warning: this NullIterator does almost nothing.");
 		String message = "";
-		message += "The GlymphImpl:createInterator() function needs to be ";
+		message += "The GlymphImpl:createIterator() function needs to be ";
 		message += "overridden for any subclass which needs it.";
 		System.out.println(message);
 		Iterator<Glyph> iterator = new NullIterator<Glyph>();

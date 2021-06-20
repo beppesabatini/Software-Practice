@@ -1,10 +1,11 @@
 package gof.ch03_01.abstractfactory;
 
-import gof.designpatterns.AbstractFactory;
-
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], p. 93.
- * Part of the sample code for the {@linkplain AbstractFactory} design pattern.
+ * Part of the sample code for the
+ * {@linkplain gof.designpatterns.AbstractFactory AbstractFactory} design
+ * pattern.
+ * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class Spell {
