@@ -3,7 +3,7 @@ div.javadoc-text, table.javadoc-text {
 }
 
 div.javadoc-diagram {
-	margin-left: 5px;
+	padding: 10px 0 0 6px;
 }
 
 td.structure-diagram {

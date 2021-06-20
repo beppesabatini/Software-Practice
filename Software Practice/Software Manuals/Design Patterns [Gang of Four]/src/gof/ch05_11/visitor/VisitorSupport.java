@@ -1,11 +1,9 @@
 package gof.ch05_11.visitor;
 
 /**
- * <div class="javadoc-text">More non-functional stubs. Most of these are only
- * mentioned in passing in the manual. These are included here primarily to get
- * other stubs to compile.</div>
- *
- * <pre></pre>
+ * <div class="javadoc-text">More non-functional stubs. Most of these classes
+ * are only mentioned in passing in the manual. These are included here
+ * primarily to get other stubs to compile.</div>
  * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */

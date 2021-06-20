@@ -1,6 +1,5 @@
 package gof.designpatterns.structures;
 
-import gof.ch04_07.proxy.*;
 import gof.designpatterns.Proxy;
 
 /**
@@ -13,7 +12,8 @@ import gof.designpatterns.Proxy;
  * of Four}], p. 209. ©1995 by Addison-Wesley.</center></td>
  * </tr>
  * <tr>
- * <td class="structure-diagram"><img src="../../ch04_07/proxy/image-5909.png"/>
+ * <td class="structure-diagram"><img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch04_07/proxy/image-5909.png"/>
  * </td>
  * </tr>
  * <tr>
@@ -23,14 +23,30 @@ import gof.designpatterns.Proxy;
  * <td>
  * <ul>
  * <li><b><i>Subject</i></b> — corresponds to the interface
- * {@linkplain Graphic}</li>
+ * {@linkplain gof.ch04_07.proxy.Graphic Graphic}</li>
  * <li><b><i>RealSubject</i></b> — corresponds to the implementation
- * {@linkplain Image}</li>
- * <li><b><i>Proxy</i></b> — the implementation {@linkplain ImageProxy}</li>
+ * {@linkplain gof.ch04_07.proxy.Image Image}</li>
+ * <li><b><i>Proxy</i></b> — the implementation
+ * {@linkplain gof.ch04_07.proxy.ImageProxy ImageProxy}</li>
  * </ul>
  * </td>
  * </table>
- * <link rel="stylesheet" href="../../styles/gof.css">
+ * 
+ * <pre>
+ * <style> 
+ * table.javadoc-structure { 
+ *     padding: 5px; width: 580px; 
+ * }
+ *
+ * div.diagram-title { 
+ *     font-size: 16px; font-weight: bold; text-align:center; 
+ * }
+ *
+ * td.structure-diagram { 
+ *     padding: 6px 0 0 0; 
+ * }
+ * </style>
+ * </pre>
  */
 public interface ProxyStructure extends Proxy {
 

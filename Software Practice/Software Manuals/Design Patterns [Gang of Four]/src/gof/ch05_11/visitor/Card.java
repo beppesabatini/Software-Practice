@@ -3,24 +3,26 @@ package gof.ch05_11.visitor;
 import gof.ch04_03.composite.Currency;
 import gof.ch04_03.composite.Equipment;
 import gof.ch04_03.composite.Watt;
-import gof.designpatterns.Composite;
-import gof.designpatterns.Visitor;
 
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], pp.
- * 170-172, 340-343. Part of the sample code for the {@linkplain Visitor} and
- * {@linkplain Composite} design patterns. This Card class does not appear in
- * the manual; it is only mentioned in passing.</div>
+ * 170-172, 340-343. Part of the sample code for the
+ * {@linkplain gof.designpatterns.Visitor Visitor} and
+ * {@linkplain gof.designpatterns.Composite Composite} design patterns. The name
+ * Card refers to a piece of hardware such as a graphics card. This Card class
+ * does not appear in the manual; it is only mentioned in passing.</div>
  *
- * <pre></pre>
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch05_11/visitor/UML%20Diagram.jpg"
+ * /> </div>
  * 
- * <div class="javadoc-diagram"> <img src="UML Diagram.jpg" /> </div>
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class Card extends Equipment {
 
 	public Card(String cardName) {
 		super(cardName);
+		setPricePoint(PricePoint.NET_PRICE);
 	}
 
 	/**

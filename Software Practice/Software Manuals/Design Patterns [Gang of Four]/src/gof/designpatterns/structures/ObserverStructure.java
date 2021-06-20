@@ -1,6 +1,5 @@
 package gof.designpatterns.structures;
 
-import gof.ch05_07.observer.*;
 import gof.designpatterns.Observer;
 
 /**
@@ -13,8 +12,9 @@ import gof.designpatterns.Observer;
  * of Four}], p. 294. ©1995 by Addison-Wesley.</center></td>
  * </tr>
  * <tr>
- * <td class="structure-diagram">
- * <img src="../../ch05_07/observer/image-6732.png" /></td>
+ * <td class="structure-diagram"><img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch05_07/observer/image-6732.png"
+ * /></td>
  * </tr>
  * <tr>
  * <td><center><i>Compared to the sample code:</i></center></td>
@@ -23,19 +23,35 @@ import gof.designpatterns.Observer;
  * <td>
  * <ul>
  * <li><b><i>Subject</i></b> — corresponds to the abstract class
- * {@linkplain Subject}</li>
+ * {@linkplain gof.ch05_07.observer.Subject Subject}</li>
  * <li><b><i>ConcreteSubject</i></b> — corresponds to the concrete subclass
- * {@linkplain ClockTimer}</li>
+ * {@linkplain gof.ch05_07.observer.ClockTimer ClockTimer}</li>
  * <p/>
  * <li><b><i>Observer</i></b> — corresponds to the abstract class
- * {@linkplain Observer}</li>
+ * {@linkplain gof.ch05_07.observer.Observer Observer}</li>
  * <li><b><i>ConcreteObserver</i></b> — there are two ConcreteObservers—two
- * concrete subclasses of Observer—{@linkplain AnalogClock} and
- * {@linkplain DigitalClock}</li>
+ * concrete subclasses of Observer—{@linkplain gof.ch05_07.observer.AnalogClock
+ * AnalogClock} and {@linkplain gof.ch05_07.observer.DigitalClock
+ * DigitalClock}</li>
  * </ul>
  * </td>
  * </table>
- * <link rel="stylesheet" href="../../styles/gof.css">
+ * 
+ * <pre>
+ * <style> 
+ * table.javadoc-structure { 
+ *     padding: 5px; width: 580px; 
+ * }
+ *
+ * div.diagram-title { 
+ *     font-size: 16px; font-weight: bold; text-align:center; 
+ * }
+ *
+ * td.structure-diagram { 
+ *     padding: 6px 0 0 0; 
+ * }
+ * </style>
+ * </pre>
  */
 public interface ObserverStructure extends Observer {
 

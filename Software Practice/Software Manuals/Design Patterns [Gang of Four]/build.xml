@@ -1,0 +1,60 @@
+<project name="GangOfFourInJava.1.0" default="jar" basedir=".">
+	<!-- -->
+	<!-- The author has both Java 12 and Java 8 installed. -->
+	<!-- The author's Eclipse installation as of this writing compiles with Java 12. -->
+	<!-- The executable jar files need to support earlier versions of Java. -->
+	<!-- To compile the jars using Java 8: -->
+	<!--     • In Project Explorer or Package Explorer, right-click on this build.xml -->
+	<!--     • Click on Run As/External Tools Configuration -->
+	<!--     • Highlight the current build ("Java Examples in a Nutshell, 3rd Edition - JavaExamplesInANutshell.1.0.jar") -->
+	<!--     • Click on the tab JRE; select "Separate JRE" and select Java 8 -->
+	<!--     • Note that in the target "compile.classes" below, source="1.8" is specified. -->
+	<!-- -->
+	<property name="jar-file" value="${ant.project.name}.jar" />
+	<property name="src-dir" value="src" />
+	<property name="build-dir" value="bin" />
+	<property name="output-dir" value="output" />
+
+	<target name="jar" depends="print-version, clean, compile.classes,copy.source.files">
+		<jar jarfile="${output-dir}/${jar-file}" basedir="${build-dir}"/>
+	</target>
+
+	<target name="print-version">
+		<echo>Starting</echo>
+		<echo>Java/JVM version: ${ant.java.version}</echo>
+		<echo>Java/JVM detail version: ${java.version}</echo>
+		<echo>Ant version: ${ant.version}</echo>
+		<echo>Building: ${output-dir}/${jar-file}</echo>
+	</target>
+
+	<target name="clean">
+		<delete>
+			<fileset dir="${build-dir}" includes="**/*.class" />
+		</delete>
+
+		<delete file="${output-dir}/${jar-file}" />
+	</target>
+
+
+	<target name="compile.classes">
+		<javac srcdir="${src-dir}/gof" destdir="${build-dir}" debug="on" source="1.8" includeantruntime="false">
+			<classpath>
+				<pathelement location="lib/JavaExamplesInANutshell.1.0.jar" />
+			</classpath>
+		</javac>
+	</target>
+
+	<!--
+	<target name="jar.source.files" >
+		<jar jarfile="${output-dir}/GangOfFourInJavaSource.jar" basedir="${src-dir}" includes="gof/**/*">
+		</jar>
+	</target>
+	-->
+
+	<target name="copy.source.files">
+		<copy todir="bin" includeemptydirs="false">
+			<fileset dir="src" includes="gof/**/*.*" />
+		</copy>
+	</target>
+
+</project>

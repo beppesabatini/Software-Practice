@@ -32,9 +32,52 @@ package gof.designpatterns;
 "gof-table-bottomtitle">From <i>Design Patterns</i> [{@linkplain GangOfFour Gang of Four}], p. 10. Table 1.1.</td>
  *     </tr>
  *   </table>
+
+ * <style>
+ * table {
+	background-color: #F9F7E0;
+	font-family: Franklin Gothic;
+	border-collapse: collapse;
+	border: 3px solid black;
+	font-size: 15px; 
+}
+
+
+td.gof-table-title {
+	font-family: Arial;
+	background-color: #9F6627;
+	font-size: 18px;
+	font-weight: bold;
+	text-align: center;
+	border: 2px solid black;
+}
+
+td.gof-table-subtitle {
+	font-family: Arial;
+	background-color: #C27C3E;
+	font-size: 16px;
+	text-align: center;
+	border: 2px solid black;
+}
+
+td.gof-table-subsubtitle {
+	font-family: Arial;
+	-- background-color: #C27C3E;
+	background-color: #B48F4D;
+	font-size: 16px;
+	text-align: center;
+	border: 2px solid black;
+}
+
+tr.object-row-bottom {
+	border-bottom: 2px solid black;	
+}
+
+td.gof-table-bottomtitle {
+	text-align: center;
+}
+ * </style>
  * </pre>
- * 
- * <link rel="stylesheet" href="../styles/gof-table.css">
  */
 public interface DesignPatternSpace {
 

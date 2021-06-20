@@ -1,13 +1,11 @@
 package gof.ch05_08.state;
 
-import gof.designpatterns.State;
-
 /**
- * <div style="width: 580px;">Adapted from Design Patterns [Gang of Four], pp.
- * 309-312. Part of the sample code to illustrate the {@linkplain State} design
- * pattern. This Demo class does not appear in the manual.</div>
- *
- * <pre></pre>
+ * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], pp.
+ * 309-312. Part of the sample code to illustrate the
+ * {@linkplain gof.designpatterns.State State} design pattern. This Demo class
+ * does not appear in the manual; it is provided to let clients test the sample
+ * code. </div>
  * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */

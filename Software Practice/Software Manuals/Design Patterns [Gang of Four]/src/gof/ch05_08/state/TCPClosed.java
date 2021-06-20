@@ -5,12 +5,17 @@ import gof.designpatterns.State;
 
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], p.
- * 312. Part of the sample code to illustrate the {@linkplain State} design
- * pattern.</div>
- *
- * <pre></pre>
+ * 312. This class is one part of the sample code used to illustrate the
+ * {@linkplain gof.designpatterns.State State} design pattern.
  * 
- * <div class="javadoc-diagram"> <img src="UML Diagram.jpg" /> </div>
+ * Each State can change itself into a different State when its work is done.
+ * Thus, the State design pattern can be used to build up a functional flow
+ * chart of connected States.</div>
+ *
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch05_08/state/UML%20Diagram.jpg"
+ * /> </div>
+ * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class TCPClosed extends TCPState implements Singleton, State {

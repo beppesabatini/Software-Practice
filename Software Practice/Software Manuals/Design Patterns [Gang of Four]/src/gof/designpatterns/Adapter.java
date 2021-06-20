@@ -1,8 +1,5 @@
 package gof.designpatterns;
 
-import gof.ch04_01.adapter.drawing.TextShape;
-import gof.designpatterns.structures.AdapterStructure;
-
 /**
  * <div class="javadoc-text">An instance of the <b>Adapter</b> pattern,
  * described in <i>Design Patterns</i> [{@linkplain GangOfFour Gang of Four}],
@@ -18,14 +15,20 @@ import gof.designpatterns.structures.AdapterStructure;
  * In the UML diagram (below), a developer is using a library of graphics
  * widgets, and incorporates a text widget from a different text library, by
  * applying the "Adapter" pattern, and adapting the text widget into the
- * graphics library. See {@linkplain TextShape} for more details. See also the
- * {@linkplain AdapterStructure Adapter Structure} diagram.</div>
+ * graphics library. See {@linkplain gof.ch04_01.adapter.drawing.TextShape
+ * TextShape} for more details. See also the
+ * {@linkplain gof.designpatterns.structures.AdapterStructure Adapter Structure}
+ * diagram.</div>
  * 
  * <pre></pre>
  * 
- * <div class="javadoc-diagram">
- * <img src="..\ch04_01\adapter\drawing\UML Diagram.jpg" /> </div>
- * <link rel="stylesheet" href="../styles/gof.css">
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch04_01/adapter/drawing/UML%20Diagram.jpg"
+ * /> </div>
+ * 
+ * <style> div.javadoc-text { width: 580px; }</style>
+ * <p/>
+ * <style> div.javadoc-diagram {margin-left: 5px;}</style>
  */
 public interface Adapter extends GangOfFour {
 

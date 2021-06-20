@@ -23,11 +23,15 @@ package gof.designpatterns;
  * Method Structure} diagram.</td>
  * </tr>
  * <tr>
- * <td><center><img src="../ch05_10/templatemethod/UML Diagram.jpg"
+ * <td><center><img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch05_10/templatemethod/UML%20Diagram.jpg"
  * /></center></td>
  * </tr>
  * </table>
- * <link rel="stylesheet" href="../styles/gof.css">
+ * 
+ * <style> div.javadoc-text { width: 580px; }</style>
+ * <p/>
+ * <style> div.javadoc-diagram {margin-left: 5px;}</style>
  */
 public interface TemplateMethod extends GangOfFour {
 

@@ -1,7 +1,5 @@
 package gof.designpatterns.structures;
 
-import gof.ch04_01.adapter.drawing.*;
-import gof.ch04_01.adapter.text.*;
 import gof.designpatterns.Adapter;
 
 /**
@@ -15,7 +13,8 @@ import gof.designpatterns.Adapter;
  * </tr>
  * <tr>
  * <td class="structure-diagram"><img src=
- * "../../ch04_01/adapter/drawing/image-5211.png" /></td>
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch04_01/adapter/drawing/image-5211.png"
+ * /></td>
  * </tr>
  * <tr>
  * <td><center><i>Compared to the sample code:</i></center></td>
@@ -26,11 +25,12 @@ import gof.designpatterns.Adapter;
  * <li><b><i>Client</i></b> — collaborates with objects conforming to the Target
  * interface</li>
  * <li><b><i>Target</i></b> — corresponds to the interface
- * {@linkplain GraphicalElementGUI}</li>
+ * {@linkplain gof.ch04_01.adapter.drawing.GraphicalElementGUI
+ * GraphicalElementGUI}</li>
  * <li><b><i>Adaptee</i></b> — corresponds to the class
- * {@linkplain TextView}</li>
+ * {@linkplain gof.ch04_01.adapter.text.TextView TextView}</li>
  * <li><b><i>Adapter</i></b> — corresponds to the class
- * {@linkplain TextShape}</li>
+ * {@linkplain gof.ch04_01.adapter.drawing.TextShape TextShape}</li>
  * </ul>
  * </td>
  * </tr>
@@ -41,7 +41,22 @@ import gof.designpatterns.Adapter;
  * Interface.</i></center></td>
  * </tr>
  * </table>
- * <link rel="stylesheet" href="../../styles/gof.css">
+ * 
+ * <pre>
+ * <style> 
+ * table.javadoc-structure { 
+ *     padding: 5px; width: 580px; 
+ * }
+ *
+ * div.diagram-title { 
+ *     font-size: 16px; font-weight: bold; text-align:center; 
+ * }
+ *
+ * td.structure-diagram { 
+ *     padding: 6px 0 0 0; 
+ * }
+ * </style>
+ * </pre>
  */
 public interface AdapterStructure extends Adapter {
 

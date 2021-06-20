@@ -1,16 +1,14 @@
 package gof.ch05_09.strategy;
 
 import gof.ch04_01.adapter.text.Coordinate;
-import gof.designpatterns.Strategy;
 
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], p.
- * 321. Part of the sample code illustrating the {@linkplain Strategy} design
- * pattern. This class does not appear in the manual; it's necessary because C++
- * and Java handle arrays differently.</div>
+ * 321. This class is part of the sample code illustrating the
+ * {@linkplain gof.designpatterns.Strategy Strategy} design pattern. This class
+ * does not appear in the manual; it's necessary because C++ and Java handle
+ * arrays differently.</div>
  *
- * <pre></pre>
- * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public class CompositionInfo {

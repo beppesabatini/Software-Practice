@@ -8,14 +8,16 @@ import gof.designpatterns.Visitor;
 /**
  * <div class="javadoc-text">Adapted from Design Patterns [Gang of Four], pp.
  * 170-172, 340-343. Part of the sample code illustrating the
- * {@linkplain Visitor} design pattern.
+ * {@linkplain gof.designpatterns.Visitor Visitor} design pattern.
  * <p/>
- * Note that the methods below are empty methods, not abstract ones, so that
- * clients can ignore the elements they do not need when subclassing this.</div>
- *
- * <pre></pre>
+ * Note that the methods in the EquipmentVisitor class are empty methods, not
+ * abstract ones, so that clients can ignore the elements they do not need when
+ * subclassing this.</div>
  * 
- * <div class="javadoc-diagram"> <img src="UML Diagram.jpg" /> </div>
+ * <div class="javadoc-diagram"> <img src=
+ * "https://raw.githubusercontent.com/beppesabatini/Software-Practice/main/Software%20Practice/Software%20Manuals/Design%20Patterns%20%5BGang%20of%20Four%5D/src/gof/ch05_11/visitor/UML%20Diagram.jpg"
+ * /> </div>
+ * 
  * <link rel="stylesheet" href="../../styles/gof.css">
  */
 public abstract class EquipmentVisitor implements Visitor {
