@@ -10,6 +10,8 @@ import java.util.List;
 // Download this jar file from https://www.bouncycastle.org/latest_releases.html
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+import com.google.gson.GsonBuilder;
+
 /**
  * This is a little toy blockchain designed to illustrate the algorithm by which
  * a real blockchain works. This code comes mainly from this tutorial:
@@ -24,29 +26,27 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  * <p/>
  * Note that what's usually called "Bitcoin mining" would be better called "hash
  * racing." Hash values for the chain are, by design, very expensive
- * computationally. All members of the distributed peer-to-peer network complete
+ * computationally. All members of the distributed peer-to-peer network compete
  * to see which can come up with a valid hash value first. The winner adds a new
  * block to the chain, and this new, longest version, is now the most up-to-date
  * blockchain.
  * <p/>
- * All the peers in the race have been helpful, so all now receive some payment.
  * The blockchain application now declares--by royal decree, by fiat--"I now
- * pronounce that some new money exists." The new digital coins are distributed
- * to the network, and the winner of the race gets a larger share. As long as
- * everyone believes the digital coin has value, and will keep its value, it is
- * a self-fulfilling prophecy.
+ * pronounce that some new money exists." The new digital coins are sent to the
+ * winner of the hash race. As long as everyone believes the digital coin has
+ * value, and will keep its value, it is a self-fulfilling prophecy.
  */
 public class BlockchainManager {
 
-	protected static final String DEBUG = "false";
+	protected static final String DEBUG = "true";
 
 	protected static List<Block> blockchain = new ArrayList<Block>();
 	public static int difficulty = 5;
 
 	/*
 	 * A record of all the unspent money, throughout the entire blockchain. A real
-	 * blockchain really does keep such a record, but of course it uses something
-	 * fancier than a global HashMap.
+	 * blockchain really does keep such a record, but not in a Java HashMap. The
+	 * Bitcoin Core client (the most popular version) uses LevelDB from Google.
 	 */
 	public static Map<String, TransactionOutput> unspentTransactionOutputs = new HashMap<String, TransactionOutput>();
 
@@ -60,7 +60,7 @@ public class BlockchainManager {
 		// Add our blocks to the blockchain ArrayList.
 		/*
 		 * First, setup Bouncy Castle as a Security Provider. This will help by doing
-		 * things like generating authorization keys.
+		 * things like generating industry-standard cryptographic keys.
 		 */
 		Security.addProvider(new BouncyCastleProvider());
 
@@ -69,8 +69,13 @@ public class BlockchainManager {
 		Wallet walletB = new Wallet();
 		Wallet seedMoneyWallet = new Wallet();
 
-		// Create the first item in the Blockchain: the coinbase transaction, which
-		// sends 100 JingleCoins to walletA:
+		/*
+		 * The blockchain is managing a cryptocurrency called a Fido. Here we create the
+		 * first item in every Block: the coinbase transaction, which sends 100 Fidos to
+		 * walletA. In real life, this first item, the coinbase transaction, is the
+		 * reward to the Bitcoin miner who won the "hash race" and came up with a legal
+		 * hash value. The hash value helps define a new Block and serves as a Block ID.
+		 */
 		Transaction coinbaseTransaction = new Transaction(seedMoneyWallet.publicKey, walletA.publicKey, 100f, null);
 		// Manually sign the coinbase transaction:
 		coinbaseTransaction.generateSignature(seedMoneyWallet.privateKey);
@@ -114,6 +119,12 @@ public class BlockchainManager {
 		System.out.println("WalletB's balance is: " + walletB.getBalance());
 
 		isChainValid(coinbaseTransaction);
+
+		if (Boolean.valueOf(DEBUG) == true) {
+			String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
+			System.out.println("\nThe block chain: ");
+			System.out.println(blockchainJson);
+		}
 	}
 
 	private static Boolean isChainValid(Transaction coinbaseTransaction) {

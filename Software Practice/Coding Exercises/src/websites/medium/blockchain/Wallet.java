@@ -27,16 +27,16 @@ public class Wallet {
 	public PrivateKey privateKey;
 	public PublicKey publicKey;
 
-	// Elliptic Curve with Digital Signature Algorithm
+	/** ECDSA, or "Elliptic Curve with Digital Signature Algorithm" */
 	public final static String SIGNATURE_ALGORITHM = "ECDSA";
-	// Bouncy Castle
-	public final static String SIGNATURE_PROVIDER = "BC";
-	// Secure Hash Algorithm 1 Pseudo Random Number Generator
+	/** BC, or "Bouncy Castle," a cryptography company. */
+	public final static String ALGORITHM_PROVIDER = "BC";
+	/** SHA1PRNG, or "Secure Hash Algorithm 1 Pseudo Random Number Generator" */
 	private final static String SECURE_RANDOM_ALGORITHM = "SHA1PRNG";
-	// 192-bit prime field Weierstrass curve
+	/** prime192v1, or "192-bit prime field Weierstrass curve" */
 	private final static String ELLIPTIC_CURVE_NAME = "prime192v1";
 
-	// Track the unspent coins owned by this wallet:
+	// Track the unspent coins owned by this wallet (sometimes called UXTO):
 	public Map<String, TransactionOutput> localUnspentTransactionObjects = new HashMap<String, TransactionOutput>();
 
 	public Wallet() {
@@ -45,12 +45,13 @@ public class Wallet {
 
 	public void generateAuthenticationKeyPair() {
 		try {
-			KeyPairGenerator keyGen = KeyPairGenerator.getInstance(SIGNATURE_ALGORITHM, SIGNATURE_PROVIDER);
-			SecureRandom random = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
+			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(SIGNATURE_ALGORITHM, ALGORITHM_PROVIDER);
+			SecureRandom secureRandom = SecureRandom.getInstance(SECURE_RANDOM_ALGORITHM);
 			ECGenParameterSpec curveSpecification = new ECGenParameterSpec(ELLIPTIC_CURVE_NAME);
-			// Initialize the key generator and generate a KeyPair:
-			keyGen.initialize(curveSpecification, random); // 256 bytes provides an acceptable security level
-			KeyPair keyPair = keyGen.generateKeyPair();
+			// Initialize the key generator and generate a KeyPair.
+			// 256 bytes provides an acceptable security level:
+			keyPairGenerator.initialize(curveSpecification, secureRandom);
+			KeyPair keyPair = keyPairGenerator.generateKeyPair();
 
 			// Set the public and private keys from the keyPair:
 			this.privateKey = keyPair.getPrivate();

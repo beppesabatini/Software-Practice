@@ -39,7 +39,7 @@ public class StringHasher {
 			// This will contain the hashed input as a hexadecimal string (base 16).
 			StringBuilder hexStringBuilder = new StringBuilder();
 			for (int i = 0; i < hashedInput.length; i++) {
-				// Bytes don't get cast to ints they way you might expect, so cast them this way
+				// Bytes don't get cast to ints the way you might expect, so cast them this way
 				// instead:
 				int hashedInputInt = 0xff & hashedInput[i];
 				String hexIntegerString = Integer.toHexString(hashedInputInt);
@@ -73,7 +73,7 @@ public class StringHasher {
 	public static byte[] buildSignature(PrivateKey privateKey, String signatureSeedString) {
 		byte[] output = new byte[0];
 		try {
-			Signature signatureManager = Signature.getInstance(Wallet.SIGNATURE_ALGORITHM, Wallet.SIGNATURE_PROVIDER);
+			Signature signatureManager = Signature.getInstance(Wallet.SIGNATURE_ALGORITHM, Wallet.ALGORITHM_PROVIDER);
 			signatureManager.initSign(privateKey);
 			byte[] signatureSeedBytes = signatureSeedString.getBytes();
 			signatureManager.update(signatureSeedBytes);
@@ -88,7 +88,7 @@ public class StringHasher {
 	public static boolean verifySignature(PublicKey publicKey, String signatureSeedString, byte[] signature) {
 		boolean isValid = false;
 		try {
-			Signature signatureManager = Signature.getInstance(Wallet.SIGNATURE_ALGORITHM, Wallet.SIGNATURE_PROVIDER);
+			Signature signatureManager = Signature.getInstance(Wallet.SIGNATURE_ALGORITHM, Wallet.ALGORITHM_PROVIDER);
 			signatureManager.initVerify(publicKey);
 			signatureManager.update(signatureSeedString.getBytes());
 			isValid = signatureManager.verify(signature);

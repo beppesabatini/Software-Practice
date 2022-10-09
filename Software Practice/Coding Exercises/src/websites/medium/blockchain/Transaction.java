@@ -87,7 +87,6 @@ public class Transaction {
 		// Gather transaction inputs (make sure they are unspent):
 		for (TransactionInput transactionInput : transactionInputs) {
 			String parentID = transactionInput.transactionOutputId;
-//			Map<String, TransactionOutput> unspentTransactionOutputs = BlockchainManager.getUnspentTransactionOutputs();
 			transactionInput.unspentTransactionOutput = BlockchainManager.unspentTransactionOutputs.get(parentID);
 		}
 
@@ -104,7 +103,7 @@ public class Transaction {
 		// Send the desired amount to the recipient:
 		TransactionOutput forRecipient = new TransactionOutput(this.recipient, this.transactionAmount, transactionId);
 		transactionOutputs.add(forRecipient);
-		// Send the leftover 'change' back to sender:
+		// Send the leftover "change" back to sender:
 		TransactionOutput forSender = new TransactionOutput(this.sender, leftover, transactionId);
 		transactionOutputs.add(forSender);
 
